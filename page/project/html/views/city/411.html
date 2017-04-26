@@ -1,0 +1,35 @@
+<!--地验交4—1-->
+                <div ng-if="_ttrl.tableIndex == '411'">
+                    <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+                        <md-list>
+                            <md-list-item ng-repeat="c4 in _ttrl.c4CuuList">
+                                <md-button ng-click="_ttrl.getAllTable41Datas(c4)">
+                                    {{c4}}
+                                </md-button>
+                            </md-list-item>
+                        </md-list>
+                    </md-sidenav>
+                    <h4>铁路建设项目征地、拆迁补偿费清册</h4>
+                    <table border="1" class="table table-striped table-hover">
+                        <tr>
+                            <th>户名</th>
+                            <th>凭证编号</th>
+                            <th>补偿类别</th>
+                            <th>单位</th>
+                            <th>数量</th>
+                            <th>单价(元)</th>
+                            <th>金额(元)</th>
+                            <th>领款人（单位）签字盖章</th>
+                            <th>备注</th>
+                        </tr>
+                        <tr ng-repeat="t41 in _ttrl.table41Datas">
+                            <td>{{t41.name}}</td>
+                            <td>{{t41.id}}</td>
+                            <td>{{t41.type}}</td>
+                            <td>{{t41.unit}}</td>
+                            <td>{{t41.quantity}}</td>
+                            <td>{{t41.price}}</td>
+                            <td>{{t41.total}}</td>
+                        </tr>
+                    </table>
+                </div>

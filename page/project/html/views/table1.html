@@ -1,0 +1,42 @@
+<!--更新价格界面-->
+            <div ng-if="_ttrl.cityLevel == '0'">
+                <div align="center">
+                    <button ng-click="_ttrl.selectTable('p1')" class="btn btn-default" type="submit">表二价格</button>
+                    <button ng-click="_ttrl.selectTable('p2')" class="btn btn-default" type="submit">建筑物价格</button>
+                    <button ng-click="_ttrl.selectTable('p3')" class="btn btn-default" type="submit">构筑物价格</button>
+                </div>
+
+                <!--表二价格-->
+                <div ng-if="_ttrl.tableIndex == 'p1'">
+                    <label>农作物价格</label>
+                    <input value="_ttrl.paras.crop" ng-model="_ttrl.paras.crop" type="text">
+                    </br>
+                    <label>农用设施价格</label>
+                    <input value="_ttrl.paras.ss" ng-model="_ttrl.paras.ss" type="text">
+                    </br>
+                    <label>树木价格</label>
+                    <input value="_ttrl.paras.tree" ng-model="_ttrl.paras.tree" type="text">
+                </div>
+
+                <!--建筑物价格-->
+                <div ng-if="_ttrl.tableIndex == 'p2'">
+                    <label>框架价格</label>
+                    <input value="_ttrl.paras.b1" ng-model="_ttrl.paras.b1" type="text">
+                    </br>
+                    <label>砖混价格</label>
+                    <input value="_ttrl.paras.b2" ng-model="_ttrl.paras.b2" type="text">
+                    </br>
+                    <label>砖木价格</label>
+                    <input value="_ttrl.paras.b3" ng-model="_ttrl.paras.b3" type="text">
+                    </br>
+                    <label>土木价格</label>
+                    <input value="_ttrl.paras.b4" ng-model="_ttrl.paras.b4" type="text">
+                </div>
+
+                <!--构筑物价格-->
+                <div ng-if="_ttrl.tableIndex == 'p3'">
+
+                </div>
+
+                <md-button ng-click="_ttrl.changePara()">保存更改</md-button>
+            </div>
