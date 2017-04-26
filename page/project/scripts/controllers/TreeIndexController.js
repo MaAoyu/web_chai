@@ -1,10 +1,9 @@
-function TreeIndexController($scope) {
+function TreeIndexController($scope, $http) {
     console.log("载入TreeIndexController");
     //框架参数
     $scope.cityName = "";
     $scope.cityLevel = '1';
     $scope.tableIndex = '0';
-
     $scope.citys1 = [{ "name": "内江市", "flag": false }, { "name": "自贡市", "flag": false }, { "name": "泸州市", "flag": false }];
     $scope.citys2 = [{ "name": "内江市东兴区", "flag": false }, { "name": "内江市市中区", "flag": false }, { "name": "自贡市大安区", "flag": false }, { "name": "自贡市沿滩区", "flag": false },
     { "name": "自贡市富顺县", "flag": false }, { "name": "泸州市泸县", "flag": false }, { "name": "泸州市龙马潭区", "flag": false }];
@@ -21,15 +20,56 @@ function TreeIndexController($scope) {
     $scope.c4CuuList = [];
     $scope.c4List = new Array();
     $scope.c4List["内江市东兴区高桥街道办"] = ["内江市东兴区高桥街道办陡坎村", "内江市东兴区高桥街道办赛峨村"];
-
-
+    $scope.currPage = 1;
+    $scope.totalPages = 1;
+    //框架函数
     $scope.isShowCity1 = isShowCity1;
     $scope.isShowCity2 = isShowCity2;
     $scope.isShowCity3 = isShowCity3;
     $scope.selectItem = selectItem;
     $scope.selectTable = selectTable;
+    //表一相关
+    $scope.curTable1 = null; //表一当前添加数据
+    $scope.autoID = 0;       //表一当前行数
+    $scope.table1Datas = []; //表一所有数据
+    $scope.table1Total = { "area": 0, "land": 0, "nonland": 0, "quantity": 0 }; //表一合计
+    $scope.getAllTable1Datas = getAllTable1Datas;
 
-
+    /* 
+     * 内部函数
+     */
+    function getAllTable1Datas(page) {  //得到表一全部数据
+        $http.get('http://localhost:8081/getTable1Count')
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getAllTable1Datas?page=' + page + '&city=' + $scope.cityName)
+            .success(function (res) {
+                //console.log(res);
+                $scope.table1Datas = [].concat(res);
+                $scope.table1Total = { "area": 0, "land": 0, "nonland": 0, "quantity": 0 };
+                for (let i = 0; i < $scope.table1Datas.length; i++) {
+                    if ($scope.table1Datas[i].area != null) {
+                        $scope.table1Total.area = $scope.table1Total.area + $scope.table1Datas[i].area;
+                    }
+                    if ($scope.table1Datas[i].land != null) {
+                        $scope.table1Total.land = $scope.table1Total.land + $scope.table1Datas[i].land;
+                    }
+                    if ($scope.table1Datas[i].nonland != null) {
+                        $scope.table1Total.nonland = $scope.table1Total.nonland + $scope.table1Datas[i].nonland;
+                    }
+                    if ($scope.table1Datas[i].quantity != null) {
+                        $scope.table1Total.quantity = $scope.table1Total.quantity + $scope.table1Datas[i].quantity;
+                    }
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    };
     function isShowCity1(index) {  //第一层展开
         if ($scope.citys1[index].flag == false)
             $scope.citys1[index].flag = true;
@@ -37,6 +77,7 @@ function TreeIndexController($scope) {
             $scope.citys1[index].flag = false;
         $scope.cityName = $scope.citys1[index].name;
         $scope.cityLevel = '1';
+        $scope.tableIndex = '0';
         //console.log("$scope.citys1[index].flag:"+$scope.citys1[index].flag);
     }
     function isShowCity2(index) {  //第二层展开
@@ -46,6 +87,7 @@ function TreeIndexController($scope) {
             $scope.citys2[index].flag = false;
         $scope.cityName = $scope.citys2[index].name;
         $scope.cityLevel = '2';
+        $scope.tableIndex = '0';
     }
     function isShowCity3(index) {  //第三层展开
         if ($scope.citys3[index].flag == false)
@@ -55,43 +97,45 @@ function TreeIndexController($scope) {
         $scope.cityName = $scope.citys3[index].name;
         $scope.c4CuuList = $scope.c4List[$scope.cityName];
         $scope.cityLevel = '3';
+        $scope.tableIndex = '0';
         //console.log("$scope.citys3[index].flag:"+$scope.citys3[index].flag);
     }
     function selectItem(item) {    //第四层选择
         //console.log("cityName:" + item);
         $scope.cityName = item;
         $scope.cityLevel = '4';
+        $scope.tableIndex = '0'; 
     }
-    function selectTable(index) {
+    function selectTable(index) {   //表格选择
         $scope.tableIndex = index;
-        // switch ($scope.tableIndex) {
-        //     case '1':
-        //         getAllTable1Datas(1);//得到初始表一数据
-        //         break;
-        //     case '2':
-        //         getPeopleList();
-        //         break;
-        //     case '3':
-        //         getPeopleList();
-        //         break;
-        //     case '4':
-        //         getPeopleList();
-        //         break;
-        //     case '11':
-        //         getAllTable11Datas();//1-1表数据汇总
-        //         break;
-        //     case '12':
-        //         getAllTable12Datas();//1-2表数据汇总
-        //         break;
-        //     case '42':
-        //         getAllTable42Datas();//4-2表数据汇总
-        //         break;
-        //     case '43':
-        //         getAllTable43Datas($scope.cityName);//4-3表数据初始化
-        //         break;
-        //     default:
-        //         console.log("no datas..");
-        // }
+        switch ($scope.tableIndex) {
+            case '1':
+                getAllTable1Datas(1);//得到初始表一数据
+                break;
+            //     case '2':
+            //         getPeopleList();
+            //         break;
+            //     case '3':
+            //         getPeopleList();
+            //         break;
+            //     case '4':
+            //         getPeopleList();
+            //         break;
+            //     case '11':
+            //         getAllTable11Datas();//1-1表数据汇总
+            //         break;
+            //     case '12':
+            //         getAllTable12Datas();//1-2表数据汇总
+            //         break;
+            //     case '42':
+            //         getAllTable42Datas();//4-2表数据汇总
+            //         break;
+            //     case '43':
+            //         getAllTable43Datas($scope.cityName);//4-3表数据初始化
+            //         break;
+            default:
+                console.log("no this table..");
+        }
     }
 }
     //     //具体表格参数
@@ -100,10 +144,6 @@ function TreeIndexController($scope) {
     //         "b4": "0", "b5": "0", "a1": "0", "a2": "0"
     //     }; //价格参数
     //     $scope.current = null;   //当前户主
-    //     $scope.curTable1 = null; //表一当前添加数据
-    //     $scope.autoID = 0;       //表一当前行数
-    //     $scope.table1Datas = []; //表一所有数据
-    //     $scope.table1Total = { "area": 0, "land": 0, "nonland": 0, "quantity": 0 }; //表一合计
     //     $scope.peopleLists = []; //所有户主的列表
     //     $scope.table2Datas = []; //表二所有数据
     //     $scope.filterText = null //搜索关键字
@@ -119,8 +159,6 @@ function TreeIndexController($scope) {
     //     $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];
     //     $scope.Table2Type = [];   //记录表二价格标准
     //     $scope.searchName = null;
-    //     $scope.currPage = 1;
-    //     $scope.totalPages = 1;
 
     //     $scope.saveTable1Data = saveTable1Data;              //表一保存数据、people表保存数据
     //     $scope.showTable2Data = showTable2Data;              //表二点击左侧列表选择户主后显示详细信息
@@ -534,15 +572,6 @@ function TreeIndexController($scope) {
     //         });
     //     }
 
-
-    //     //得到表一全部数据
-    //     function getAllTable1Datas(page) {
-    //         DataService.getTable1Count().then(function (affectedRows) {
-    //             //console.log(JSON.stringify(affectedRows));
-    //             //console.log("pages:" + Math.ceil(affectedRows[0]["count(*)"]/10));
-    //             $scope.totalPages = Math.ceil(affectedRows[0]["count(*)"] / 10);
-
-    //         });
 
     //         DataService.getDatas($scope.cityName, page).then(function (datas) {
     //             $scope.table1Datas = [].concat(datas);
