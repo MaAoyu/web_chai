@@ -29,15 +29,192 @@ function TreeIndexController($scope, $http) {
     $scope.selectItem = selectItem;
     $scope.selectTable = selectTable;
     //表一相关
-    $scope.curTable1 = null; //表一当前添加数据
+    $scope.curTable1 = {}; //表一当前添加数据
     $scope.autoID = 0;       //表一当前行数
     $scope.table1Datas = []; //表一所有数据
     $scope.table1Total = { "area": 0, "land": 0, "nonland": 0, "quantity": 0 }; //表一合计
-    $scope.getAllTable1Datas = getAllTable1Datas;
+    $scope.getAllTable1Datas = getAllTable1Datas;//增删改查
+    $scope.getTable1ByPK = getTable1ByPK;
+    $scope.deleteTable1 = deleteTable1;
+    $scope.saveTable1Data = saveTable1Data;
+    //分页
+    $scope.getNextPage = getNextPage;
 
     /* 
      * 内部函数
      */
+    function getNextPage(flag) {//分页
+        var page = 0;
+        switch (flag) {
+            case 0: //首页
+                page = 1;
+                $scope.currPage = page;
+                alert("已经是首页！");
+                break;
+            case 1://上一页
+                if ($scope.currPage == 1) {
+                    alert("已经是第一页！");
+                    page = 1;
+                }
+                else {
+                    page = $scope.currPage - 1;
+                    $scope.currPage = page;
+                }
+                break;
+            case 2://下一页
+                if ($scope.currPage == $scope.totalPages) {
+                    alert("已经是最后一页！");
+                    page = $scope.currPage;
+                }
+                else {
+                    page = $scope.currPage + 1;
+                    $scope.currPage = page;
+                }
+                break;
+            case 3://尾页
+                page = $scope.totalPages;
+                $scope.currPage = page;
+                alert("已经是尾页！");
+                break;
+            default:
+                console.log("no datas..");
+        }
+        switch ($scope.tableIndex) {
+            case '1':
+                getAllTable1Datas(page);//得到初始表一数据
+                break;
+            // case '2':
+            //     showTable2Data($scope.searchName.id, page);
+            //     break;
+            // case '3':
+            //     getAllTable3Datas($scope.searchName.id, page);
+            //     break;
+            // case '4':
+            //     getAllTable4Datas($scope.searchName.id, page);
+            //     break;
+            default:
+                console.log("no datas..");
+        }
+    }
+    function saveTable1Data() {   //添加表一数据
+        //更新
+        if ($scope.curTable1 != null && $scope.curTable1.autoID != null) {
+            var urlPara = '';
+            var t1Para = ['name', 'family', 'people', 'rail', 'type',
+                'area', 'land', 'nonland', 'prj', 'unit', 'quantity', 'autoID'];
+            for (let i = 0; i < t1Para.length; i++) {
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable1[t1Para[i]] + '&';
+            }
+            //console.log(urlPara);
+            $http.get('http://localhost:8081/updateTable1?' + urlPara)
+                .success(function (res) {
+                    alert("更新表一成功！");
+                })
+                .error(function (res) {
+                    alert("更新表一数据出错");
+                });
+            var urlPara2 = '';
+            urlPara2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj + '&unit=' +
+                $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity + '&autoID=' +
+                $scope.curTable1.autoID;
+            $http.get('http://localhost:8081/updateTable2ByT1?' + urlPara2)
+                .success(function (res) {
+                    // alert("更新表成功！");
+                })
+                .error(function (res) {
+                    alert("更新表二数据出错");
+                });
+
+            $scope.curTable1 = {};
+            getAllTable1Datas(1);
+        }
+        //添加
+        else {
+            $scope.curTable1.city = $scope.cityName;
+            //添加表一、表二，表二pID外键对应表一主键 id prj unit quantity fID price
+            var urlTable2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
+                '&unit=' + $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity;
+            //添加表一
+            var urlPara = '';
+            var t1Para = ['name', 'id', 'family', 'people', 'rail', 'type',
+                'area', 'land', 'nonland', 'prj', 'unit', 'quantity', 'city'];
+            for (let i = 0; i < t1Para.length; i++) {
+                if ($scope.curTable1[t1Para[i]] == null)
+                    $scope.curTable1[t1Para[i]] = '';
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable1[t1Para[i]] + '&';
+            }
+            $http.get('http://localhost:8081/addTable1?' + urlPara)
+                .success(function (res) {
+                    //console.log(JSON.stringify(res));
+                    urlTable2 = urlTable2 + '&fID=' + res.insertId + '&price=0';//取到表一自增id
+                    //添加表二
+                    $http.get('http://localhost:8081/addTable2?' + urlTable2)
+                        .success(function (res) {
+                        })
+                        .error(function (res) {
+                            alert("添加表二数据出错");
+                        });
+                    alert("添加表1成功！");
+                })
+                .error(function (res) {
+                    alert("添加表一数据出错");
+                });
+            //添加用户表，身份证为主键 id name city 
+            var urlPeople = 'id=' + $scope.curTable1.id + '&name=' + $scope.curTable1.name
+                + '&city=' + $scope.curTable1.city;
+            $http.get('http://localhost:8081/addTablePeople?' + urlPeople)
+                .success(function (res) {
+                })
+                .error(function (res) {
+                    alert("添加用户表数据出错");
+                });
+            //重载表单
+            $scope.curTable1 = {};
+            getAllTable1Datas(1);
+            //添加4-1表TODO
+            // $scope.curTable41.name = $scope.curTable1.name;
+            // $scope.curTable41.type = $scope.curTable1.prj;
+            // $scope.curTable41.unit = $scope.curTable1.unit;
+            // $scope.curTable41.quantity = $scope.curTable1.quantity;
+            // $scope.curTable41.city = $scope.curTable1.city;
+            // DataService.addTable41($scope.curTable41).then(function (affectedRows) {
+            // });
+        }
+    }
+    function deleteTable1(pk) { //删除表一
+        $http.get('http://localhost:8081/deleteTable1?pk=' + pk)
+            .success(function (res) {
+                //重新加载表1
+                getAllTable1Datas(1);
+            })
+            .error(function (res) {
+                alert("删除表一数据出错");
+            });
+        $http.get('http://localhost:8081/deleteTable2?pk=' + pk)
+            .success(function (res) {
+            })
+            .error(function (res) {
+                alert("删除表二数据出错");
+            });
+
+        // var confirm = $mdDialog.confirm()
+        //     .title('Are you sure?')
+        //     .content('Are you sure want to delete this?')
+        //     .ok('Yes')
+        //     .cancel('No')
+        //     .targetEvent($event);
+    }
+    function getTable1ByPK(pk) {    //根据主键获取表一数据
+        $http.get('http://localhost:8081/getTable1ByPK?pk=' + pk)
+            .success(function (res) {
+                var rawDatas = [].concat(res);
+                $scope.curTable1 = rawDatas[0];
+                //console.log($scope.curTable1.name);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
     function getAllTable1Datas(page) {  //得到表一全部数据
         $http.get('http://localhost:8081/getTable1Count')
             .success(function (res) {
@@ -104,7 +281,7 @@ function TreeIndexController($scope, $http) {
         //console.log("cityName:" + item);
         $scope.cityName = item;
         $scope.cityLevel = '4';
-        $scope.tableIndex = '0'; 
+        $scope.tableIndex = '0';
     }
     function selectTable(index) {   //表格选择
         $scope.tableIndex = index;
@@ -136,6 +313,249 @@ function TreeIndexController($scope, $http) {
             default:
                 console.log("no this table..");
         }
+    }
+    function outputExcel() {        //导出表格
+        switch ($scope.tableIndex) {
+            case '1':
+                outputExcel1();
+                break;
+            case '2':
+                outputExcel2();
+                break;
+            case '3':
+                outputExcel3();
+                break;
+            case '4':
+                outputExcel4();
+                break;
+            default:
+                console.log("no this table..");
+        }
+    }
+    function outputExcel2() {
+        const fs = require('fs');
+        const xlsx = require('better-xlsx');
+
+        const file = new xlsx.File();
+        const style = new xlsx.Style();
+        style.fill.patternType = 'solid';
+        style.fill.fgColor = '00FF0000';
+        style.fill.bgColor = 'FF000000';
+        style.align.h = 'center';
+        style.align.v = 'center';
+
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "建设项目名称：川南城际铁路 线   标段";
+        lines[1] = "铁路建设项目（征）用集体土地面积、青苗及附着物补偿清册";
+        lines[2] = $scope.cityName + " 年 月 日 共 " + $scope.totalPages + "页 第" + $scope.currPage + "页";
+        for (let i = 0; i < 3; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 9;
+            if (i == 1)
+                cellLine.style = style;
+        }
+
+        //多级表头
+        const row1 = sheet.addRow();
+        var cell1 = null;
+        var table2Heads = ["铁路里程范围", $scope.current.rail, "户主姓名",
+            $scope.current.name, "身份证号码", $scope.current.id];
+        for (let i = 0; i < 3; i++) {
+            cell1 = row1.addCell();
+            cell1.value = table2Heads[i * 2];
+            cell1 = row1.addCell();
+            cell1.value = table2Heads[i * 2 + 1];
+            cell1.hMerge = 1;
+            cell1 = row1.addCell();
+        }
+
+        const row2 = sheet.addRow();
+        var cell2 = row2.addCell();
+        cell2.value = "青苗及附着物补偿";
+        cell2.hMerge = 4;
+        cell2.style = style;
+        for (let i = 0; i < 4; i++) {
+            row2.addCell();
+        }
+        cell2 = row2.addCell();
+        cell2.value = "青苗及附着物补偿";
+        cell2.hMerge = 4;
+        cell2.style = style;
+
+        const row3 = sheet.addRow();
+        var cell3 = null;
+        var table2Heads2 = ["类别", "单位", "数量", "标准", "补偿金额"];
+        for (let i = 0; i < 5; i++) {
+            cell3 = row3.addCell();
+            cell3.value = table2Heads2[i];
+        }
+        for (let i = 0; i < 5; i++) {
+            cell3 = row3.addCell();
+            cell3.value = table2Heads2[i];
+        }
+
+        //表内容
+        var table2Content = ["prj", "unit", "quantity", "price", "total",
+            "prj2", "unit2", "quantity2", "price2", "total2"];
+        for (let i = 0; i < $scope.table2Datas.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table2Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table2Datas[i][table2Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        var cellT1 = rowTotal.addCell();
+        cellT1.value = "小计";
+        for (let i = 0; i < 3; i++) {
+            rowTotal.addCell();
+        }
+        cellT1 = rowTotal.addCell();
+        cellT1.value = $scope.table2Total.total;
+        for (let i = 0; i < 4; i++) {
+            rowTotal.addCell();
+        }
+        cellT1 = rowTotal.addCell();
+        cellT1.value = $scope.table2Total.total2;
+
+        //表尾
+        var tableOver = ["乡镇人民政府（公章）： ", "被拆迁人（签字/章）：", "结算人（签字）：",
+            "审核人（签字）："];
+        for (let i = 0; i < 2; i++) {
+            const rowOver = sheet.addRow();
+
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i * 2];
+            cellOver.hMerge = 4;
+
+            for (let i = 0; i < 4; i++) {
+                rowOver.addCell();
+            }
+            const cellOver2 = rowOver.addCell();
+            cellOver2.value = tableOver[i * 2 + 1];
+            cellOver2.hMerge = 4;
+        }
+
+
+        var excelRoot = 'table/table2/' + $scope.cityName + $scope.currPage + '.xlsx';
+
+        file
+            .saveAs()
+            .pipe(fs.createWriteStream(excelRoot));
+    }
+    function outputExcel1() {
+        const file = new xlsx.File();
+        const style = new xlsx.Style();
+        style.fill.patternType = 'solid';
+        style.fill.fgColor = '00FF0000';
+        style.fill.bgColor = 'FF000000';
+        style.align.h = 'center';
+        style.align.v = 'center';
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "建设项目名称：川南城际铁路 线   标段";
+        lines[1] = "铁路建设项目（征）用集体土地面积、青苗及附着物登记清册";
+        lines[2] = $scope.cityName + " 年 月 日 共 " + $scope.totalPages + "页 第" + $scope.currPage + "页";
+        for (let i = 0; i < 3; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 12;
+            if (i == 1)
+                cellLine.style = style;
+        }
+
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['姓名', '身份证号码', '家庭人口', '安置人口', '铁路里程范围', '用地性质', '用地面积（亩）', '青苗及附着物补偿', '户主签名', '小计', '耕地', '非耕地', '项目', '单位', '数量'];
+        for (let i = 0; i < 9; i++) {
+            if (i == 6 || i == 7) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 2;
+                cell2.style = style;
+                row1.addCell();
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 1;
+                cell1.style = style;
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 6; i++) {
+            row2.addCell();
+        }
+        for (let i = 9; i < 15; i++) {
+            const cell3 = row2.addCell();
+            cell3.value = table1Head[i];
+            //cell3.style = style;
+        }
+        //表内容
+        var table1Content = ["name", "id", "family", "people", "rail", "type", "area",
+            "land", "nonland", "prj", "unit", "quantity"];
+        for (let i = 0; i < $scope.table1Datas.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table1Datas[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT1 = rowTotal.addCell();
+        cellT1.value = "本页合计";
+        cellT1.hMerge = 1;
+        for (let i = 0; i < 5; i++) {
+            rowTotal.addCell();
+        }
+        var totalLine = [];
+        totalLine[0] = $scope.table1Total.area;
+        totalLine[1] = $scope.table1Total.land;
+        totalLine[2] = $scope.table1Total.nonland;
+        totalLine[3] = null;
+        totalLine[4] = null;
+        totalLine[5] = $scope.table1Total.quantity;
+        for (let i = 0; i < totalLine.length; i++) {
+            const cellT2 = rowTotal.addCell();
+            cellT2.value = totalLine[i];
+        }
+        //表尾
+        var tableOver = ["乡镇人民政府签字（公章）： ", "县（区）铁建办签字（公章）", "铁路建设业主单位签字（公章）：",
+            "设计单位签字（公章）：", "监理单位签字（公章）：", "铁路施工单位签字（公章）："];
+        for (let i = 0; i < 3; i++) {
+            const rowOver = sheet.addRow();
+
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i * 2];
+            cellOver.hMerge = 6;
+
+            for (let i = 0; i < 6; i++) {
+                rowOver.addCell();
+            }
+            const cellOver2 = rowOver.addCell();
+            cellOver2.value = tableOver[i * 2 + 1];
+            cellOver2.hMerge = 6;
+        }
+        //导出
+        var excelRoot = 'table1-' + $scope.cityName + $scope.currPage + '.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
     }
 }
     //     //具体表格参数
@@ -183,64 +603,6 @@ function TreeIndexController($scope, $http) {
     //     //得到各参数
     //     getAllParas();
 
-    //     //----------------------
-    //     // Internal functions 
-    //     //----------------------
-
-    //     //分页
-    //     function getNextPage(flag) {
-    //         var page = 0;
-    //         switch (flag) {
-    //             case 0: //首页
-    //                 page = 1;
-    //                 $scope.currPage = page;
-    //                 break;
-    //             case 1://上一页
-    //                 if ($scope.currPage == 1) {
-    //                     alert("已经是第一页！");
-    //                     page = 1;
-    //                 }
-    //                 else {
-    //                     page = $scope.currPage - 1;
-    //                     $scope.currPage = page;
-    //                 }
-    //                 break;
-    //             case 2://下一页
-    //                 if ($scope.currPage == $scope.totalPages) {
-    //                     alert("已经是最后一页！");
-    //                     page = $scope.currPage;
-    //                 }
-    //                 else {
-    //                     page = $scope.currPage + 1;
-    //                     $scope.currPage = page;
-    //                 }
-    //                 break;
-    //             case 3://尾页
-    //                 page = $scope.totalPages;
-    //                 $scope.currPage = page;
-    //                 break;
-    //             default:
-    //                 console.log("no datas..");
-    //         }
-    //         console.log(page);
-    //         switch ($scope.tableIndex) {
-    //             case '1':
-    //                 getAllTable1Datas(page);//得到初始表一数据
-    //                 break;
-    //             case '2':
-    //                 showTable2Data($scope.searchName.id, page);
-    //                 break;
-    //             case '3':
-    //                 getAllTable3Datas($scope.searchName.id, page);
-    //                 break;
-    //             case '4':
-    //                 getAllTable4Datas($scope.searchName.id, page);
-    //                 break;
-    //             default:
-    //                 console.log("no datas..");
-    //         }
-    //     }
-
     //     function updateTable2($event) {
     //         for (var i = 0; i < $scope.table2Datas.length; i++) {
     //             // $scope.table2Datas[i].price = $scope.Table2Type[i].type1;
@@ -276,33 +638,7 @@ function TreeIndexController($scope, $http) {
     //         showTable2Data($scope.searchName.id, $scope.currPage);
     //     }
 
-    //     function deleteTable1(pk, $event) {
-    //         //console.log(pk);
-    //         var confirm = $mdDialog.confirm()
-    //             .title('Are you sure?')
-    //             .content('Are you sure want to delete this?')
-    //             .ok('Yes')
-    //             .cancel('No')
-    //             .targetEvent($event);
 
-
-    //         $mdDialog.show(confirm).then(function () {
-    //             DataService.deleteTable1(pk).then(function (affectedRows) {
-    //                 //重新加载表单
-    //                 getAllTable1Datas(1);//得到初始表一数据
-    //             });
-    //             DataService.deleteTable2(pk).then(function (affectedRows) {
-    //             });
-    //         }, function () { });
-    //     }
-
-    //     function getTable1ByPK(pk) {
-    //         DataService.getTable1ByPK(pk).then(function (datas) {
-    //             var rawDatas = [].concat(datas);
-    //             $scope.curTable1 = rawDatas[0];
-    //             //console.log($scope.curTable1.name);
-    //         });
-    //     }
 
     //     function getTable3ByPK(pk) {
     //         console.log(pk);
@@ -593,91 +929,6 @@ function TreeIndexController($scope, $http) {
     //         });
     //     }
 
-    //     //添加表一数据
-    //     function saveTable1Data($event) {
-    //         //更新
-    //         if ($scope.curTable1 != null && $scope.curTable1.autoID != null) {
-    //             DataService.updateTable1($scope.curTable1).then(function (affectedRows) {
-    //                 $mdDialog.show(
-    //                     $mdDialog
-    //                         .alert()
-    //                         .clickOutsideToClose(true)
-    //                         .title('Success')
-    //                         .content('Data Updated Successfully!')
-    //                         .ok('Ok')
-    //                         .targetEvent($event)
-    //                 );
-    //             });
-    //             DataService.updateTable2ByT1($scope.curTable1.id, $scope.curTable1.prj,
-    //                 $scope.curTable1.unit, $scope.curTable1.quantity, $scope.curTable1.autoID).then(function (affectedRows) {
-    //                 });
-    //             $scope.curTable1 = {};
-    //             getAllTable1Datas(1);
-    //         }
-    //         //添加
-    //         else {
-    //             $scope.curTable1.city = $scope.cityName;
-    //             //添加表二，pID外键对应表一主键
-    //             var currTable2 = {};
-    //             currTable2.id = $scope.curTable1.id;
-    //             currTable2.prj = $scope.curTable1.prj;
-    //             currTable2.unit = $scope.curTable1.unit;
-    //             currTable2.quantity = $scope.curTable1.quantity;
-    //             //取到表一自增id
-    //             DataService.create($scope.curTable1).then(function (affectedRows) {
-    //                 //console.log("affectedRows:" + affectedRows);
-    //                 currTable2.fID = affectedRows;
-    //                 currTable2.price = 0;
-    //                 // currTable2.price = $scope.paras[$scope.curTable1.prj];
-    //                 // switch ($scope.curTable1.prj) {
-    //                 //     case "农作物":
-    //                 //         currTable2.price = $scope.paras.crop;
-    //                 //         break;
-    //                 //     case "农用设施":
-    //                 //         currTable2.price = $scope.paras.ss;
-    //                 //         break;
-    //                 //     default:
-    //                 //         currTable2.price = $scope.paras.tree;
-    //                 // }
-    //                 //TODO 价格先按每个人都不同处理
-    //                 DataService.addTable2(currTable2).then(function (affectedRows) {
-    //                 });
-
-    //                 $mdDialog.show(
-    //                     $mdDialog
-    //                         .alert()
-    //                         .clickOutsideToClose(true)
-    //                         .title('Success')
-    //                         .content('Data Added Successfully!')
-    //                         .ok('Ok')
-    //                         .targetEvent($event)
-    //                 );
-    //             });
-
-    //             //添加用户表，身份证为主键
-    //             var people = { "id": "", "name": "", "city": "" };
-    //             people.id = $scope.curTable1.id;
-    //             people.name = $scope.curTable1.name;
-    //             people.city = $scope.curTable1.city;
-    //             DataService.addTablePeople(people).then(function (affectedRows) {
-    //             });
-
-
-
-    //             $scope.curTable1 = {};
-    //             getAllTable1Datas(1);
-    //             //添加4-1表
-    //             // $scope.curTable41.name = $scope.curTable1.name;
-    //             // $scope.curTable41.type = $scope.curTable1.prj;
-    //             // $scope.curTable41.unit = $scope.curTable1.unit;
-    //             // $scope.curTable41.quantity = $scope.curTable1.quantity;
-    //             // $scope.curTable41.city = $scope.curTable1.city;
-    //             // DataService.addTable41($scope.curTable41).then(function (affectedRows) {
-    //             // });
-    //         }
-
-    //     }
-
 
     //     function search() {
     //         $scope.currPage = 1;
@@ -711,251 +962,3 @@ function TreeIndexController($scope, $http) {
     //             $scope.paras.a2 = datas[0].a2;
     //         });
     //     }
-
-    //     //导出表格
-    //     function outputExcel() {
-    //         switch ($scope.tableIndex) {
-    //             case '1':
-    //                 outputExcel1();
-    //                 break;
-    //             case '2':
-    //                 outputExcel2();
-    //                 break;
-    //             case '3':
-    //                 outputExcel3();
-    //                 break;
-    //             case '4':
-    //                 outputExcel4();
-    //                 break;
-    //             default:
-    //                 console.log("no datas..");
-    //         }
-    //     }
-
-    //     function outputExcel2() {
-    //         const fs = require('fs');
-    //         const xlsx = require('better-xlsx');
-
-    //         const file = new xlsx.File();
-    //         const style = new xlsx.Style();
-    //         style.fill.patternType = 'solid';
-    //         style.fill.fgColor = '00FF0000';
-    //         style.fill.bgColor = 'FF000000';
-    //         style.align.h = 'center';
-    //         style.align.v = 'center';
-
-    //         const sheet = file.addSheet('Sheet1');
-    //         //表上面内容
-    //         var lines = [];
-    //         lines[0] = "建设项目名称：川南城际铁路 线   标段";
-    //         lines[1] = "铁路建设项目（征）用集体土地面积、青苗及附着物补偿清册";
-    //         lines[2] = $scope.cityName + " 年 月 日 共 " + $scope.totalPages + "页 第" + $scope.currPage + "页";
-    //         for (let i = 0; i < 3; i++) {
-    //             const rowLine = sheet.addRow();
-    //             const cellLine = rowLine.addCell();
-    //             cellLine.value = lines[i];
-    //             cellLine.hMerge = 9;
-    //             if (i == 1)
-    //                 cellLine.style = style;
-    //         }
-
-    //         //多级表头
-    //         const row1 = sheet.addRow();
-    //         var cell1 = null;
-    //         var table2Heads = ["铁路里程范围", $scope.current.rail, "户主姓名",
-    //             $scope.current.name, "身份证号码", $scope.current.id];
-    //         for (let i = 0; i < 3; i++) {
-    //             cell1 = row1.addCell();
-    //             cell1.value = table2Heads[i * 2];
-    //             cell1 = row1.addCell();
-    //             cell1.value = table2Heads[i * 2 + 1];
-    //             cell1.hMerge = 1;
-    //             cell1 = row1.addCell();
-    //         }
-
-    //         const row2 = sheet.addRow();
-    //         var cell2 = row2.addCell();
-    //         cell2.value = "青苗及附着物补偿";
-    //         cell2.hMerge = 4;
-    //         cell2.style = style;
-    //         for (let i = 0; i < 4; i++) {
-    //             row2.addCell();
-    //         }
-    //         cell2 = row2.addCell();
-    //         cell2.value = "青苗及附着物补偿";
-    //         cell2.hMerge = 4;
-    //         cell2.style = style;
-
-    //         const row3 = sheet.addRow();
-    //         var cell3 = null;
-    //         var table2Heads2 = ["类别", "单位", "数量", "标准", "补偿金额"];
-    //         for (let i = 0; i < 5; i++) {
-    //             cell3 = row3.addCell();
-    //             cell3.value = table2Heads2[i];
-    //         }
-    //         for (let i = 0; i < 5; i++) {
-    //             cell3 = row3.addCell();
-    //             cell3.value = table2Heads2[i];
-    //         }
-
-    //         //表内容
-    //         var table2Content = ["prj", "unit", "quantity", "price", "total",
-    //             "prj2", "unit2", "quantity2", "price2", "total2"];
-    //         for (let i = 0; i < $scope.table2Datas.length; i++) {
-    //             const rowContent = sheet.addRow();
-    //             for (let j = 0; j < table2Content.length; j++) {
-    //                 const cellContent = rowContent.addCell();
-    //                 cellContent.value = $scope.table2Datas[i][table2Content[j]];
-    //             }
-    //         }
-    //         //合计行
-    //         const rowTotal = sheet.addRow();
-    //         var cellT1 = rowTotal.addCell();
-    //         cellT1.value = "小计";
-    //         for (let i = 0; i < 3; i++) {
-    //             rowTotal.addCell();
-    //         }
-    //         cellT1 = rowTotal.addCell();
-    //         cellT1.value = $scope.table2Total.total;
-    //         for (let i = 0; i < 4; i++) {
-    //             rowTotal.addCell();
-    //         }
-    //         cellT1 = rowTotal.addCell();
-    //         cellT1.value = $scope.table2Total.total2;
-
-    //         //表尾
-    //         var tableOver = ["乡镇人民政府（公章）： ", "被拆迁人（签字/章）：", "结算人（签字）：",
-    //             "审核人（签字）："];
-    //         for (let i = 0; i < 2; i++) {
-    //             const rowOver = sheet.addRow();
-
-    //             const cellOver = rowOver.addCell();
-    //             cellOver.value = tableOver[i * 2];
-    //             cellOver.hMerge = 4;
-
-    //             for (let i = 0; i < 4; i++) {
-    //                 rowOver.addCell();
-    //             }
-    //             const cellOver2 = rowOver.addCell();
-    //             cellOver2.value = tableOver[i * 2 + 1];
-    //             cellOver2.hMerge = 4;
-    //         }
-
-
-    //         var excelRoot = 'table/table2/' + $scope.cityName + $scope.currPage + '.xlsx';
-
-    //         file
-    //             .saveAs()
-    //             .pipe(fs.createWriteStream(excelRoot));
-    //     }
-
-
-    //     function outputExcel1() {
-    //         const fs = require('fs');
-    //         const xlsx = require('better-xlsx');
-
-    //         const file = new xlsx.File();
-    //         const style = new xlsx.Style();
-    //         style.fill.patternType = 'solid';
-    //         style.fill.fgColor = '00FF0000';
-    //         style.fill.bgColor = 'FF000000';
-    //         style.align.h = 'center';
-    //         style.align.v = 'center';
-
-    //         const sheet = file.addSheet('Sheet1');
-    //         //表上面内容
-    //         var lines = [];
-    //         lines[0] = "建设项目名称：川南城际铁路 线   标段";
-    //         lines[1] = "铁路建设项目（征）用集体土地面积、青苗及附着物登记清册";
-    //         lines[2] = $scope.cityName + " 年 月 日 共 " + $scope.totalPages + "页 第" + $scope.currPage + "页";
-    //         for (let i = 0; i < 3; i++) {
-    //             const rowLine = sheet.addRow();
-    //             const cellLine = rowLine.addCell();
-    //             cellLine.value = lines[i];
-    //             cellLine.hMerge = 12;
-    //             if (i == 1)
-    //                 cellLine.style = style;
-    //         }
-
-    //         //多级表头
-    //         const row1 = sheet.addRow();
-    //         var table1Head = ['姓名', '身份证号码', '家庭人口', '安置人口', '铁路里程范围', '用地性质', '用地面积（亩）', '青苗及附着物补偿', '户主签名', '小计', '耕地', '非耕地', '项目', '单位', '数量'];
-    //         for (let i = 0; i < 9; i++) {
-    //             if (i == 6 || i == 7) {
-    //                 const cell2 = row1.addCell();
-    //                 cell2.value = table1Head[i];
-    //                 cell2.hMerge = 2;
-    //                 cell2.style = style;
-    //                 row1.addCell();
-    //                 row1.addCell();
-    //             }
-    //             else {
-    //                 const cell1 = row1.addCell();
-    //                 cell1.value = table1Head[i];
-    //                 cell1.vMerge = 1;
-    //                 cell1.style = style;
-    //             }
-    //         }
-    //         const row2 = sheet.addRow();
-    //         for (let i = 0; i < 6; i++) {
-    //             row2.addCell();
-    //         }
-    //         for (let i = 9; i < 15; i++) {
-    //             const cell3 = row2.addCell();
-    //             cell3.value = table1Head[i];
-    //             //cell3.style = style;
-    //         }
-    //         //表内容
-    //         var table1Content = ["name", "id", "family", "people", "rail", "type", "area",
-    //             "land", "nonland", "prj", "unit", "quantity"];
-    //         for (let i = 0; i < $scope.table1Datas.length; i++) {
-    //             const rowContent = sheet.addRow();
-    //             for (let j = 0; j < table1Content.length; j++) {
-    //                 const cellContent = rowContent.addCell();
-    //                 cellContent.value = $scope.table1Datas[i][table1Content[j]];
-    //             }
-    //         }
-    //         //合计行
-    //         const rowTotal = sheet.addRow();
-    //         const cellT1 = rowTotal.addCell();
-    //         cellT1.value = "本页合计";
-    //         cellT1.hMerge = 1;
-    //         for (let i = 0; i < 5; i++) {
-    //             rowTotal.addCell();
-    //         }
-    //         var totalLine = [];
-    //         totalLine[0] = $scope.table1Total.area;
-    //         totalLine[1] = $scope.table1Total.land;
-    //         totalLine[2] = $scope.table1Total.nonland;
-    //         totalLine[3] = null;
-    //         totalLine[4] = null;
-    //         totalLine[5] = $scope.table1Total.quantity;
-    //         for (let i = 0; i < totalLine.length; i++) {
-    //             const cellT2 = rowTotal.addCell();
-    //             cellT2.value = totalLine[i];
-    //         }
-    //         //表尾
-    //         var tableOver = ["乡镇人民政府签字（公章）： ", "县（区）铁建办签字（公章）", "铁路建设业主单位签字（公章）：",
-    //             "设计单位签字（公章）：", "监理单位签字（公章）：", "铁路施工单位签字（公章）："];
-    //         for (let i = 0; i < 3; i++) {
-    //             const rowOver = sheet.addRow();
-
-    //             const cellOver = rowOver.addCell();
-    //             cellOver.value = tableOver[i * 2];
-    //             cellOver.hMerge = 6;
-
-    //             for (let i = 0; i < 6; i++) {
-    //                 rowOver.addCell();
-    //             }
-    //             const cellOver2 = rowOver.addCell();
-    //             cellOver2.value = tableOver[i * 2 + 1];
-    //             cellOver2.hMerge = 6;
-    //         }
-
-    //         var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
-
-    //         file
-    //             .saveAs()
-    //             .pipe(fs.createWriteStream(excelRoot));
-    //     }
-    // }
