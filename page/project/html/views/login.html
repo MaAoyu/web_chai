@@ -13,7 +13,7 @@
 </div>
 <div class="container">
     <form class="login-form">
-        <div>
+        <div class="form-header">
             <h1>
                 登录
             </h1>
@@ -44,6 +44,38 @@
     客服电话：15210555057
 </div>
 </div>
-
+<script>
+    $(function(){
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+        console.log(screenWidth);
+        if (screenWidth <= 1280) {
+            $(".login-form").css("padding","10px 20px")
+            $(".form-header").css("height","40px")
+            $(".form-header").css("line-height","25px")
+            $("h1").css("font-size","18px")
+            $("h1").css("font-weight","bold")
+            $("h2").css("font-size","18px")
+            $("label").css("line-height","15px")
+            $("label").css("font-size","15px")
+            $("input").css("height","30px")
+            $("input").css("margin","7px 0")
+            $(".rem").css("margin","0")
+            $(".submit-button").css("margin","5px 0")
+        }else{
+            $("h1").css("font-size","25px")
+            $("h1").css("font-weight","bold")
+            $("h2").css("font-size","25px")
+        }
+        if (screenWidth <= 870) {
+            $(".rem").css("float","left")
+        }
+        if (screenHeight <= 580) {
+            $(".footer").css("font-size","12px")
+            $(".footer").css("line-height","22px")
+            $(".login-form").css("top","15%")
+        }
+    })
+</script>
 <!--</body>
 </html>-->

@@ -67,12 +67,10 @@ body{
 
 .login-form h1{
     font-family: "Microsoft YaHei UI Light";
-    line-height: 25px;
     font-size: 25px;
     display: inline-block;
 }
 .login-form h2{
-    line-height: 15px;
     font-size: 30px;
     float: right;
     display: inline-block;
@@ -138,6 +136,12 @@ body{
 .login-form :focus{
     outline: none;
 }
+
+.form-header{
+    max-height: 40px;
+    overflow-y: hidden;
+}
+
 .footer{
     background:-moz-linear-gradient(top, #90c2dd, #5389a7);
     background:-webkit-linear-gradient(top, #90c2dd, #5389a7);
@@ -145,7 +149,7 @@ body{
     bottom: 0;
     height: 40px;
     width: 100%;
-    line-height: 40px;
+    line-height: 30px;
     font-size:15px;
     color: white;
     text-align: center;

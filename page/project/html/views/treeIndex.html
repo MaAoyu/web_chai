@@ -341,7 +341,33 @@
 </div>
 
 <script src="page/common/mtree.js"></script>
+<script>
+    var screenHeight = window.screen.height;
+    $(".table-content").css("height",(screenHeight-50)+"px");
 
+    var screeWidth = window.screen.width;
+    if(screeWidth>=1400){
+        $(".tree-bar").css("width","280px");
+        $(".table-content").css("width",(screeWidth-285)+"px");
+    }else{
+        $(".tree-bar").css("width","200px");
+        $(".table-content").css("width",(screeWidth-205)+"px");
+    }
+    if (screeWidth <= 1100) {
+        $(".tree-bar").css("width","150px");
+        $(".table-content").css("width",(screeWidth-155)+"px");
+        $(".mtree").css("padding",".8em");
+        $(".mtree ul").css("font-size",".9em");
+        $(".mtree.transit ul").css("font-size",".9em");
+        $(".mtree a").css("font-weight","narmal");
+
+    }
+
+//    $(".table-content").css("overflow-y","scroll");
+
+//    $(".table-content").css("overflow-x","scroll");
+
+</script>
 <script>
     $(document).ready(function() {
         var mtree = $('ul.mtree');
