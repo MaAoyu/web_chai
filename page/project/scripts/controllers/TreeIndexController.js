@@ -52,60 +52,62 @@ function TreeIndexController($scope, $http) {
     //表二相关
     $scope.table2Datas = [];                            //表二所有数据
     $scope.table2Total = { "total": 0, "total2": 0 };   //表二合计数据
+    $scope.Table2Type1 = [];                             //表二价格标准1
+    $scope.Table2Type2 = [];                             //表二价格标准2
     $scope.updateTable2 = updateTable2;                 //更改表二标准
 
 
     /* 
      * 内部函数
      */
-    function updateTable2($event) { //更改表二标准
+    function updateTable2(Table2Type1, Table2Type2) { //更改表二标准
+        $scope.Table2Type1 = Table2Type1;
+        $scope.Table2Type2 = Table2Type2;
         for (var i = 0; i < $scope.table2Datas.length; i++) {
-            // $scope.table2Datas[i].price = $scope.Table2Type[i].type1;
-            // $scope.table2Datas[i].price2 = $scope.Table2Type[i].type2;
-            // $scope.table2Datas[i].total = $scope.table2Datas[i].quantity * $scope.table2Datas[i].price;
-            // $scope.table2Datas[i].total2 = $scope.table2Datas[i].quantity2 * $scope.table2Datas[i].price2;
-            //TODO 更新数据库
-            if ($scope.Table2Type[i] != null) {
-                if ($scope.Table2Type[i].type1 != null) {
-                    //更改数据库中所有该种类的价格
-                    DataService.updateTable2($scope.table2Datas[i].prj, $scope.Table2Type[i].type1).then(function (affectedRows) {
-                        $mdDialog.show(
-                            $mdDialog
-                                .alert()
-                                .clickOutsideToClose(true)
-                                .title('Success')
-                                .content('Data update Successfully!')
-                                .ok('Ok')
-                                .targetEvent($event)
-                        );
+            //更改数据库中所有该种类的价格
+            if ($scope.Table2Type1[i] != null) {
+                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj + '&type=' + $scope.Table2Type1[i])
+                    .success(function (res) {
+                        alert("更改成功！");
+                    })
+                    .error(function (res) {
+                        alert("网络出错");
                     });
-                }
-                if ($scope.Table2Type[i].type2 != null) {
-                    //更改数据库中所有该种类的价格
-                    DataService.updateTable2($scope.table2Datas[i].prj2, $scope.Table2Type[i].type2).then(function (datas) {
+            }
+            if ($scope.Table2Type2[i] != null) {
+                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj2 + '&type=' + $scope.Table2Type2[i])
+                    .success(function (res) {
+                    })
+                    .error(function (res) {
                     });
-                }
             }
         }
-        $scope.Table2Type = [];
-
+        $scope.Table2Type1 = [];
+        $scope.Table2Type2 = [];
         //重新加载表二
-        showTable2Data($scope.searchName.id, $scope.currPage);
+        getAllTable2Datas($scope.searchName.id, $scope.currPage);
     }
-    function getAllTable2Datas(id, page) { //根据所选户主显示表二
+    function getAllTable2Datas(id, page) { //1.取到总页数
         $scope.table2Datas = [];
-        $http.get('http://localhost:8081/getTable1ById?id=' + id)//1.取表头信息
+        $http.get('http://localhost:8081/getTable2Count?id=' + id)
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/gettable2Datas?id=' + id + '&page=' + page)//2.取表信息
+        $http.get('http://localhost:8081/gettable2Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.table2Total = { "total": 0, "total2": 0 };
-                for (var i = 0; i < rawDatas.length; i++) {//3.表特殊处理
+                for (var i = 0; i < rawDatas.length; i++) {//4.表特殊处理
                     if (2 * i + 1 > rawDatas.length)
                         break;
                     $scope.table2Datas[i] = rawDatas[2 * i];
@@ -146,6 +148,7 @@ function TreeIndexController($scope, $http) {
         getAllTable4Datas($scope.current.id, 1);
     }
     function search(searchName) {
+        $scope.searchName = searchName;
         $scope.currPage = 1;
         //console.log("searchName:"+searchName.id);
         switch ($scope.tableIndex) {
@@ -263,6 +266,17 @@ function TreeIndexController($scope, $http) {
             //添加表一、表二，表二pID外键对应表一主键 id prj unit quantity fID price
             var urlTable2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
                 '&unit=' + $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity;
+            //根据prj得到表二price
+            $http.get('http://localhost:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
+                .success(function (res) {
+                    if(res.length!=0)
+                        urlTable2 = urlTable2 + '&price=' + res[0]["price"];
+                    else
+                        urlTable2 = urlTable2 + '&price=0';
+                })
+                .error(function (res) {
+                    urlTable2 = urlTable2 + '&price=0';
+                });
             //添加表一
             var urlPara = '';
             var t1Para = ['name', 'id', 'family', 'people', 'rail', 'type',
@@ -275,7 +289,7 @@ function TreeIndexController($scope, $http) {
             $http.get('http://localhost:8081/addTable1?' + urlPara)
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
-                    urlTable2 = urlTable2 + '&fID=' + res.insertId + '&price=0';//取到表一自增id
+                    urlTable2 = urlTable2 + '&fID=' + res.insertId;//取到表一自增id
                     //添加表二
                     $http.get('http://localhost:8081/addTable2?' + urlTable2)
                         .success(function (res) {
@@ -295,7 +309,7 @@ function TreeIndexController($scope, $http) {
                 .success(function (res) {
                 })
                 .error(function (res) {
-                    alert("添加用户表数据出错");
+                    // alert("添加用户表数据出错");
                 });
             //重载表单
             $scope.curTable1 = {};
@@ -310,8 +324,8 @@ function TreeIndexController($scope, $http) {
             // });
         }
     }
-    function deleteTable1(pk) { //删除表一
-        $http.get('http://localhost:8081/deleteTable1?pk=' + pk)
+    function deleteTable1(pk, id) { //删除表一
+        $http.get('http://localhost:8081/deleteTable1?pk=' + pk)//1.删除表一
             .success(function (res) {
                 //重新加载表1
                 getAllTable1Datas(1);
@@ -319,11 +333,26 @@ function TreeIndexController($scope, $http) {
             .error(function (res) {
                 alert("删除表一数据出错");
             });
-        $http.get('http://localhost:8081/deleteTable2?pk=' + pk)
+        $http.get('http://localhost:8081/deleteTable2?pk=' + pk)//2.删除表二
             .success(function (res) {
             })
             .error(function (res) {
                 alert("删除表二数据出错");
+            });
+        $http.get('http://localhost:8081/getTable2Count?id=' + id)//3.删除表三
+            .success(function (res) {
+                console.log(res[0]["count(*)"] == 0);
+                if (res[0]["count(*)"] == 0) { //此人在表一没有记录则删除用户表数据
+                    $http.get('http://localhost:8081/deletePeopleTable?pk=' + id)
+                        .success(function (res) {
+                        })
+                        .error(function (res) {
+                            alert("删除用户表数据出错");
+                        });
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
             });
 
         // var confirm = $mdDialog.confirm()
@@ -463,9 +492,7 @@ function TreeIndexController($scope, $http) {
         }
     }
     function outputExcel2() {
-        const fs = require('fs');
-        const xlsx = require('better-xlsx');
-
+        console.log("excel2...")
         const file = new xlsx.File();
         const style = new xlsx.Style();
         style.fill.patternType = 'solid';
@@ -473,7 +500,6 @@ function TreeIndexController($scope, $http) {
         style.fill.bgColor = 'FF000000';
         style.align.h = 'center';
         style.align.v = 'center';
-
         const sheet = file.addSheet('Sheet1');
         //表上面内容
         var lines = [];
@@ -488,7 +514,6 @@ function TreeIndexController($scope, $http) {
             if (i == 1)
                 cellLine.style = style;
         }
-
         //多级表头
         const row1 = sheet.addRow();
         var cell1 = null;
@@ -527,7 +552,6 @@ function TreeIndexController($scope, $http) {
             cell3 = row3.addCell();
             cell3.value = table2Heads2[i];
         }
-
         //表内容
         var table2Content = ["prj", "unit", "quantity", "price", "total",
             "prj2", "unit2", "quantity2", "price2", "total2"];
@@ -552,7 +576,6 @@ function TreeIndexController($scope, $http) {
         }
         cellT1 = rowTotal.addCell();
         cellT1.value = $scope.table2Total.total2;
-
         //表尾
         var tableOver = ["乡镇人民政府（公章）： ", "被拆迁人（签字/章）：", "结算人（签字）：",
             "审核人（签字）："];
@@ -570,13 +593,18 @@ function TreeIndexController($scope, $http) {
             cellOver2.value = tableOver[i * 2 + 1];
             cellOver2.hMerge = 4;
         }
-
-
-        var excelRoot = 'table/table2/' + $scope.cityName + $scope.currPage + '.xlsx';
-
+        //导出
+        var excelRoot = '表2-' + $scope.cityName + $scope.currPage + '.xlsx';
         file
-            .saveAs()
-            .pipe(fs.createWriteStream(excelRoot));
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+
+        // var excelRoot = 'table/table2/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
     }
     function outputExcel1() {
         const file = new xlsx.File();
@@ -676,7 +704,7 @@ function TreeIndexController($scope, $http) {
             cellOver2.hMerge = 6;
         }
         //导出
-        var excelRoot = 'table1-' + $scope.cityName + $scope.currPage + '.xlsx';
+        var excelRoot = '表1-' + $scope.cityName + $scope.currPage + '.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -705,7 +733,6 @@ function TreeIndexController($scope, $http) {
     //     $scope.table11Datas = []; //表1-1所有数据
     //     $scope.table12Datas = []; //表1-2所有数据
     //     $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];
-    //     $scope.Table2Type = [];   //记录表二价格标准
 
 
     //     $scope.saveTable1Data = saveTable1Data;              //表一保存数据、people表保存数据
