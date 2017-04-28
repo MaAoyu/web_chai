@@ -343,19 +343,22 @@
 <script src="page/common/mtree.js"></script>
 <script>
     var screenHeight = window.screen.height;
-    $(".table-content").css("height",(screenHeight-50)+"px");
+    $(".table-content").css("height",(screenHeight)+"px");
 
     var screeWidth = window.screen.width;
-    if(screeWidth>=1400){
-        $(".tree-bar").css("width","280px");
-        $(".table-content").css("width",(screeWidth-285)+"px");
-    }else{
-        $(".tree-bar").css("width","200px");
-        $(".table-content").css("width",(screeWidth-205)+"px");
-    }
+    var treeBarWidth = window.screen.width*0.2;
+    $(".tree-bar").css("width",treeBarWidth+"px");
+    $(".table-content").css("width",(screeWidth-treeBarWidth-10)+"px");
+//    if(screeWidth>=1400){
+//        $(".tree-bar").css("width",screeWidth*0.2+"px");
+//        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
+//    }else{
+//        $(".tree-bar").css("width","200px");
+//        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
+//    }
     if (screeWidth <= 1100) {
         $(".tree-bar").css("width","150px");
-        $(".table-content").css("width",(screeWidth-155)+"px");
+        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
         $(".mtree").css("padding",".8em");
         $(".mtree ul").css("font-size",".9em");
         $(".mtree.transit ul").css("font-size",".9em");
