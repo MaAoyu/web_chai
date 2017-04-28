@@ -321,17 +321,6 @@
                     <button ng-click="selectTable('3')" class="btn btn-default" type="submit">表3</button>
                     <button ng-click="selectTable('4')" class="btn btn-default" type="submit">表4</button>
                 </div>
-                <!--<div align="right">
-                    <label>搜索户主</label>
-                    <input required ng-model="filterText" ng-change="filter()">
-                    </br>
-                    <label>选择户主</label>
-                    <select style="width:60px;" ng-init="searchName = peopleLists[0].name" ng-model="searchName" ng-options="x.name for x in peopleLists">
-                    </select>
-                    <button ng-click="search()" class="btn btn-primary btn-middle">
-                        确认
-                    </button>
-                </div>-->
                 <div ng-include="'page/project/html/views/city/'+tableIndex+'.html'"></div>
             </div>
             <!--表单结束-->

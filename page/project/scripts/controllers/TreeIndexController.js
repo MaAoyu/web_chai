@@ -28,6 +28,10 @@ function TreeIndexController($scope, $http) {
     $scope.isShowCity3 = isShowCity3;
     $scope.selectItem = selectItem;
     $scope.selectTable = selectTable;
+    //分页
+    $scope.getNextPage = getNextPage;
+    //导出excel
+    $scope.outputExcel = outputExcel;
     //表一相关
     $scope.curTable1 = {}; //表一当前添加数据
     $scope.autoID = 0;       //表一当前行数
@@ -37,13 +41,138 @@ function TreeIndexController($scope, $http) {
     $scope.getTable1ByPK = getTable1ByPK;
     $scope.deleteTable1 = deleteTable1;
     $scope.saveTable1Data = saveTable1Data;
-    //分页
-    $scope.getNextPage = getNextPage;
+    //用户表相关
+    $scope.peopleLists = []; //所有户主列表
+    $scope.current = null;   //当前正在操作的户主
+    $scope.filterText = null //户主列表过滤关键字
+    $scope.searchName = null;//选择的户主
+    $scope.filter = filterCustomer; //户主列表过滤
+    $scope.search = search;         //根据户主搜索
+    $scope.getPeopleList = getPeopleList;
+    //表二相关
+    $scope.table2Datas = [];                            //表二所有数据
+    $scope.table2Total = { "total": 0, "total2": 0 };   //表二合计数据
+    $scope.updateTable2 = updateTable2;                 //更改表二标准
+
 
     /* 
      * 内部函数
      */
-    function getNextPage(flag) {//分页
+    function updateTable2($event) { //更改表二标准
+        for (var i = 0; i < $scope.table2Datas.length; i++) {
+            // $scope.table2Datas[i].price = $scope.Table2Type[i].type1;
+            // $scope.table2Datas[i].price2 = $scope.Table2Type[i].type2;
+            // $scope.table2Datas[i].total = $scope.table2Datas[i].quantity * $scope.table2Datas[i].price;
+            // $scope.table2Datas[i].total2 = $scope.table2Datas[i].quantity2 * $scope.table2Datas[i].price2;
+            //TODO 更新数据库
+            if ($scope.Table2Type[i] != null) {
+                if ($scope.Table2Type[i].type1 != null) {
+                    //更改数据库中所有该种类的价格
+                    DataService.updateTable2($scope.table2Datas[i].prj, $scope.Table2Type[i].type1).then(function (affectedRows) {
+                        $mdDialog.show(
+                            $mdDialog
+                                .alert()
+                                .clickOutsideToClose(true)
+                                .title('Success')
+                                .content('Data update Successfully!')
+                                .ok('Ok')
+                                .targetEvent($event)
+                        );
+                    });
+                }
+                if ($scope.Table2Type[i].type2 != null) {
+                    //更改数据库中所有该种类的价格
+                    DataService.updateTable2($scope.table2Datas[i].prj2, $scope.Table2Type[i].type2).then(function (datas) {
+                    });
+                }
+            }
+        }
+        $scope.Table2Type = [];
+
+        //重新加载表二
+        showTable2Data($scope.searchName.id, $scope.currPage);
+    }
+    function getAllTable2Datas(id, page) { //根据所选户主显示表二
+        $scope.table2Datas = [];
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//1.取表头信息
+            .success(function (res) {
+                $scope.current = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/gettable2Datas?id=' + id + '&page=' + page)//2.取表信息
+            .success(function (res) {
+                var rawDatas = [].concat(res);
+                $scope.table2Total = { "total": 0, "total2": 0 };
+                for (var i = 0; i < rawDatas.length; i++) {//3.表特殊处理
+                    if (2 * i + 1 > rawDatas.length)
+                        break;
+                    $scope.table2Datas[i] = rawDatas[2 * i];
+                    $scope.table2Datas[i].total = $scope.table2Datas[i].quantity * $scope.table2Datas[i].price;
+                    $scope.table2Total.total = $scope.table2Total.total + $scope.table2Datas[i].total;
+
+                    if (2 * i + 1 >= rawDatas.length)
+                        break;
+                    $scope.table2Datas[i].prj2 = rawDatas[2 * i + 1].prj;
+                    $scope.table2Datas[i].unit2 = rawDatas[2 * i + 1].unit;
+                    $scope.table2Datas[i].quantity2 = rawDatas[2 * i + 1].quantity;
+                    $scope.table2Datas[i].price2 = rawDatas[2 * i + 1].price;
+                    $scope.table2Datas[i].total2 = $scope.table2Datas[i].quantity2 * $scope.table2Datas[i].price2;
+                    $scope.table2Total.total2 = $scope.table2Total.total2 + $scope.table2Datas[i].total2;
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function filterCustomer(filterText) {
+        if (filterText == null || filterText == "") {
+            getPeopleList();
+        }
+        else {
+            $http.get('http://localhost:8081/getNameListByName?city=' + $scope.cityName + '&text=' + filterText)
+                .success(function (res) {
+                    $scope.peopleLists = [].concat(res);
+                    $scope.current = res[0];
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
+        }
+        //直接显示搜索结果第一的具体信息
+        getAllTable2Datas($scope.current.id, 1);
+        getAllTable3Datas($scope.current.id, 1);
+        getAllTable4Datas($scope.current.id, 1);
+    }
+    function search(searchName) {
+        $scope.currPage = 1;
+        //console.log("searchName:"+searchName.id);
+        switch ($scope.tableIndex) {
+            case '2':
+                getAllTable2Datas(searchName.id, 1);
+                break;
+            case '3':
+                getAllTable3Datas(searchName.id, 1);
+                break;
+            case '4':
+                getAllTable4Datas(searchName.id, 1);
+                break;
+            default:
+                console.log("no datas..");
+        }
+    }
+    function getPeopleList() {  //得到户主列表
+        $http.get('http://localhost:8081/getPeopleList?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.peopleLists = [].concat(res);
+                $scope.current = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getNextPage(flag) {  //分页
         var page = 0;
         switch (flag) {
             case 0: //首页
@@ -83,15 +212,15 @@ function TreeIndexController($scope, $http) {
             case '1':
                 getAllTable1Datas(page);//得到初始表一数据
                 break;
-            // case '2':
-            //     showTable2Data($scope.searchName.id, page);
-            //     break;
-            // case '3':
-            //     getAllTable3Datas($scope.searchName.id, page);
-            //     break;
-            // case '4':
-            //     getAllTable4Datas($scope.searchName.id, page);
-            //     break;
+            case '2':
+                getAllTable2Datas($scope.searchName.id, page);
+                break;
+            case '3':
+                getAllTable3Datas($scope.searchName.id, page);
+                break;
+            case '4':
+                getAllTable4Datas($scope.searchName.id, page);
+                break;
             default:
                 console.log("no datas..");
         }
@@ -289,15 +418,15 @@ function TreeIndexController($scope, $http) {
             case '1':
                 getAllTable1Datas(1);//得到初始表一数据
                 break;
-            //     case '2':
-            //         getPeopleList();
-            //         break;
-            //     case '3':
-            //         getPeopleList();
-            //         break;
-            //     case '4':
-            //         getPeopleList();
-            //         break;
+            case '2':
+                getPeopleList();
+                break;
+            case '3':
+                getPeopleList();
+                break;
+            case '4':
+                getPeopleList();
+                break;
             //     case '11':
             //         getAllTable11Datas();//1-1表数据汇总
             //         break;
@@ -315,6 +444,7 @@ function TreeIndexController($scope, $http) {
         }
     }
     function outputExcel() {        //导出表格
+        console.log("excel....")
         switch ($scope.tableIndex) {
             case '1':
                 outputExcel1();
@@ -563,10 +693,8 @@ function TreeIndexController($scope, $http) {
     //         "crop": "0", "ss": "0", "tree": "0", "b1": "0", "b2": "0", "b3": "0",
     //         "b4": "0", "b5": "0", "a1": "0", "a2": "0"
     //     }; //价格参数
-    //     $scope.current = null;   //当前户主
-    //     $scope.peopleLists = []; //所有户主的列表
-    //     $scope.table2Datas = []; //表二所有数据
-    //     $scope.filterText = null //搜索关键字
+
+
     //     $scope.curTable3 = null; //表三当前添加数据
     //     $scope.table3Datas = []; //表三所有数据
     //     $scope.table4Datas = []; //表四所有数据
@@ -578,18 +706,17 @@ function TreeIndexController($scope, $http) {
     //     $scope.table12Datas = []; //表1-2所有数据
     //     $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];
     //     $scope.Table2Type = [];   //记录表二价格标准
-    //     $scope.searchName = null;
+
 
     //     $scope.saveTable1Data = saveTable1Data;              //表一保存数据、people表保存数据
     //     $scope.showTable2Data = showTable2Data;              //表二点击左侧列表选择户主后显示详细信息
-    //     $scope.filter = filterCustomer;                      //表二搜索
+
     //     $scope.saveTable3Data = saveTable3Data;              //表三保存数据
     //     $scope.getAllTable3Datas = getAllTable3Datas;        //根据户主ID获取表三数据
     //     $scope.getAllTable4Datas = getAllTable4Datas;        //根据户主ID获取表四数据
     //     $scope.getAllTable41Datas = getAllTable41Datas;      //根据村名获取4-1数据
     //     $scope.saveTable43Data = saveTable43Data;            //表4-3保存数据
     //     // $scope.changePara = changePara;                      //更改价格参数
-    //     $scope.search = search;                              //点击搜索结果
     //     // $scope.changePrice = changePrice;                    //更改价格
     //     $scope.getTable1ByPK = getTable1ByPK;
     //     $scope.getTable3ByPK = getTable3ByPK;
@@ -602,41 +729,6 @@ function TreeIndexController($scope, $http) {
 
     //     //得到各参数
     //     getAllParas();
-
-    //     function updateTable2($event) {
-    //         for (var i = 0; i < $scope.table2Datas.length; i++) {
-    //             // $scope.table2Datas[i].price = $scope.Table2Type[i].type1;
-    //             // $scope.table2Datas[i].price2 = $scope.Table2Type[i].type2;
-    //             // $scope.table2Datas[i].total = $scope.table2Datas[i].quantity * $scope.table2Datas[i].price;
-    //             // $scope.table2Datas[i].total2 = $scope.table2Datas[i].quantity2 * $scope.table2Datas[i].price2;
-    //             //TODO 更新数据库
-    //             if ($scope.Table2Type[i] != null) {
-    //                 if ($scope.Table2Type[i].type1 != null) {
-    //                     //更改数据库中所有该种类的价格
-    //                     DataService.updateTable2($scope.table2Datas[i].prj, $scope.Table2Type[i].type1).then(function (affectedRows) {
-    //                         $mdDialog.show(
-    //                             $mdDialog
-    //                                 .alert()
-    //                                 .clickOutsideToClose(true)
-    //                                 .title('Success')
-    //                                 .content('Data update Successfully!')
-    //                                 .ok('Ok')
-    //                                 .targetEvent($event)
-    //                         );
-    //                     });
-    //                 }
-    //                 if ($scope.Table2Type[i].type2 != null) {
-    //                     //更改数据库中所有该种类的价格
-    //                     DataService.updateTable2($scope.table2Datas[i].prj2, $scope.Table2Type[i].type2).then(function (datas) {
-    //                     });
-    //                 }
-    //             }
-    //         }
-    //         $scope.Table2Type = [];
-
-    //         //重新加载表二
-    //         showTable2Data($scope.searchName.id, $scope.currPage);
-    //     }
 
 
 
@@ -851,101 +943,6 @@ function TreeIndexController($scope, $http) {
     //             $scope.table3Datas = [].concat(datas);
     //             //console.log("length:"+$scope.table3Datas.length);
     //         });//取表格信息
-    //     }
-
-    //     //搜索户主
-    //     function filterCustomer() {
-    //         if ($scope.filterText == null || $scope.filterText == "") {
-    //             getPeopleList();
-    //         }
-    //         else {
-    //             DataService.getNameListByName($scope.cityName, $scope.filterText).then(function (customers) {
-    //                 $scope.peopleLists = [].concat(customers);
-    //                 $scope.current = customers[0];
-    //             });
-    //         }
-    //         //直接显示搜索结果第一的具体信息
-    //         showTable2Data($scope.current.id, 1);
-    //         getAllTable3Datas($scope.current.id, 1);
-    //         getAllTable4Datas($scope.current.id, 1);
-    //     }
-
-    //     //选择一个户主显示表二
-    //     function showTable2Data(id, page) {
-    //         $scope.table2Datas = []
-
-    //         DataService.getTable1ById(id).then(function (datas) {
-    //             $scope.current = datas[0];
-    //         });//取表头信息
-    //         DataService.gettable2Datas(id, page).then(function (datas) {
-    //             //console.log("length:"+datas.length);
-    //             //表特殊处理
-    //             var rawDatas = [].concat(datas);
-    //             $scope.table2Total = { "total": 0, "total2": 0 };
-    //             for (var i = 0; i < rawDatas.length; i++) {
-    //                 if (2 * i + 1 > rawDatas.length)
-    //                     break;
-    //                 $scope.table2Datas[i] = rawDatas[2 * i];
-    //                 $scope.table2Datas[i].total = $scope.table2Datas[i].quantity * $scope.table2Datas[i].price;
-    //                 $scope.table2Total.total = $scope.table2Total.total + $scope.table2Datas[i].total;
-
-    //                 if (2 * i + 1 >= rawDatas.length)
-    //                     break;
-    //                 $scope.table2Datas[i].prj2 = rawDatas[2 * i + 1].prj;
-    //                 $scope.table2Datas[i].unit2 = rawDatas[2 * i + 1].unit;
-    //                 $scope.table2Datas[i].quantity2 = rawDatas[2 * i + 1].quantity;
-    //                 $scope.table2Datas[i].price2 = rawDatas[2 * i + 1].price;
-    //                 $scope.table2Datas[i].total2 = $scope.table2Datas[i].quantity2 * $scope.table2Datas[i].price2;
-    //                 $scope.table2Total.total2 = $scope.table2Total.total2 + $scope.table2Datas[i].total2;
-    //             }
-    //         });//表信息
-    //     }
-
-    //     //得到户主列表
-    //     function getPeopleList() {
-    //         DataService.getPeopleList($scope.cityName).then(function (datas) {
-    //             $scope.peopleLists = [].concat(datas);
-    //         });
-    //     }
-
-
-    //         DataService.getDatas($scope.cityName, page).then(function (datas) {
-    //             $scope.table1Datas = [].concat(datas);
-    //             $scope.table1Total = { "area": 0, "land": 0, "nonland": 0, "quantity": 0 };
-    //             for (let i = 0; i < $scope.table1Datas.length; i++) {
-    //                 if ($scope.table1Datas[i].area != null) {
-    //                     $scope.table1Total.area = $scope.table1Total.area + $scope.table1Datas[i].area;
-    //                 }
-    //                 if ($scope.table1Datas[i].land != null) {
-    //                     $scope.table1Total.land = $scope.table1Total.land + $scope.table1Datas[i].land;
-    //                 }
-    //                 if ($scope.table1Datas[i].nonland != null) {
-    //                     $scope.table1Total.nonland = $scope.table1Total.nonland + $scope.table1Datas[i].nonland;
-    //                 }
-    //                 if ($scope.table1Datas[i].quantity != null) {
-    //                     $scope.table1Total.quantity = $scope.table1Total.quantity + $scope.table1Datas[i].quantity;
-    //                 }
-    //             }
-    //         });
-    //     }
-
-
-    //     function search() {
-    //         $scope.currPage = 1;
-    //         //console.log("searchID:"+$scope.searchName.id);
-    //         switch ($scope.tableIndex) {
-    //             case '2':
-    //                 showTable2Data($scope.searchName.id, 1);
-    //                 break;
-    //             case '3':
-    //                 getAllTable3Datas($scope.searchName.id, 1);
-    //                 break;
-    //             case '4':
-    //                 getAllTable4Datas($scope.searchName.id, 1);
-    //                 break;
-    //             default:
-    //                 console.log("no datas..");
-    //         }
     //     }
 
     //     function getAllParas() {
