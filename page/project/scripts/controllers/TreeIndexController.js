@@ -55,11 +55,123 @@ function TreeIndexController($scope, $http) {
     $scope.Table2Type1 = [];                             //表二价格标准1
     $scope.Table2Type2 = [];                             //表二价格标准2
     $scope.updateTable2 = updateTable2;                 //更改表二标准
+    //表三相关
+    $scope.curTable3 = null; //表三当前添加数据
+    $scope.table3Datas = []; //表三所有数据
+    $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];//表三建筑物类别
+    $scope.getTable3ByPK = getTable3ByPK;
+    $scope.saveTable3Data = saveTable3Data;
 
 
     /* 
      * 内部函数
      */
+    function saveTable3Data() {   //添加表三数据
+        var currTable4 = {};//1.相应添加到表四 TODO价格
+        currTable4.index = $scope.curTable3.index;
+        currTable4.type1 = $scope.curTable3.type2;
+        currTable4.area1 = $scope.curTable3.area;
+        switch ($scope.curTable3.type2) {
+            case "框架":
+                currTable4.t1 = $scope.curTable3.area;
+                //currTable4.price = $scope.paras.b1;
+                break;
+            case "砖混":
+                currTable4.t2 = $scope.curTable3.area;
+                //currTable4.price = $scope.paras.b2;
+                break;
+            case "砖木":
+                currTable4.t3 = $scope.curTable3.area;
+                //currTable4.price = $scope.paras.b3;
+                break;
+            case "土木":
+                currTable4.t4 = $scope.curTable3.area;
+                //currTable4.price = $scope.paras.b4;
+                break;
+            default:
+                currTable4.t5 = $scope.curTable3.area;
+                //currTable4.price = $scope.paras.b5;
+        }
+        currTable4.arcName = $scope.curTable3.prj;
+        currTable4.unit = $scope.curTable3.unit;
+        currTable4.quantity = $scope.curTable3.quantity;
+        //2.更新
+        if ($scope.curTable3 != null && $scope.curTable3.autoID != null) {
+            var urlPara = '';
+            var t1Para = ['index', 'length', 'width', 'high', 'area',
+                'type1', 'type2', 'prj', 'unit', 'quantity', 'autoID'];
+            for (let i = 0; i < t1Para.length; i++) {
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable3[t1Para[i]] + '&';
+            }
+            //console.log(urlPara);
+            $http.get('http://localhost:8081/updateTable3?' + urlPara)
+                .success(function (res) {
+                    alert("更新表三成功！");
+                })
+                .error(function (res) {
+                    alert("更新表三数据出错");
+                });
+            var urlPara2 = '';
+            urlPara2 = 'index=' + currTable4.index + '&type1=' + currTable4.type1 + '&area1=' + currTable4.area1 + 
+            '&t1=' + currTable4.t1 + '&t2=' + currTable4.t2 + '&t3=' + currTable4.t3 + '&t4=' + currTable4.t4 + 
+            '&t5=' + currTable4.t5 + '&arcName=' + currTable4.arcName + '&unit=' + currTable4.unit + 
+            '&quantity=' + currTable4.quantity + '&autoID=' + $scope.curTable3.autoID;
+            $http.get('http://localhost:8081/updateTable4ByT3?' + urlPara2)
+                .success(function (res) {
+                })
+                .error(function (res) {
+                    alert("更新表四数据出错");
+                });
+        }
+        //3.添加//********** */
+        else {
+            $scope.curTable3.id = $scope.current.id;
+            $scope.curTable3.city = $scope.cityName;
+
+            DataService.createTable3($scope.curTable3).then(function (affectedRows) {
+                currTable4.fID = affectedRows;
+                DataService.createTable4(currTable4).then(function (affectedRows) {
+                });
+            });
+        }
+        //重载表单
+        $scope.curTable3 = {};
+        getAllTable3Datas($scope.current.id, 1);
+    }
+    function getTable3ByPK(pk) {    //选择要编辑的数据
+        //console.log(pk);
+        $http.get('http://localhost:8081/getTable3ByPK?pk=' + pk)
+            .success(function (res) {
+                var rawDatas = [].concat(res);
+                $scope.curTable3 = rawDatas[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getAllTable3Datas(id, page) {//根据户主取出表三信息
+        $http.get('http://localhost:8081/getTable3Count?id=' + id)//1.取到总页数
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
+            .success(function (res) {
+                $scope.current = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/gettable3Datas?id=' + id + '&page=' + page)//3.取表信息
+            .success(function (res) {
+                $scope.table3Datas = [].concat(res);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
     function updateTable2(Table2Type1, Table2Type2) { //更改表二标准
         $scope.Table2Type1 = Table2Type1;
         $scope.Table2Type2 = Table2Type2;
@@ -87,9 +199,9 @@ function TreeIndexController($scope, $http) {
         //重新加载表二
         getAllTable2Datas($scope.searchName.id, $scope.currPage);
     }
-    function getAllTable2Datas(id, page) { //1.取到总页数
+    function getAllTable2Datas(id, page) { //根据户主取出表二信息
         $scope.table2Datas = [];
-        $http.get('http://localhost:8081/getTable2Count?id=' + id)
+        $http.get('http://localhost:8081/getTable2Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -269,7 +381,7 @@ function TreeIndexController($scope, $http) {
             //根据prj得到表二price
             $http.get('http://localhost:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
                 .success(function (res) {
-                    if(res.length!=0)
+                    if (res.length != 0)
                         urlTable2 = urlTable2 + '&price=' + res[0]["price"];
                     else
                         urlTable2 = urlTable2 + '&price=0';
@@ -723,8 +835,6 @@ function TreeIndexController($scope, $http) {
     //     }; //价格参数
 
 
-    //     $scope.curTable3 = null; //表三当前添加数据
-    //     $scope.table3Datas = []; //表三所有数据
     //     $scope.table4Datas = []; //表四所有数据
     //     $scope.table41Datas = []; //表4-1所有数据
     //     $scope.table42Datas = []; //表4-1所有数据
@@ -732,7 +842,6 @@ function TreeIndexController($scope, $http) {
     //     $scope.curTable43 = null; //表4-3当前添加数据
     //     $scope.table11Datas = []; //表1-1所有数据
     //     $scope.table12Datas = []; //表1-2所有数据
-    //     $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];
 
 
     //     $scope.saveTable1Data = saveTable1Data;              //表一保存数据、people表保存数据
@@ -759,14 +868,6 @@ function TreeIndexController($scope, $http) {
 
 
 
-    //     function getTable3ByPK(pk) {
-    //         console.log(pk);
-    //         DataService.getTable3ByPK(pk).then(function (datas) {
-    //             var rawDatas = [].concat(datas);
-    //             $scope.curTable3 = rawDatas[0];
-    //             console.log($scope.curTable3.id);
-    //         });
-    //     }
 
     //     function getTable4ByPK(pk) {
     //         console.log(pk);
@@ -882,95 +983,7 @@ function TreeIndexController($scope, $http) {
 
     //     }
 
-    //     //添加表三数据
-    //     function saveTable3Data($event) {
-    //         //相应添加到表四
-    //         var currTable4 = {};
-    //         currTable4.index = $scope.curTable3.index;
-    //         currTable4.type1 = $scope.curTable3.type2;
-    //         currTable4.area1 = $scope.curTable3.area;
-    //         switch ($scope.curTable3.type2) {
-    //             case "框架":
-    //                 currTable4.t1 = $scope.curTable3.area;
-    //                 //currTable4.price = $scope.paras.b1;
-    //                 break;
-    //             case "砖混":
-    //                 currTable4.t2 = $scope.curTable3.area;
-    //                 //currTable4.price = $scope.paras.b2;
-    //                 break;
-    //             case "砖木":
-    //                 currTable4.t3 = $scope.curTable3.area;
-    //                 //currTable4.price = $scope.paras.b3;
-    //                 break;
-    //             case "土木":
-    //                 currTable4.t4 = $scope.curTable3.area;
-    //                 //currTable4.price = $scope.paras.b4;
-    //                 break;
-    //             default:
-    //                 currTable4.t5 = $scope.paras.tree;
-    //             //currTable4.price = $scope.paras.b5;
-    //         }
-    //         switch ($scope.curTable3.prj) {
-    //             case "院坝":
-    //                 currTable4.price2 = $scope.paras.a1;
-    //                 break;
-    //             default:
-    //                 currTable4.price2 = $scope.paras.a2;
-    //         }
-    //         currTable4.arcName = $scope.curTable3.prj;
-    //         currTable4.unit = $scope.curTable3.unit;
-    //         currTable4.quantity = $scope.curTable3.quantity;
-    //         //更新
-    //         if ($scope.curTable3 != null && $scope.curTable3.autoID != null) {
-    //             DataService.updateTable3($scope.curTable3).then(function (affectedRows) {
-    //                 $mdDialog.show(
-    //                     $mdDialog
-    //                         .alert()
-    //                         .clickOutsideToClose(true)
-    //                         .title('Success')
-    //                         .content('Data Updated Successfully!')
-    //                         .ok('Ok')
-    //                         .targetEvent($event)
-    //                 );
-    //             });
-    //             DataService.updateTable4ByT3(currTable4).then(function (affectedRows) {
-    //             });
-    //         }
-    //         //添加
-    //         else {
-    //             $scope.curTable3.id = $scope.current.id;
-    //             $scope.curTable3.city = $scope.cityName;
 
-    //             DataService.createTable3($scope.curTable3).then(function (affectedRows) {
-    //                 currTable4.fID = affectedRows;
-    //                 DataService.createTable4(currTable4).then(function (affectedRows) {
-    //                 });
-    //                 $mdDialog.show(
-    //                     $mdDialog
-    //                         .alert()
-    //                         .clickOutsideToClose(true)
-    //                         .title('Success')
-    //                         .content('Data Added Successfully!')
-    //                         .ok('Ok')
-    //                         .targetEvent($event)
-    //                 );
-    //             });
-    //         }
-
-    //         $scope.curTable3 = {};
-    //         getAllTable3Datas($scope.current.id, 1);
-    //     }
-
-    //     //得到表三全部数据
-    //     function getAllTable3Datas(id, page) {
-    //         DataService.getTable1ById(id).then(function (datas) {
-    //             $scope.current = datas[0];
-    //         });//取表头信息
-    //         DataService.getAllTable3Datas(id, page).then(function (datas) {
-    //             $scope.table3Datas = [].concat(datas);
-    //             //console.log("length:"+$scope.table3Datas.length);
-    //         });//取表格信息
-    //     }
 
     //     function getAllParas() {
     //         DataService.getAllParas().then(function (datas) {

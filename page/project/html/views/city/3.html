@@ -1,15 +1,26 @@
 <!--表单3-->
-<label>建设项目名称：川南城际铁路</label>
-<input ng-model="Table1Head.line" type="text" style="width:30px;">线
-<input ng-model="Table1Head.line2" type="text" style="width:30px;">标段
+<div align="right">
+    <label style="display: inline-block">搜索户主</label>
+    <input style="width:65px;display: inline-block" required ng-model="filterText">
+    <button ng-click="filter(filterText)" class="btn btn-primary btn-middle">搜索</button>
+    </br>
+    </br>
+    <label style="display: inline-block">选择户主</label>
+    <select style="width:60px;display: inline-block" ng-init="searchName = peopleLists[0].name" ng-model="searchName" ng-options="x.name for x in peopleLists">
+    </select>
+    <button ng-click="search(searchName)" class="btn btn-primary btn-middle">确认</button>
+</div>
+<label style="display: inline-block">建设项目名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
 <h4 align="center">铁路建设项目拆迁农村建（构）筑物登记清册</h4>
-<label>{{cityName}}</label>
-<input ng-model="Table1Head.city5" type="text" style="width:30px;">社
+<label style="display: inline-block">{{cityName}}</label>
+<input ng-model="Table1Head.city5" type="text" style="width:30px;display: inline-block">社
 <div class="pull-right">
-    <input ng-model="Table1Head.year" type="text" style="width:30px;">年
-    <input ng-model="Table1Head.month" type="text" style="width:30px;">月
-    <input ng-model="Table1Head.day" type="text" style="width:30px;">日
-    <label> 共    页    第    页</label>
+    <input ng-model="Table1Head.year" type="text" style="width:30px;display: inline-block">年
+    <input ng-model="Table1Head.month" type="text" style="width:30px;display: inline-block">月
+    <input ng-model="Table1Head.day" type="text" style="width:30px;display: inline-block">日
+    <label style="display: inline-block"> 共 {{totalPages}}   页    第  {{currPage}}  页</label>
 </div>
 
 
@@ -93,22 +104,31 @@
             <td></td>
         </tr>
     </table>
-    <md-button ng-click="saveTable3Data()" class="md-raised md-info">保存数据</md-button>
+    <md-button ng-click="saveTable3Data()" class="btn btn-default">保存数据</md-button>
+    <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
     <div style="float: right">
-        <md-button ng-click="getNextPage(0)" class="md-raised md-info">首页</md-button>
-        <md-button ng-click="getNextPage(1)" class="md-raised md-info">上一页</md-button>
-        <md-button ng-click="getNextPage(2)" class="md-raised md-info">下一页</md-button>
-        <md-button ng-click="getNextPage(3)" class="md-raised md-info">末页</md-button>
+        <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
+        <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
+        <md-button ng-click="getNextPage(2)" class="btn btn-default">下一页</md-button>
+        <md-button ng-click="getNextPage(3)" class="btn btn-default">末页</md-button>
     </div>
 </div>
 
+
 <div>
-    <p style="display: inline-block;margin-right: 150px;">乡镇人民政府签字（公章）： </p>
+    <p style="display: inline-block;margin-right: 185px;">乡镇人民政府签字（公章）： </p>
     <p style="display: inline-block;">县（区）铁建办签字（公章）</p>
     </br>
     <p style="display: inline-block;margin-right: 150px;">铁路建设业主单位签字（公章）： </p>
     <p style="display: inline-block;">设计单位签字（公章）： </p>
     </br>
-    <p style="display: inline-block;margin-right: 150px;">监理单位签字（公章）： </p>
+    <p style="display: inline-block;margin-right: 215px;">监理单位签字（公章）： </p>
     <p style="display: inline-block;">铁路施工单位签字（公章）： </p>
 </div>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<p>..</p>
