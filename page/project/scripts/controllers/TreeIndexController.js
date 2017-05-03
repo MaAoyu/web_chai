@@ -9,9 +9,9 @@ function TreeIndexController($scope, $http, user) {
     $scope.userCity1 = 1;
     $scope.userCity2 = 0;
     $scope.userCity3 = 1;
-    $scope.isManageUser = 0;
+    $scope.isManageUser = -1;
     $scope.cityName = "";
-    $scope.cityLevel = '1';
+    $scope.cityLevel = '0';
     $scope.tableIndex = '0';
     $scope.citys1 = [{ "name": "内江市", "flag": false }, { "name": "自贡市", "flag": false }, { "name": "泸州市", "flag": false }];
     $scope.citys2 = [{ "name": "内江市东兴区", "flag": false }, { "name": "内江市市中区", "flag": false }, { "name": "自贡市大安区", "flag": false }, { "name": "自贡市沿滩区", "flag": false },
@@ -97,10 +97,13 @@ function TreeIndexController($scope, $http, user) {
     function getAllTable411Datas(city4Name) {    //根据村名获取表4-1－1全部数据
         $http.get('http://localhost:8081/getAllTable411Datas?city=' + city4Name)
             .success(function (res) {
+                console.log(JSON.stringify(res));
                 var rawT4Datas = [].concat(res);
                 for (var i = 0; i < rawT4Datas.length; i++) {
                     $scope.table411Datas[i] = rawT4Datas[i];
                     $scope.table411Datas[i].total = $scope.table411Datas[i].quantity * $scope.table411Datas[i].price;
+                    console.log($scope.table411Datas[i].name);
+                    console.log($scope.table411Datas[i].total);
                 };
             })
             .error(function (res) {
@@ -731,6 +734,8 @@ function TreeIndexController($scope, $http, user) {
     }
     function manageTable() {
         $scope.isManageUser = 0;
+        $scope.cityLevel = '0';
+        $scope.cityName = '';
     }
     function isShowCity1(index) {  //第一层展开
         if ($scope.citys1[index].flag == false)
@@ -740,6 +745,7 @@ function TreeIndexController($scope, $http, user) {
         $scope.cityName = $scope.citys1[index].name;
         $scope.cityLevel = '1';
         $scope.tableIndex = '0';
+        $scope.isManageUser = 0;
         //console.log("$scope.citys1[index].flag:"+$scope.citys1[index].flag);
     }
     function isShowCity2(index) {  //第二层展开
@@ -750,6 +756,7 @@ function TreeIndexController($scope, $http, user) {
         $scope.cityName = $scope.citys2[index].name;
         $scope.cityLevel = '2';
         $scope.tableIndex = '0';
+        $scope.isManageUser = 0;
     }
     function isShowCity3(index) {  //第三层展开
         if ($scope.citys3[index].flag == false)
@@ -760,6 +767,7 @@ function TreeIndexController($scope, $http, user) {
         $scope.c4CuuList = $scope.c4List[$scope.cityName];
         $scope.cityLevel = '3';
         $scope.tableIndex = '0';
+        $scope.isManageUser = 0;
         //console.log("$scope.citys3[index].flag:"+$scope.citys3[index].flag);
     }
     function selectItem(item) {    //第四层选择
@@ -767,6 +775,7 @@ function TreeIndexController($scope, $http, user) {
         $scope.cityName = item;
         $scope.cityLevel = '4';
         $scope.tableIndex = '0';
+        $scope.isManageUser = 0;
     }
     function selectTable(index) {   //表格选择
         $scope.tableIndex = index;
@@ -796,7 +805,7 @@ function TreeIndexController($scope, $http, user) {
             //         getAllTable43Datas($scope.cityName);//4-3表数据初始化
             //         break;
             default:
-                console.log("no this table..");
+                console.log("");
         }
     }
     function outputExcel() {        //导出表格
