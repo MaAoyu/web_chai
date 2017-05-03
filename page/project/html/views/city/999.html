@@ -1,0 +1,66 @@
+</br>
+</br>
+<h3 align="center">权限管理界面</h3>
+<div>
+    <table border="1" cellpadding="0" class="table table-striped table-hover">
+        <tr>
+            <th>用户名</th>
+            <th>密码</th>
+            <th>内江市</th>
+            <th>自贡市</th>
+            <th>泸州市</th>
+            <th align="center" colspan="2">操作</th>
+        </tr>
+        <tr ng-repeat="t1 in userDatas">
+            <td>{{t1.name}}</td>
+            <td>{{t1.password}}</td>
+            <td>{{t1.city1 | typeFilter}}</td>
+            <td>{{t1.city2 | typeFilter}}</td>
+            <td>{{t1.city3 | typeFilter}}</td>
+            <td>
+                <button ng-click="getUserByName(t1.name)" class="btn btn-primary btn-small">编辑</button>
+            </td>
+            <td>
+                <button ng-click="deleteUser(t1.name)" class="btn btn-danger btn-middle">删除</button>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="6">编辑用户信息：</th>
+        </tr>
+        <tr>
+            <td>
+                {{curUser.name}}</td>
+            <td>
+                <input ng-model="curUser.password" type="text" style="width:100px;"></td>
+            <td>
+                <input ng-model="curUser.city1" type="checkbox" style="width:20px;" name="favoriteColors"></td>
+             <td>
+                <input ng-model="curUser.city2" type="checkbox" name="favoriteColors"></td>
+             <td>
+                <input ng-model="curUser.city3" type="checkbox" name="favoriteColors"></td>
+             <td>
+                 <button ng-click="updateUser()" class="btn btn-primary btn-small">保存修改</button>
+             </td>
+             <td></td>
+        </tr>
+        <tr>
+            <th colspan="6">添加用户信息：</th>
+        </tr>
+        <tr>
+            <td>
+                <input ng-model="newUser.name" type="text" style="width:100px;"></td>
+            <td>
+                <input ng-model="newUser.password" type="text" style="width:100px;"></td>
+            <td>
+                <input ng-model="newUser.city1" type="checkbox"></td>
+             <td>
+                <input ng-model="newUser.city2" type="checkbox"></td>
+             <td>
+                <input ng-model="newUser.city3" type="checkbox"></td>
+             <td>
+                 <button ng-click="addUser()" class="btn btn-primary btn-middle">新增用户</button>
+             </td>
+             <td></td>
+        </tr>
+    </table>
+</div>

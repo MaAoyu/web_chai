@@ -1,7 +1,6 @@
 function TreeIndexController($scope, $http, user) {
     console.log("载入TreeIndexController");
     //框架参数
-    //console.log(JSON.stringify(user));
     // $scope.userName = user.name;
     // $scope.userCity1 = user.city1;
     // $scope.userCity2 = user.city2;
@@ -10,6 +9,7 @@ function TreeIndexController($scope, $http, user) {
     $scope.userCity1 = 1;
     $scope.userCity2 = 0;
     $scope.userCity3 = 1;
+    $scope.isManageUser = 0;
     $scope.cityName = "";
     $scope.cityLevel = '1';
     $scope.tableIndex = '0';
@@ -37,6 +37,8 @@ function TreeIndexController($scope, $http, user) {
     $scope.isShowCity3 = isShowCity3;
     $scope.selectItem = selectItem;
     $scope.selectTable = selectTable;
+    $scope.manageUser = manageUser;
+    $scope.manageTable = manageTable;
     //分页
     $scope.getNextPage = getNextPage;
     //导出excel
@@ -77,11 +79,87 @@ function TreeIndexController($scope, $http, user) {
     $scope.getAllTable4Datas = getAllTable4Datas; //根据户主ID获取表四数据
     $scope.getTable4ByPK = getTable4ByPK;
     $scope.updateTable4 = updateTable4;
-
+    //权限表相关
+    $scope.userDatas = [];
+    $scope.curUser = {};
+    $scope.newUser = {};
+    $scope.addUser = addUser;
+    $scope.updateUser = updateUser;
+    $scope.deleteUser = deleteUser;
+    $scope.getUserByName = getUserByName;
+    //表4-1相关
+    $scope.table411Datas = [];
+    $scope.getAllTable411Datas = getAllTable411Datas;      //根据村名获取4-1青苗数据
 
     /* 
      * 内部函数
      */
+    function getAllTable411Datas(city4Name) {    //根据村名获取表4-1－1全部数据
+        $http.get('http://localhost:8081/getAllTable411Datas?city=' + city4Name)
+            .success(function (res) {
+                var rawT4Datas = [].concat(res);
+                for (var i = 0; i < rawT4Datas.length; i++) {
+                    $scope.table411Datas[i] = rawT4Datas[i];
+                    $scope.table411Datas[i].total = $scope.table411Datas[i].quantity * $scope.table411Datas[i].price;
+                };
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getUserByName(name) {
+        $http.get('http://localhost:8081/getUserByName?pk=' + name)
+            .success(function (res) {
+                $scope.curUser = res[0];
+                if ($scope.curUser.city1 == 'true')
+                    $scope.curUser.city1 = true;
+                if ($scope.curUser.city2 == 'true')
+                    $scope.curUser.city2 = true;
+                if ($scope.curUser.city3 == 'true')
+                    $scope.curUser.city3 = true;
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function updateUser() { //更新用户
+        var url = 'name=' + $scope.curUser.name + '&password=' + $scope.curUser.password + '&city1=' + $scope.curUser.city1 +
+            '&city2=' + $scope.curUser.city2 + '&city3=' + $scope.curUser.city3;
+        //console.log(url);    
+        $http.get('http://localhost:8081/updateUser?' + url)
+            .success(function (res) {
+                alert("更新成功！");
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $scope.curUser = {};
+        getUserDatas();
+    }
+    function deleteUser(name) { //删除用户
+        $http.get('http://localhost:8081/deleteUser?pk=' + name)
+            .success(function (res) {
+                alert("删除成功！");
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        getUserDatas();
+    }
+    function addUser() { //添加用户
+        //console.log(JSON.stringify($scope.newUser));
+        var url = 'name=' + $scope.newUser.name + '&password=' + $scope.newUser.password + '&city1=' + $scope.newUser.city1 +
+            '&city2=' + $scope.newUser.city2 + '&city3=' + $scope.newUser.city3;
+        $http.get('http://localhost:8081/addUser?' + url)
+            .success(function (res) {
+                alert("添加成功！");
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $scope.newUser = {};
+        getUserDatas();
+    }
     function updateTable4() {   //更新表四
         var urlPara = '';
         var t4Para = ['price', 'price2', 'o1', 'o2', 'o3', 'o4', 'fID'];
@@ -497,7 +575,7 @@ function TreeIndexController($scope, $http, user) {
         else {
             $scope.curTable1.city = $scope.cityName;
             //添加表一、表二，表二pID外键对应表一主键 id prj unit quantity fID price
-            var urlTable2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
+            var urlTable2 = 'city=' + $scope.cityName + '&name=' + $scope.curTable1.name + '&id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
                 '&unit=' + $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity;
             //根据prj得到表二price
             $http.get('http://localhost:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
@@ -637,7 +715,23 @@ function TreeIndexController($scope, $http, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-    };
+    }
+    function getUserDatas() {
+        $http.get('http://localhost:8081/getUserTable')
+            .success(function (res) {
+                $scope.userDatas = [].concat(res);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function manageUser() {
+        $scope.isManageUser = 1;
+        getUserDatas();
+    }
+    function manageTable() {
+        $scope.isManageUser = 0;
+    }
     function isShowCity1(index) {  //第一层展开
         if ($scope.citys1[index].flag == false)
             $scope.citys1[index].flag = true;
@@ -746,8 +840,8 @@ function TreeIndexController($scope, $http, user) {
         //多级表头
         const row1 = sheet.addRow();
         var cell1 = null;
-        var table2Heads = ["铁路里程范围", $scope.current.rail, "户主姓名",$scope.current.name, 
-        "身份证号码", $scope.current.id,"家庭人口", $scope.current.family, "安置人口",$scope.current.people];
+        var table2Heads = ["铁路里程范围", $scope.current.rail, "户主姓名", $scope.current.name,
+            "身份证号码", $scope.current.id, "家庭人口", $scope.current.family, "安置人口", $scope.current.people];
         for (let i = 0; i < 5; i++) {
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2];
@@ -780,8 +874,8 @@ function TreeIndexController($scope, $http, user) {
         cell2.style = style;
 
         const row3 = sheet.addRow();
-        var table4Head = ["序号","拆迁面积（平方米）","单价","补偿金额","序号","构筑物名称",
-        "单位","单价","数量","补偿金额","序号","过渡费","搬迁费","拆迁奖励","建房补助"];
+        var table4Head = ["序号", "拆迁面积（平方米）", "单价", "补偿金额", "序号", "构筑物名称",
+            "单位", "单价", "数量", "补偿金额", "序号", "过渡费", "搬迁费", "拆迁奖励", "建房补助"];
         for (let i = 0; i < table4Head.length; i++) {
             if (i == 1) {
                 const cell2 = row3.addCell();
@@ -802,15 +896,15 @@ function TreeIndexController($scope, $http, user) {
         }
         const row4 = sheet.addRow();
         row4.addCell();
-        var table4Head2 = ["框架结构","砖混结构","砖木结构","土木结构","简易结构"];
+        var table4Head2 = ["框架结构", "砖混结构", "砖木结构", "土木结构", "简易结构"];
         for (let i = 0; i < table4Head2.length; i++) {
             const cell4 = row4.addCell();
             cell4.value = table4Head2[i];
             //cell3.style = style;
         }
         //表内容
-        var table4Content = ["index", "t1", "t2", "t3", "t4", "t5", "price", "total", 
-        "index", "arcName", "unit", "price2", "quantity", "total2", "index", "o1", "02", "o3", "o4"];
+        var table4Content = ["index", "t1", "t2", "t3", "t4", "t5", "price", "total",
+            "index", "arcName", "unit", "price2", "quantity", "total2", "index", "o1", "02", "o3", "o4"];
         for (let i = 0; i < $scope.table4Datas.length; i++) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table4Content.length; j++) {
@@ -1171,10 +1265,6 @@ function TreeIndexController($scope, $http, user) {
         //     .pipe(fs.createWriteStream(excelRoot));
     }
 }
-
-
-
-    //     $scope.getAllTable41Datas = getAllTable41Datas;      //根据村名获取4-1数据
     //     $scope.saveTable43Data = saveTable43Data;            //表4-3保存数据
 
     //     //得到表1-2全部数据
@@ -1237,13 +1327,6 @@ function TreeIndexController($scope, $http, user) {
 
     //             });
     //         }
-    //     }
-
-    //     //得到表4-1全部数据
-    //     function getAllTable41Datas(city4Name) {
-    //         DataService.getAllTable41Datas(city4Name).then(function (datas) {
-    //             $scope.table41Datas = [].concat(datas);
-    //         });
     //     }
 
 
