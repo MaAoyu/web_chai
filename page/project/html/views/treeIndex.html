@@ -1,315 +1,321 @@
-<div class="header-main">
-    <div class="logo" style="height: 25px;width: 25px;margin: 0 10px 0 30px"></div>
-    征地拆迁系统
-</div>
 <div ng-controller="TreeIndexController" style="width:100%" layout="row">
+    <div class="header-main">
+        <div class="logo" style="height: 25px;width: 25px;margin: 0 10px 0 30px"></div>
+        征地拆迁系统1
+            <!--<div >        -->
+    </div>
     <div class="tree-bar">
         <ul class="mtree transit">
-            <li><a ng-click="isShowCity1(0)" href="#">内江市</a>
-                <ul>
-                    <li><a ng-click="isShowCity2(0)" href="#">东兴区</a>
-                        <ul>
-                            <li><a ng-click="isShowCity3(0)" href="#">高桥街道办</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市东兴区高桥街道办陡坎村')">陡坎村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区高桥街道办赛峨村')">赛峨村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(1)" href="#">郭北镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市东兴区郭北镇红岩村')">红岩村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区郭北镇石锣村')">石锣村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(2)" href="#">东兴街道</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市东兴区东兴街道新建村')">新建村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区东兴街道新民村')">新民村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(3)" href="#">胜利街道</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市东兴区胜利街道园艺村')">园艺村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(4)" href="#">新江街道</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市东兴区新江街道高寺村')">高寺村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区新江街道国光村')">国光村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区新江街道红光村')">红光村</a></li>
-                                    <li><a ng-click="selectItem('内江市东兴区新江街道九龙村')">九龙村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a ng-click="isShowCity2(1)" href="#">市中区</a>
-                        <ul>
-                            <li><a ng-click="isShowCity3(5)" href="#">乐贤街道</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区乐贤街道江村')">江村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区乐贤街道红星村')">红星村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区乐贤街道永兴村')">永兴村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(6)" href="#">白马镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区白马镇白塔村')">白塔村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区白马镇九盘村')">九盘村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区白马镇和平村')">和平村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区白马镇千子村')">千子村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(7)" href="#">凤鸣镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区凤鸣镇白腊园村')">白腊园村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(8)" href="#">交通镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区交通镇红星村')">红星村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区交通镇同意村')">同意村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区交通镇永兴村')">永兴村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区交通镇三元村')">三元村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区交通镇新光村')">新光村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(9)" href="#">永安镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇柏杨村')">柏杨村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇漏棚湾村')">漏棚湾村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇三应寺村')">三应寺村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇永富村')">永富村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇高峰村')">高峰村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇桥板凼村')">桥板凼村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区永安镇下元村')">下元村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(10)" href="#">伏龙镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区伏龙镇水口村')">水口村</a></li>
-                                    <li><a ng-click="selectItem('内江市市中区伏龙镇新祠堂村')">新祠堂村</a></li>
-                                </ul>
-                            </li>
-                            <li><a ng-click="isShowCity3(11)" href="#">凌家镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('内江市市中区凌家镇柳家嘴村')">柳家嘴村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+                <li ng-if="userCity1 == 1"><a ng-click="isShowCity1(0)" href="#">内江市</a>
+                    <ul>
+                        <li><a ng-click="isShowCity2(0)" href="#">东兴区</a>
+                            <ul>
+                                <li><a ng-click="isShowCity3(0)" href="#">高桥街道办</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市东兴区高桥街道办陡坎村')">陡坎村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区高桥街道办赛峨村')">赛峨村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(1)" href="#">郭北镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市东兴区郭北镇红岩村')">红岩村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区郭北镇石锣村')">石锣村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(2)" href="#">东兴街道</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市东兴区东兴街道新建村')">新建村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区东兴街道新民村')">新民村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(3)" href="#">胜利街道</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市东兴区胜利街道园艺村')">园艺村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(4)" href="#">新江街道</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市东兴区新江街道高寺村')">高寺村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区新江街道国光村')">国光村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区新江街道红光村')">红光村</a></li>
+                                        <li><a ng-click="selectItem('内江市东兴区新江街道九龙村')">九龙村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a ng-click="isShowCity2(1)" href="#">市中区</a>
+                            <ul>
+                                <li><a ng-click="isShowCity3(5)" href="#">乐贤街道</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区乐贤街道江村')">江村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区乐贤街道红星村')">红星村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区乐贤街道永兴村')">永兴村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(6)" href="#">白马镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区白马镇白塔村')">白塔村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区白马镇九盘村')">九盘村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区白马镇和平村')">和平村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区白马镇千子村')">千子村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(7)" href="#">凤鸣镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区凤鸣镇白腊园村')">白腊园村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(8)" href="#">交通镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区交通镇红星村')">红星村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区交通镇同意村')">同意村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区交通镇永兴村')">永兴村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区交通镇三元村')">三元村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区交通镇新光村')">新光村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(9)" href="#">永安镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇柏杨村')">柏杨村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇漏棚湾村')">漏棚湾村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇三应寺村')">三应寺村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇永富村')">永富村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇高峰村')">高峰村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇桥板凼村')">桥板凼村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区永安镇下元村')">下元村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(10)" href="#">伏龙镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区伏龙镇水口村')">水口村</a></li>
+                                        <li><a ng-click="selectItem('内江市市中区伏龙镇新祠堂村')">新祠堂村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a ng-click="isShowCity3(11)" href="#">凌家镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('内江市市中区凌家镇柳家嘴村')">柳家嘴村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+           
 
-            <li><a ng-click="isShowCity1(1)" href="#">自贡市</a>
-                <ul>
-                    <li><a ng-click="isShowCity2(2)" href="#">大安区</a>
-                        <ul>
-                            <li><a href="#">何市镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市大安区何市镇三河村')">三河村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区何市镇高庙村')">高庙村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">三多寨镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇长河村')">长河村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇公平村')">公平村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇洞云村')">洞云村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇八甲村')">八甲村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇高家村')">高家村</a></li>
-                                    <li><a ng-click="selectItem('自贡市大安区三多寨镇杨柳村')">杨柳村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a ng-click="isShowCity2(3)" href="#">沿滩区</a>
-                        <ul>
-                            <li><a href="#">仙市镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇伍七村')">伍七村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇鱼洞村')">鱼洞村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇余家村')">余家村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇八斗村')">八斗村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇蕉湾村')">蕉湾村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇华丰村')">华丰村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区仙市镇大岩村')">大岩村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">瓦市镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市沿滩区瓦市镇王家村')">>王家村</a></li>
-                                    <li><a ng-click="selectItem('自贡市沿滩区兴塘村')">兴塘村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a ng-click="isShowCity2(4)" href="#">富顺县</a>
-                        <ul>
-                            <li><a href="#">互助镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县互助镇长山村')">长山村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县互助镇小塘村')">小塘村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县互助镇友爱村')">友爱村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">富世镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县富世镇')">团结村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">狮市镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县狮市镇菱角村')">菱角村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县狮市镇复兴村')">复兴村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县狮市镇旗前村')">旗前村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">东湖镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县东湖镇')">高石村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">骑龙镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县骑龙镇')">马耳桥村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县骑龙镇')">石山村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">童寺镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县童寺镇五余村')">五余村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县童寺镇自立村')">自立村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县童寺镇张湾村')">张湾村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">古佛镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县古佛镇冯坪村')">冯坪村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县古佛镇玉佛村')">玉佛村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">龙万乡</a></li>
-                            <li><a href="#">代寺镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县代寺镇')">勤劳村</a></li>
-                                    <li><a ng-click="selectItem('自贡市富顺县代寺镇')">石龙村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">中石镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('自贡市富顺县中石镇百花村')">百花村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+           
+                <li><a ng-click="isShowCity1(1)" href="#">自贡市</a>
+                    <ul>
+                        <li><a ng-click="isShowCity2(2)" href="#">大安区</a>
+                            <ul>
+                                <li><a href="#">何市镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市大安区何市镇三河村')">三河村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区何市镇高庙村')">高庙村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">三多寨镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇长河村')">长河村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇公平村')">公平村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇洞云村')">洞云村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇八甲村')">八甲村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇高家村')">高家村</a></li>
+                                        <li><a ng-click="selectItem('自贡市大安区三多寨镇杨柳村')">杨柳村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a ng-click="isShowCity2(3)" href="#">沿滩区</a>
+                            <ul>
+                                <li><a href="#">仙市镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇伍七村')">伍七村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇鱼洞村')">鱼洞村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇余家村')">余家村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇八斗村')">八斗村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇蕉湾村')">蕉湾村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇华丰村')">华丰村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区仙市镇大岩村')">大岩村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">瓦市镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市沿滩区瓦市镇王家村')">>王家村</a></li>
+                                        <li><a ng-click="selectItem('自贡市沿滩区兴塘村')">兴塘村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a ng-click="isShowCity2(4)" href="#">富顺县</a>
+                            <ul>
+                                <li><a href="#">互助镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县互助镇长山村')">长山村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县互助镇小塘村')">小塘村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县互助镇友爱村')">友爱村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">富世镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县富世镇')">团结村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">狮市镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县狮市镇菱角村')">菱角村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县狮市镇复兴村')">复兴村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县狮市镇旗前村')">旗前村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">东湖镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县东湖镇')">高石村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">骑龙镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县骑龙镇')">马耳桥村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县骑龙镇')">石山村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">童寺镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县童寺镇五余村')">五余村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县童寺镇自立村')">自立村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县童寺镇张湾村')">张湾村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">古佛镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县古佛镇冯坪村')">冯坪村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县古佛镇玉佛村')">玉佛村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">龙万乡</a></li>
+                                <li><a href="#">代寺镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县代寺镇')">勤劳村</a></li>
+                                        <li><a ng-click="selectItem('自贡市富顺县代寺镇')">石龙村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">中石镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('自贡市富顺县中石镇百花村')">百花村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            
 
-
-            <li><a ng-click="isShowCity1(2)" href="#">泸州市</a>
-                <ul>
-                    <li><a ng-click="isShowCity2(5)" href="#">泸县</a>
-                        <ul>
-                            <li><a href="#">玉蝉街道办事处</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市泸县玉蝉街道办事处代桥村')">代桥村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县玉蝉街道办事处九曲河村')">九曲河村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">福集镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市泸县福集镇金钱村')">金钱村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县福集镇沙土村')">沙土村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县福集镇万宝村')">万宝村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">富集镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市泸县富集镇白龙塔村')">白龙塔村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">牛滩镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市泸县牛滩镇百洋村')">百洋村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县牛滩镇寿尊村')">寿尊村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">德胜镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市泸县德胜镇百祥村')">百祥村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县德胜镇人和村')">人和村</a></li>
-                                    <li><a ng-click="selectItem('泸州市泸县德胜镇接官坝村')">接官坝村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a ng-click="isShowCity2(6)" href="#">龙马潭区</a>
-                        <ul>
-                            <li><a href="#">双加镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区双加镇颜坪村')">颜坪村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区双加镇枝子园村')">枝子园村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区双加镇中和村')">中和村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区双加镇群丰村')">群丰村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">石洞镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区石洞镇桥头村')">桥头村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区石洞镇岳坡山村')">岳坡山村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区石洞镇肖湾村')">肖湾村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">鱼塘镇</a>
-                                <ul>
-                                    <li><a hng-click="selectItem('泸州市龙马潭区鱼塘镇民全村')">全村</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">安宁镇</a>
-                                <ul>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区安宁镇红岩村')">红岩村</a></li>
-                                    <li><a ng-click="selectItem('泸州市龙马潭区安宁镇安宁村')">安宁村</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                </ul>
+            
+                <li ng-if="userCity3 == 1"><a ng-click="isShowCity1(2)" href="#">泸州市</a>
+                    <ul>
+                        <li><a ng-click="isShowCity2(5)" href="#">泸县</a>
+                            <ul>
+                                <li><a href="#">玉蝉街道办事处</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市泸县玉蝉街道办事处代桥村')">代桥村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县玉蝉街道办事处九曲河村')">九曲河村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">福集镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市泸县福集镇金钱村')">金钱村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县福集镇沙土村')">沙土村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县福集镇万宝村')">万宝村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">富集镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市泸县富集镇白龙塔村')">白龙塔村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">牛滩镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市泸县牛滩镇百洋村')">百洋村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县牛滩镇寿尊村')">寿尊村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">德胜镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市泸县德胜镇百祥村')">百祥村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县德胜镇人和村')">人和村</a></li>
+                                        <li><a ng-click="selectItem('泸州市泸县德胜镇接官坝村')">接官坝村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a ng-click="isShowCity2(6)" href="#">龙马潭区</a>
+                            <ul>
+                                <li><a href="#">双加镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区双加镇颜坪村')">颜坪村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区双加镇枝子园村')">枝子园村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区双加镇中和村')">中和村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区双加镇群丰村')">群丰村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">石洞镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区石洞镇桥头村')">桥头村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区石洞镇岳坡山村')">岳坡山村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区石洞镇肖湾村')">肖湾村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">鱼塘镇</a>
+                                    <ul>
+                                        <li><a hng-click="selectItem('泸州市龙马潭区鱼塘镇民全村')">全村</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">安宁镇</a>
+                                    <ul>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区安宁镇红岩村')">红岩村</a></li>
+                                        <li><a ng-click="selectItem('泸州市龙马潭区安宁镇安宁村')">安宁村</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+        </ul>
     </div>
     <div class="table-content">
         <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
             <h3 align="center">{{cityName}}</h3>
+            <h5 align="right">当前用户：{{userName}}</h5>
             <!--市级表单-->
             <div ng-if="cityLevel == '1'">
                 <div align="center">
-                <button ng-click="selectTable('7')" class="btn btn-default" type="submit">建协7</button>
-                <button ng-click="selectTable('92')" class="btn btn-default" type="submit">建协9-2</button>
-                <button ng-click="selectTable('9')" class="btn btn-default" type="submit">建协9</button>
-                <button ng-click="selectTable('101')" class="btn btn-default" type="submit">建协10-1</button>
-                <button ng-click="selectTable('10')" class="btn btn-default" type="submit">建协10</button>
+                    <button ng-click="selectTable('7')" class="btn btn-default" type="submit">建协7</button>
+                    <button ng-click="selectTable('92')" class="btn btn-default" type="submit">建协9-2</button>
+                    <button ng-click="selectTable('9')" class="btn btn-default" type="submit">建协9</button>
+                    <button ng-click="selectTable('101')" class="btn btn-default" type="submit">建协10-1</button>
+                    <button ng-click="selectTable('10')" class="btn btn-default" type="submit">建协10</button>
                 </div>
                 <div ng-include="'page/project/html/views/city/'+tableIndex+'.html'"></div>
             </div>
             <!--县级表单-->
             <div ng-if="cityLevel == '2'">
                 <div align="center">
-                <button ng-click="selectTable('43')" class="btn btn-default" type="submit">地验交4-3</button>
-                <button ng-click="selectTable('12')" class="btn btn-default" type="submit">建协1-2</button>
-                <button ng-click="selectTable('5')" class="btn btn-default" type="submit">建协5</button>
-                <button ng-click="selectTable('71')" class="btn btn-default" type="submit">建协7-1</button>
-                <button ng-click="selectTable('91')" class="btn btn-default" type="submit">建协9-1</button>
-                <button ng-click="selectTable('93')" class="btn btn-default" type="submit">建协9-3</button>
+                    <button ng-click="selectTable('43')" class="btn btn-default" type="submit">地验交4-3</button>
+                    <button ng-click="selectTable('12')" class="btn btn-default" type="submit">建协1-2</button>
+                    <button ng-click="selectTable('5')" class="btn btn-default" type="submit">建协5</button>
+                    <button ng-click="selectTable('71')" class="btn btn-default" type="submit">建协7-1</button>
+                    <button ng-click="selectTable('91')" class="btn btn-default" type="submit">建协9-1</button>
+                    <button ng-click="selectTable('93')" class="btn btn-default" type="submit">建协9-3</button>
                 </div>
                 <div ng-include="'page/project/html/views/city/'+tableIndex+'.html'"></div>
             </div>
             <!--镇级表单-->
             <div ng-if="cityLevel == '3'">
                 <div align="center">
-                <button ng-click="selectTable('411')" class="btn btn-default" type="submit">地验交4—1青苗</button>
-                <button ng-click="selectTable('412')" class="btn btn-default" type="submit">地验交4—1地面建筑物</button>
-                <button ng-click="selectTable('413')" class="btn btn-default" type="submit">地验交4—1土地</button>
-                <button ng-click="selectTable('42')" class="btn btn-default" type="submit">地验交4—2</button>
-                <button ng-click="selectTable('11')" class="btn btn-default" type="submit">建协1—1</button>
+                    <button ng-click="selectTable('411')" class="btn btn-default" type="submit">地验交4—1青苗</button>
+                    <button ng-click="selectTable('412')" class="btn btn-default" type="submit">地验交4—1地面建筑物</button>
+                    <button ng-click="selectTable('413')" class="btn btn-default" type="submit">地验交4—1土地</button>
+                    <button ng-click="selectTable('42')" class="btn btn-default" type="submit">地验交4—2</button>
+                    <button ng-click="selectTable('11')" class="btn btn-default" type="submit">建协1—1</button>
                 </div>
                 <div ng-include="'page/project/html/views/city/'+tableIndex+'.html'"></div>
             </div>
@@ -332,26 +338,26 @@
 <script src="page/common/mtree.js"></script>
 <script>
     var screenHeight = window.screen.height;
-    $(".table-content").css("height",(screenHeight)+"px");
+    $(".table-content").css("height", (screenHeight) + "px");
 
     var screeWidth = window.screen.width;
-    var treeBarWidth = window.screen.width*0.2;
+    var treeBarWidth = window.screen.width * 0.2;
     // $(".tree-bar").css("width",treeBarWidth+"px");
     // $(".table-content").css("width",(screeWidth-treeBarWidth-10)+"px");
-//    if(screeWidth>=1400){
-//        $(".tree-bar").css("width",screeWidth*0.2+"px");
-//        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
-//    }else{
-//        $(".tree-bar").css("width","200px");
-//        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
-//    }
+    //    if(screeWidth>=1400){
+    //        $(".tree-bar").css("width",screeWidth*0.2+"px");
+    //        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
+    //    }else{
+    //        $(".tree-bar").css("width","200px");
+    //        $(".table-content").css("width",(screeWidth-treeBarWidth)+"px");
+    //    }
     if (screeWidth <= 1100) {
-        $(".tree-bar").css("width","150px");
-        $(".table-content").css("width",(screeWidth-treeBarWidth-5)+"px");
-        $(".mtree").css("padding",".8em");
-        $(".mtree ul").css("font-size",".9em");
-        $(".mtree.transit ul").css("font-size",".9em");
-        $(".mtree a").css("font-weight","narmal");
+        $(".tree-bar").css("width", "150px");
+        $(".table-content").css("width", (screeWidth - treeBarWidth - 5) + "px");
+        $(".mtree").css("padding", ".8em");
+        $(".mtree ul").css("font-size", ".9em");
+        $(".mtree.transit ul").css("font-size", ".9em");
+        $(".mtree a").css("font-weight", "narmal");
 
     }
 
@@ -361,29 +367,30 @@
 
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var mtree = $('ul.mtree');
 
         // Skin selector for demo
         mtree.wrap('<div class=mtree-demo></div>');
-        var skins = ['transit','skinny','bubba','jet','nix'];
+        var skins = ['transit', 'skinny', 'bubba', 'jet', 'nix'];
         mtree.addClass(skins[0]);
         $('body').prepend('<div class="mtree-skin-selector"><ul class="button-group radius"></ul></div>');
         var s = $('.mtree-skin-selector');
-        $.each(skins, function(index, val) {
+        $.each(skins, function (index, val) {
             s.find('ul').append('<li><button class="small skin">' + val + '</button></li>');
         });
         s.find('ul').append('<li><button class="small csl active">Close Same Level</button></li>');
-        s.find('button.skin').each(function(index){
-            $(this).on('click.mtree-skin-selector', function(){
+        s.find('button.skin').each(function (index) {
+            $(this).on('click.mtree-skin-selector', function () {
                 s.find('button.skin.active').removeClass('active');
                 $(this).addClass('active');
                 mtree.removeClass(skins.join(' ')).addClass(skins[index]);
             });
         })
         s.find('button:first').addClass('active');
-        s.find('.csl').on('click.mtree-close-same-level', function(){
+        s.find('.csl').on('click.mtree-close-same-level', function () {
             $(this).toggleClass('active');
         });
     });
+
 </script>

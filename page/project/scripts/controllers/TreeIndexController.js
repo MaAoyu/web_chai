@@ -1,6 +1,15 @@
-function TreeIndexController($scope, $http) {
+function TreeIndexController($scope, $http, user) {
     console.log("载入TreeIndexController");
     //框架参数
+    //console.log(JSON.stringify(user));
+    // $scope.userName = user.name;
+    // $scope.userCity1 = user.city1;
+    // $scope.userCity2 = user.city2;
+    // $scope.userCity3 = user.city3;
+    $scope.userName = 'admin';
+    $scope.userCity1 = 1;
+    $scope.userCity2 = 0;
+    $scope.userCity3 = 1;
     $scope.cityName = "";
     $scope.cityLevel = '1';
     $scope.tableIndex = '0';

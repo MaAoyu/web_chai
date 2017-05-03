@@ -1,5 +1,6 @@
 var app = angular.module('auto-biz-user', ['ngRoute']);
 
+app.value('user', {})
 app.config(function ($locationProvider,$httpProvider,$routeProvider) {
     console.log("载入angular config，跳转到login");
     $routeProvider
@@ -12,10 +13,6 @@ app.config(function ($locationProvider,$httpProvider,$routeProvider) {
         templateUrl: '/page/project/html/views/treeIndex.html',
         //controller: 'treeIndexController',
         //controllerAs: '_ttrl'
-      })
-      .when('/basicTable', {
-        templateUrl: '/page/project/html/views/basicTable.html',
-        //controller: 'basicTableController'
       });
       $locationProvider.html5Mode(true);
   });
