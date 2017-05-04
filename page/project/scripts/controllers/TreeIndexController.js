@@ -26,9 +26,6 @@ function TreeIndexController($scope, $http, user) {
     { "name": "泸州市泸县玉蝉街道办事处", "flag": false }, { "name": "泸州市泸县福集镇", "flag": false }, { "name": "泸州市泸县富集镇", "flag": false }, { "name": "泸州市泸县牛滩镇", "flag": false },
     { "name": "泸州市泸县德胜镇", "flag": false }, { "name": "泸州市龙马潭区双加镇", "flag": false }, { "name": "泸州市龙马潭区石洞镇", "flag": false }, { "name": "泸州市龙马潭区鱼塘镇", "flag": false },
     { "name": "泸州市龙马潭区安宁镇", "flag": false }];
-    $scope.c4CuuList = [];
-    $scope.c4List = new Array();
-    $scope.c4List["内江市东兴区高桥街道办"] = ["内江市东兴区高桥街道办陡坎村", "内江市东兴区高桥街道办赛峨村"];
     $scope.currPage = 1;
     $scope.totalPages = 1;
     //框架函数
@@ -89,21 +86,48 @@ function TreeIndexController($scope, $http, user) {
     $scope.getUserByName = getUserByName;
     //表4-1相关
     $scope.table411Datas = [];
+    $scope.table411Total = {"city4Name":'',"t1":0,"t2":0};
+    $scope.c4CurrList = [];
+    $scope.getC4List = getC4List; //根据镇名获取下属村列表
     $scope.getAllTable411Datas = getAllTable411Datas;      //根据村名获取4-1青苗数据
 
     /* 
      * 内部函数
      */
-    function getAllTable411Datas(city4Name) {    //根据村名获取表4-1－1全部数据
-        $http.get('http://localhost:8081/getAllTable411Datas?city=' + city4Name)
+    function getC4List() {
+        $scope.table411Total.t1 = 0;
+        $scope.table411Total.t2 = 0;
+        $scope.table411Datas = [];
+        $http.get('page/project/conf/city4.json').success(function (data) {
+            $scope.c4CurrList = data[$scope.cityName];
+            //console.log($scope.c4CurrList[1]);
+        });
+
+    }
+    function getAllTable411Datas(city4Name,page) {    //根据村名获取表4-1－1全部数据
+        $scope.currPage = page;
+        $scope.table411Total.city4Name = city4Name;
+        city4Name = $scope.cityName+city4Name;
+        $http.get('http://localhost:8081/getTable411Count?city=' + city4Name)//1.取到总页数
             .success(function (res) {
-                console.log(JSON.stringify(res));
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getAllTable411Datas?city=' + city4Name + '&page=' + page)//2.表内容
+            .success(function (res) {
+                //console.log(JSON.stringify(res));
                 var rawT4Datas = [].concat(res);
+                $scope.table411Total.t1 = 0;
+                $scope.table411Total.t2 = 0;
+                $scope.table411Datas = [];
                 for (var i = 0; i < rawT4Datas.length; i++) {
                     $scope.table411Datas[i] = rawT4Datas[i];
+                    $scope.table411Datas[i].quantity = $scope.table411Datas[i].quantity * 1;
                     $scope.table411Datas[i].total = $scope.table411Datas[i].quantity * $scope.table411Datas[i].price;
-                    console.log($scope.table411Datas[i].name);
-                    console.log($scope.table411Datas[i].total);
+                    $scope.table411Total.t1 = $scope.table411Total.t1 + $scope.table411Datas[i].quantity;
+                    $scope.table411Total.t2 = $scope.table411Total.t2 + $scope.table411Datas[i].total;
                 };
             })
             .error(function (res) {
@@ -194,6 +218,7 @@ function TreeIndexController($scope, $http, user) {
             });
     }
     function getAllTable4Datas(id, page) {    //根据户主ID获取表四数据
+        $scope.currPage = page;
         $http.get('http://localhost:8081/getTable4Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
@@ -352,6 +377,7 @@ function TreeIndexController($scope, $http, user) {
             });
     }
     function getAllTable3Datas(id, page) {//根据户主取出表三信息
+        $scope.currPage = page;
         $http.get('http://localhost:8081/getTable3Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
@@ -402,6 +428,7 @@ function TreeIndexController($scope, $http, user) {
         getAllTable2Datas($scope.searchName.id, $scope.currPage);
     }
     function getAllTable2Datas(id, page) { //根据户主取出表二信息
+        $scope.currPage = page;
         $scope.table2Datas = [];
         $http.get('http://localhost:8081/getTable2Count?id=' + id)//1.取到总页数
             .success(function (res) {
@@ -494,8 +521,9 @@ function TreeIndexController($scope, $http, user) {
         switch (flag) {
             case 0: //首页
                 page = 1;
-                $scope.currPage = page;
-                alert("已经是首页！");
+                if ($scope.currPage == 1) {
+                    alert("已经是首页！");
+                }
                 break;
             case 1://上一页
                 if ($scope.currPage == 1) {
@@ -519,8 +547,9 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case 3://尾页
                 page = $scope.totalPages;
-                $scope.currPage = page;
-                alert("已经是尾页！");
+                if($scope.currPage = page){
+                    alert("已经是尾页！");
+                }
                 break;
             default:
                 console.log("no datas..");
@@ -537,6 +566,9 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case '4':
                 getAllTable4Datas($scope.searchName.id, page);
+                break;
+            case '411':
+                getAllTable411Datas($scope.table411Total.city4Name, page);
                 break;
             default:
                 console.log("no datas..");
@@ -688,6 +720,7 @@ function TreeIndexController($scope, $http, user) {
             });
     }
     function getAllTable1Datas(page) {  //得到表一全部数据
+        $scope.currPage = page;
         $http.get('http://localhost:8081/getTable1Count')
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
@@ -759,16 +792,15 @@ function TreeIndexController($scope, $http, user) {
         $scope.isManageUser = 0;
     }
     function isShowCity3(index) {  //第三层展开
-        if ($scope.citys3[index].flag == false)
-            $scope.citys3[index].flag = true;
-        else
-            $scope.citys3[index].flag = false;
+        // if ($scope.citys3[index].flag == false)
+        //     $scope.citys3[index].flag = true;
+        // else
+        //     $scope.citys3[index].flag = false;
         $scope.cityName = $scope.citys3[index].name;
-        $scope.c4CuuList = $scope.c4List[$scope.cityName];
         $scope.cityLevel = '3';
         $scope.tableIndex = '0';
         $scope.isManageUser = 0;
-        //console.log("$scope.citys3[index].flag:"+$scope.citys3[index].flag);
+        //console.log("$scope.cityLevel:"+$scope.cityLevel);
     }
     function selectItem(item) {    //第四层选择
         //console.log("cityName:" + item);
@@ -791,6 +823,9 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case '4':
                 getPeopleList();
+                break;
+            case '411':
+                getC4List();
                 break;
             //     case '11':
             //         getAllTable11Datas();//1-1表数据汇总

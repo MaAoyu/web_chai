@@ -1,7 +1,15 @@
 <!--地验交4—1-->
-<button ng-click="getAllTable411Datas('内江市东兴区高桥街道办陡坎村')" class="btn btn-default" type="submit">陡坎村</button>
-<button ng-click="getAllTable411Datas('内江市东兴区高桥街道办赛峨村')" class="btn btn-default" type="submit">赛峨村</button>
-<h4 align="right">铁路建设项目征地、拆迁补偿费清册</h4>
+<span ng-repeat="c4 in c4CurrList">
+    <button ng-click="getAllTable411Datas(c4,1)" class="btn btn-default" type="submit">{{c4}}</button>
+</span>
+
+<h3 align="center">铁路建设项目征地、拆迁补偿费清册</h3>
+<h6>地验交—4—1</h6>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+<label class="pull-right" style="display: inline-block"> 共 {{totalPages}}   页    第  {{currPage}}  页</label>
+
 <table border="1" class="table table-striped table-hover">
     <tr>
         <th>户名</th>
@@ -25,4 +33,22 @@
         <td></td>
         <td></td>
     </tr>
+    <tr>
+        <th>合计</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>{{table411Total.t1}}</th>
+        <th></th>
+        <th>{{table411Total.t2}}</th>
+        <th></th>
+        <th></th>
+    </tr>
 </table>
+<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+<div style="float: right">
+    <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
+    <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
+    <md-button ng-click="getNextPage(2)" class="btn btn-default">下一页</md-button>
+    <md-button ng-click="getNextPage(3)" class="btn btn-default">末页</md-button>
+</div>
