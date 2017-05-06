@@ -86,28 +86,246 @@ function TreeIndexController($scope, $http, user) {
     $scope.getUserByName = getUserByName;
     //表4-1相关
     $scope.table411Datas = [];
-    $scope.table411Total = {"city4Name":'',"t1":0,"t2":0};
+    $scope.table411Total = { "city4Name": '', "t1": 0, "t2": 0 };
+    $scope.table412Datas = [];
+    $scope.table412Total = { "city4Name": '', "t1": 0, "t2": 0 };
     $scope.c4CurrList = [];
     $scope.getC4List = getC4List; //根据镇名获取下属村列表
     $scope.getAllTable411Datas = getAllTable411Datas;      //根据村名获取4-1青苗数据
+    $scope.getAllTable412Datas = getAllTable412Datas;      //根据村名获取4-1建筑物数据
+    //表4-2相关
+    $scope.table42Datas = [];
+    $scope.table42Total = { "t1": 0, "t2": 0 };
+    $scope.getAllTable42Datas = getAllTable42Datas;      //获取4-2数据
+    //表1-1相关
+    $scope.table11DatasP1 = []; //第一页
+    $scope.table11TotalP1 = {};
+    $scope.table11DatasP2 = []; //第二页
+    $scope.table11TotalP2 = {};
+    $scope.table11DatasP3 = []; //第三页
+    $scope.table11TotalP3 = {};
+    $scope.getAllTable11Datas = getAllTable11Datas;      //获取1-1数据
+
+
 
     /* 
      * 内部函数
      */
+    function getAllTable11Datas() {
+        $scope.table11TotalP1 = {"area":0,"familys":0,"t1":0,"t2":0,"t3":0,"t4":0,"total":0,
+                "a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0};
+        $scope.table11DatasP1 = [];
+        $scope.table11TotalP2 = {"a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0,
+                "a7":0,"a8":0,"a9":0,"a10":0,"a11":0,"a12":0,"a13":0};
+        $scope.table11DatasP2 = [];
+        $scope.table11TotalP3 = {"a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0,
+                "a7":0,"a8":0,"a9":0,"a10":0,"a11":0,"a12":0,"a13":0,"a14":0,"a15":0,"a16":0};
+        $scope.table11DatasP3 = [];
+        var count1 = 0;
+        for (var i = 0; i < $scope.c4CurrList.length; i++) {//1.遍历所有村
+            $http.get('http://localhost:8081/getTable1Area?city=' + $scope.cityName + $scope.c4CurrList[i])
+                .success(function (res) {
+                    var new11 = new Object();
+                    var new11p2 = new Object();
+                    var new11p3 = new Object();
+                    new11 = {"c4":'',"area":0,"familys":0,"t1":0,"t2":0,"t3":0,"t4":0,"total":0,
+                    "a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0};
+                    new11p2 = {"c4":'',"a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0,"a7":0
+                    ,"a8":0,"a9":0,"a10":0,"a11":0,"a12":0,"a13":0};
+                    new11p3 = {"c4":'',"a1":0,"a2":0,"a3":0,"a4":0,"a5":0,"a6":0,"a7":0
+                    ,"a8":0,"a9":0,"a10":0,"a11":0,"a12":0,"a13":0,"a14":0,"a15":0,"a16":0};
+                    new11.c4 = $scope.c4CurrList[count1];           //2.村子名字
+                    new11p2.c4 = $scope.c4CurrList[count1];
+                    new11p3.c4 = $scope.c4CurrList[count1];       
+                    count1++;
+
+                    var rawT4Datas = [].concat(res);
+                    for (var n = 0; n < rawT4Datas.length; n++) {   //3.征地面积 
+                        new11.area = new11.area + rawT4Datas[n]['area'];
+                    };
+                    $scope.table11TotalP1.area = $scope.table11TotalP1.area + new11.area;
+                    //房屋
+                    $http.get('http://localhost:8081/getTable3Bycity?city=' + $scope.cityName + new11.c4)
+                        .success(function (res) {                   
+                            var rawT4Datas = [].concat(res);
+                            new11.familys = rawT4Datas.length;      //4.房屋户数
+                            $scope.table11TotalP1.familys = $scope.table11TotalP1.familys + new11.familys;
+                            //面积
+                            for (var i = 0; i < rawT4Datas.length; i++) {
+                                rawT4Datas[i]["area"] = rawT4Datas[i]["area"] * 1;
+                                rawT4Datas[i]["quantity"] = rawT4Datas[i]["quantity"] * 1;
+                                new11.total = new11.total + rawT4Datas[i]["area"];
+                                switch (rawT4Datas[i]["type2"]) {   //5.房屋面积
+                                    case "框架":
+                                        new11.t1 = new11.t1 + rawT4Datas[i]["area"];
+                                        break;
+                                    case "砖混":
+                                       new11.t2 = new11.t2 + rawT4Datas[i]["area"];
+                                        break;
+                                    case "砖木":
+                                       new11.t3 = new11.t3 + rawT4Datas[i]["area"];
+                                        break;
+                                    case "土木":
+                                        new11.t4 = new11.t4 + rawT4Datas[i]["area"];
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                //6.构筑物
+                                var prjArr = [["院坝","a1"],["围墙","a2"],["灶头","a3"],["粪（水）池","a4"],["水缸","a5"]
+                                ,["粮仓","a6"],["堡坎","a1"],["坟墓","a2"],["沼气池","a3"],["简易棚","a4"],["金属棚架","a5"],["水井","a6"],
+                                ["水窖","a7"],["钢管","a8"],["胶管","a9"],["烤烟房","a10"],["公路或机耕道","a11"],["卫星接收器","a12"],["太阳能","a13"],
+                                ["水泥管","a1"],["水泥梯步","a2"],["围墙大门","a3"],["电杆","a4"],["电线","a5"],["水泥碗柜","a6"],
+                                ["闸阀","a7"],["PVC管","a8"],["沟渠","a9"],["鱼池","a10"],["大棚","a11"],["花台","a12"],["洗衣台","a13"]
+                                ,["砖瓦窑","a14"],["石灰窑","a14"],["畜圈","a16"]]; 
+                                //console.log(rawT4Datas[i]["prj"]);
+                                for(var j=0;j<6;j++){ 
+                                    if(rawT4Datas[i]["prj"] == prjArr[j][0]){
+                                        new11[prjArr[j][1]] = new11[prjArr[j][1]] + rawT4Datas[i]["quantity"];
+                                        break;
+                                    }
+                                }
+                                for(var j=6;j<19;j++){
+                                    if(rawT4Datas[i]["prj"] == prjArr[j][0]){
+                                        new11p2[prjArr[j][1]] = new11p2[prjArr[j][1]] + rawT4Datas[i]["quantity"];
+                                        break;
+                                    }
+                                }
+                                for(var j=19;j<prjArr.length;j++){
+                                    if(rawT4Datas[i]["prj"] == prjArr[j][0]){
+                                        new11p3[prjArr[j][1]] = new11p3[prjArr[j][1]] + rawT4Datas[i]["quantity"];
+                                        break;
+                                    }
+                                }
+                                //console.log(JSON.stringify(new11p2));
+                            }          
+                            //7.合计
+                            var table11TotalP1Arr = ["t1","t2","t3","t4","total","a1","a2","a3","a4","a5","a6"];
+                            for(var k=0;k<table11TotalP1Arr.length;k++){
+                                $scope.table11TotalP1[table11TotalP1Arr[k]] = $scope.table11TotalP1[table11TotalP1Arr[k]] + new11[table11TotalP1Arr[k]];
+                            }
+                            var table11TotalP2Arr = ["a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13"];
+                            for(var m=0;m<table11TotalP2Arr.length;m++){
+                                $scope.table11TotalP2[table11TotalP2Arr[m]] = $scope.table11TotalP2[table11TotalP2Arr[m]] + new11p2[table11TotalP2Arr[m]];
+                            }
+                            var table11TotalP3Arr = ["a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16"];
+                            for(var m=0;m<table11TotalP3Arr.length;m++){
+                                $scope.table11TotalP3[table11TotalP3Arr[m]] = $scope.table11TotalP3[table11TotalP3Arr[m]] + new11p3[table11TotalP3Arr[m]];
+                            }
+                            //console.log(JSON.stringify($scope.table11TotalP2));
+                            //8.数据绑定
+                            $scope.table11DatasP1.push(new11);
+                            $scope.table11DatasP2.push(new11p2);
+                            $scope.table11DatasP3.push(new11p3);
+                        })
+                        .error(function (res) {
+                        });
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
+        }
+    }
+    function getAllTable42Datas() {
+        $scope.table42Total = { "t1": 0, "t2": 0 };
+        $scope.table42Datas = [];
+        var count1 = 0;
+        var count2 = 0;
+        for (var i = 0; i < $scope.c4CurrList.length; i++) {//1.遍历所有村
+            $http.get('http://localhost:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+                .success(function (res) {                       //2.青苗 
+                    var new42 = new Object();
+                    new42.c4 = $scope.c4CurrList[count1];
+                    new42.type = "青苗";
+                    new42.unit = "亩";
+                    new42.quantity = 0;
+                    new42.total = 0;
+                    var rawT4Datas = [].concat(res);
+                    for (var i = 0; i < rawT4Datas.length; i++) {
+                        rawT4Datas[i].quantity = rawT4Datas[i].quantity * 1;
+                        rawT4Datas[i].total = rawT4Datas[i].quantity * rawT4Datas[i].price;
+                        new42.price = rawT4Datas[i].price;
+                        new42.quantity = new42.quantity + rawT4Datas[i].quantity;
+                        new42.total = new42.total + rawT4Datas[i].total;
+                    };
+                    $scope.table42Datas.push(new42);
+                    count1++;
+                    //console.log(JSON.stringify($scope.table42Datas));
+                    $scope.table42Total.t1 = $scope.table42Total.t1 + new42.quantity;
+                    $scope.table42Total.t2 = $scope.table42Total.t2 + new42.total;
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
+            $http.get('http://localhost:8081/getAllTable412Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+                .success(function (res) {   //3.地面建筑物  地面建筑物单价不一致
+                    var new42 = new Object();
+                    new42.c4 = $scope.c4CurrList[count2];
+                    new42.type = "地面建筑物";
+                    new42.unit = "m²";
+                    new42.quantity = 0;
+                    new42.total = 0;
+                    var rawT4Datas = [].concat(res);
+                    for (var i = 0; i < rawT4Datas.length; i++) {
+                        rawT4Datas[i].area1 = rawT4Datas[i].area1 * 1;
+                        rawT4Datas[i].total = rawT4Datas[i].area1 * rawT4Datas[i].price;
+                        new42.quantity = new42.quantity + rawT4Datas[i].area1;
+                        new42.total = new42.total + rawT4Datas[i].total;
+                    };
+                    $scope.table42Datas.push(new42);
+                    count2++;
+                    $scope.table42Total.t1 = $scope.table42Total.t1 + new42.quantity;
+                    $scope.table42Total.t2 = $scope.table42Total.t2 + new42.total;
+                })
+                .error(function (res) {
+                });
+        }
+    }
     function getC4List() {
-        $scope.table411Total.t1 = 0;
-        $scope.table411Total.t2 = 0;
         $scope.table411Datas = [];
+        $scope.table411Total = { "city4Name": '', "t1": 0, "t2": 0 };
+        $scope.table412Datas = [];
+        $scope.table412Total = { "city4Name": '', "t1": 0, "t2": 0 };
         $http.get('page/project/conf/city4.json').success(function (data) {
             $scope.c4CurrList = data[$scope.cityName];
             //console.log($scope.c4CurrList[1]);
         });
 
     }
-    function getAllTable411Datas(city4Name,page) {    //根据村名获取表4-1－1全部数据
+    function getAllTable412Datas(city4Name, page) {    //根据村名获取表4-1－2全部数据
+        $scope.currPage = page;
+        $scope.table412Total.city4Name = city4Name;
+        city4Name = $scope.cityName + city4Name;
+        $http.get('http://localhost:8081/getTable412Count?city=' + city4Name)//1.取到总页数
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getAllTable412Datas?city=' + city4Name + '&page=' + page)//2.表内容
+            .success(function (res) {
+                //console.log(JSON.stringify(res));
+                var rawT4Datas = [].concat(res);
+                $scope.table412Total.t1 = 0;
+                $scope.table412Total.t2 = 0;
+                $scope.table412Datas = [];
+                for (var i = 0; i < rawT4Datas.length; i++) {
+                    $scope.table412Datas[i] = rawT4Datas[i];
+                    $scope.table412Datas[i].area1 = $scope.table412Datas[i].area1 * 1;
+                    $scope.table412Datas[i].total = $scope.table412Datas[i].area1 * $scope.table412Datas[i].price;
+                    $scope.table412Total.t1 = $scope.table412Total.t1 + $scope.table412Datas[i].area1;
+                    $scope.table412Total.t2 = $scope.table412Total.t2 + $scope.table412Datas[i].total;
+                };
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getAllTable411Datas(city4Name, page) {    //根据村名获取表4-1－1全部数据
         $scope.currPage = page;
         $scope.table411Total.city4Name = city4Name;
-        city4Name = $scope.cityName+city4Name;
+        city4Name = $scope.cityName + city4Name;
         $http.get('http://localhost:8081/getTable411Count?city=' + city4Name)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
@@ -195,7 +413,7 @@ function TreeIndexController($scope, $http, user) {
                 $scope.curTable4[t4Para[i]] = '';
             urlPara = urlPara + t4Para[i] + '=' + $scope.curTable4[t4Para[i]] + '&';
         }
-        console.log(urlPara);
+        //console.log(urlPara);
         $http.get('http://localhost:8081/updateTable4?' + urlPara)
             .success(function (res) {
                 alert("更新成功！");
@@ -348,7 +566,8 @@ function TreeIndexController($scope, $http, user) {
             $http.get('http://localhost:8081/addTable3?' + urlPara)//5.3 添加表三 
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
-                    urlPara2 = urlPara2 + '&id=' + $scope.current.id + '&fID=' + res.insertId;    //取到表三自增id
+                    urlPara2 = urlPara2 + '&id=' + $scope.current.id + '&fID=' + res.insertId
+                        + '&city=' + $scope.cityName + '&name=' + $scope.current.name;    //取到表三自增id
                     $http.get('http://localhost:8081/addTable4?' + urlPara2) //5.4 添加表四
                         .success(function (res) {
                         })
@@ -547,7 +766,7 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case 3://尾页
                 page = $scope.totalPages;
-                if($scope.currPage = page){
+                if ($scope.currPage = page) {
                     alert("已经是尾页！");
                 }
                 break;
@@ -569,6 +788,9 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case '411':
                 getAllTable411Datas($scope.table411Total.city4Name, page);
+                break;
+            case '412':
+                getAllTable412Datas($scope.table412Total.city4Name, page);
                 break;
             default:
                 console.log("no datas..");
@@ -632,9 +854,9 @@ function TreeIndexController($scope, $http, user) {
                     $scope.curTable1[t1Para[i]] = '';
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable1[t1Para[i]] + '&';
             }
+            console.log(urlPara);
             $http.get('http://localhost:8081/addTable1?' + urlPara)
                 .success(function (res) {
-                    //console.log(JSON.stringify(res));
                     urlTable2 = urlTable2 + '&fID=' + res.insertId;//取到表一自增id
                     //添加表二
                     $http.get('http://localhost:8081/addTable2?' + urlTable2)
@@ -800,6 +1022,7 @@ function TreeIndexController($scope, $http, user) {
         $scope.cityLevel = '3';
         $scope.tableIndex = '0';
         $scope.isManageUser = 0;
+        getC4List();
         //console.log("$scope.cityLevel:"+$scope.cityLevel);
     }
     function selectItem(item) {    //第四层选择
@@ -824,12 +1047,12 @@ function TreeIndexController($scope, $http, user) {
             case '4':
                 getPeopleList();
                 break;
-            case '411':
-                getC4List();
+            case '42':
+                getAllTable42Datas();
                 break;
-            //     case '11':
-            //         getAllTable11Datas();//1-1表数据汇总
-            //         break;
+            case '11':
+                getAllTable11Datas();
+                break;
             //     case '12':
             //         getAllTable12Datas();//1-2表数据汇总
             //         break;
@@ -840,7 +1063,7 @@ function TreeIndexController($scope, $http, user) {
             //         getAllTable43Datas($scope.cityName);//4-3表数据初始化
             //         break;
             default:
-                console.log("");
+                break;
         }
     }
     function outputExcel() {        //导出表格
@@ -1323,17 +1546,6 @@ function TreeIndexController($scope, $http, user) {
     //         // }
     //     }
 
-    //     //得到表1-1全部数据
-    //     function getAllTable11Datas() {
-    //         var currC4List = $scope.c4List[$scope.cityName];//该镇下所有村的数组
-    //         for (var i = 0; i < currC4List.length; i++) {
-    //             DataService.getAllTable3Datas(currC4List[i]).then(function (datas) {
-    //                 //TODO:表三增加村字段，再汇总数据
-    //                 $scope.table11Datas.city4 = currC4List[i];
-
-    //             });
-    //         }
-    //     }
 
     //     //得到表4-3全部数据
     //     function getAllTable43Datas(city2Name) {
@@ -1358,19 +1570,6 @@ function TreeIndexController($scope, $http, user) {
     //         });
     //         $scope.curTable43 = {};
     //         getAllTable43Datas($scope.cityName);
-    //     }
-
-    //     //得到表4-2全部数据
-    //     function getAllTable42Datas() {
-    //         var currC4List = $scope.c4List[$scope.cityName];//该镇下所有村的数组
-    //         for (var i = 0; i < currC4List.length; i++) {
-    //             DataService.getAllTable41Datas(currC4List[i]).then(function (datas) {
-    //                 $scope.table41Datas = [].concat(datas);
-    //                 $scope.table42Datas.name = currC4List[i];
-    //                 //TODO:补偿类别固定则直接从数据库取和
-
-    //             });
-    //         }
     //     }
 
 
