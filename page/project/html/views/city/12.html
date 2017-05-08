@@ -1,43 +1,215 @@
 <!--建协1—2-->
-                <div ng-if="_ttrl.tableIndex == '12'">
-                    <h4>新建铁路统迁建(构)筑物数量汇总表</h4>
-                    <table border="1" class="table table-striped table-hover">
-                        <tr>
-                            <th rowspan="2">镇(乡、街办</th>
-                            <th rowspan="2">征地面积(亩)</th>
-                            <th colspan="6">房屋(m2)</th>
-                            <th colspan="6">构筑物(亩、m、m2、m3、个、口、套)</th>
-                            <th colspan="1">身份证号码</th>
-                        </tr>
-                        <tr>
-                            <th>户数</th>
-                            <th>框架</th>
-                            <th>砖混</th>
-                            <th>砖瓦</th>
-                            <th>土木</th>
-                            <th>小计</th>
-                            <th>院坝</th>
-                            <th>围墙</th>
-                            <th>灶头</th>
-                            <th>粪（水）池</th>
-                            <th>水缸</th>
-                            <th>粮仓</th>
-                        </tr>
-                        <tr ng-repeat="t12 in _ttrl.table12Datas">
-                            <td>{{t12.city4}}</td>
-                            <td>{{t12.area}}</td>
-                            <td>{{t12.familys}}</td>
-                            <td>{{t12.t1}}</td>
-                            <td>{{t12.t2}}</td>
-                            <td>{{t12.t3}}</td>
-                            <td>{{t12.t4}}</td>
-                            <td>{{t12.total}}</td>
-                            <td>{{t12.a1}}</td>
-                            <td>{{t12.a2}}</td>
-                            <td>{{t12.a3}}</td>
-                            <td>{{t12.a4}}</td>
-                            <td>{{t12.a5}}</td>
-                            <td>{{t12.a6}}</td>
-                        </tr>
-                    </table>
-                </div>
+<h4 align="center">新建铁路统迁建(构)筑物数量汇总表</h4>
+<label style="display: inline-block">建协表—1—2</label>
+<label class="pull-center" style="display: inline-block">{{cityName}}</label>
+</br>
+<!--第一页-->
+<div>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+<label class="pull-right" style="display: inline-block">第 1 页 共 3 页</label>
+<table border="1" class="table table-striped table-hover">
+    <tr>
+        <th rowspan="2">镇（乡、街办）</th>
+        <th rowspan="2">征地面积(亩)</th>
+        <th colspan="6">房屋(m2)</th>
+        <th colspan="6">构筑物(亩、m、m2、m3、个、口、套)</th>
+    </tr>
+    <tr>
+        <th>户数</th>
+        <th>框架</th>
+        <th>砖混</th>
+        <th>砖瓦</th>
+        <th>土木</th>
+        <th>小计</th>
+        <th>院坝</th>
+        <th>围墙</th>
+        <th>灶头</th>
+        <th>粪（水）池</th>
+        <th>水缸</th>
+        <th>粮仓</th>
+    </tr>
+    <tr ng-repeat="t11 in table12DatasP1">
+        <td>{{t11.c4}}</td>
+        <td>{{t11.area}}</td>
+        <td>{{t11.familys}}</td>
+        <td>{{t11.t1}}</td>
+        <td>{{t11.t2}}</td>
+        <td>{{t11.t3}}</td>
+        <td>{{t11.t4}}</td>
+        <td>{{t11.total}}</td>
+        <td>{{t11.a1}}</td>
+        <td>{{t11.a2}}</td>
+        <td>{{t11.a3}}</td>
+        <td>{{t11.a4}}</td>
+        <td>{{t11.a5}}</td>
+        <td>{{t11.a6}}</td>
+    </tr>
+    <tr>
+        <th>合计</th>
+        <th>{{table12TotalP1.sum(area)}}</th>
+        <th>{{table12TotalP1.familys}}</th>
+        <th>{{table12TotalP1.t1}}</th>
+        <th>{{table12TotalP1.t2}}</th>
+        <th>{{table12TotalP1.t3}}</th>
+        <th>{{table12TotalP1.t4}}</th>
+        <th>{{table12TotalP1.total}}</th>
+        <th>{{table12TotalP1.a1}}</th>
+        <th>{{table12TotalP1.a2}}</th>
+        <th>{{table12TotalP1.a3}}</th>
+        <th>{{table12TotalP1.a4}}</th>
+        <th>{{table12TotalP1.a5}}</th>
+        <th>{{table12TotalP1.a6}}</th>
+    </tr>
+</table>
+</div>
+<!--第二页-->
+<div>
+    </br>
+    </br>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+<label class="pull-right" style="display: inline-block">第 2 页 共 3 页</label>
+<table border="1" class="table table-striped table-hover">
+    <tr>
+        <th rowspan="2">镇（乡、街办）</th>
+        <th colspan="13">构筑物(亩、m、m2、m3、个、口、套)</th>
+    </tr>
+    <tr>
+        <th>堡坎</th>
+        <th>坟墓</th>
+        <th>沼气池</th>
+        <th>简易棚</th>
+        <th>金属棚架</th>
+        <th>水井</th>
+        <th>水窖</th>
+        <th>钢管</th>
+        <th>胶管</th>
+        <th>烤烟房</th>
+        <th>公路或机耕道</th>
+        <th>卫星接收器</th>
+        <th>太阳能</th>
+    </tr>
+    <tr ng-repeat="t11 in table12DatasP2">
+        <td>{{t11.c4}}</td>
+        <td>{{t11.a1}}</td>
+        <td>{{t11.a2}}</td>
+        <td>{{t11.a3}}</td>
+        <td>{{t11.a4}}</td>
+        <td>{{t11.a5}}</td>
+        <td>{{t11.a6}}</td>
+        <td>{{t11.a7}}</td>
+        <td>{{t11.a8}}</td>
+        <td>{{t11.a9}}</td>
+        <td>{{t11.a10}}</td>
+        <td>{{t11.a11}}</td>
+        <td>{{t11.a12}}</td>
+        <td>{{t11.a13}}</td>
+    </tr>
+    <tr>
+        <th>合计</th>
+        <th>{{table12TotalP2.a1}}</th>
+        <th>{{table12TotalP2.a2}}</th>
+        <th>{{table12TotalP2.a3}}</th>
+        <th>{{table12TotalP2.a4}}</th>
+        <th>{{table12TotalP2.a5}}</th>
+        <th>{{table12TotalP2.a6}}</th>
+        <th>{{table12TotalP2.a7}}</th>
+        <th>{{table12TotalP2.a8}}</th>
+        <th>{{table12TotalP2.a9}}</th>
+        <th>{{table12TotalP2.a10}}</th>
+        <th>{{table12TotalP2.a11}}</th>
+        <th>{{table12TotalP2.a12}}</th>
+        <th>{{table12TotalP2.a13}}</th>
+    </tr>
+</table>
+</div>
+
+<!--第三页-->
+<div>
+    </br>
+    </br>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+<label class="pull-right" style="display: inline-block">第 3 页 共 3 页</label>
+<table border="1" class="table table-striped table-hover">
+    <tr>
+        <th rowspan="2">镇（乡、街办）</th>
+        <th colspan="16">构筑物(亩、m、m2、m3、个、口、套)</th>
+    </tr>
+    <tr>
+        <th>水泥管</th>
+        <th>水泥梯步</th>
+        <th>围墙大门</th>
+        <th>电杆</th>
+        <th>电线</th>
+        <th>水泥碗柜</th>
+        <th>闸阀</th>
+        <th>PVC管</th>
+        <th>沟渠</th>
+        <th>鱼池</th>
+        <th>大棚</th>
+        <th>花台</th>
+        <th>洗衣台</th>
+        <th>砖瓦窑</th>
+        <th>石灰窑</th>
+        <th>畜圈</th>
+    </tr>
+    <tr ng-repeat="t11 in table12DatasP3">
+        <td>{{t11.c4}}</td>
+        <td>{{t11.a1}}</td>
+        <td>{{t11.a2}}</td>
+        <td>{{t11.a3}}</td>
+        <td>{{t11.a4}}</td>
+        <td>{{t11.a5}}</td>
+        <td>{{t11.a6}}</td>
+        <td>{{t11.a7}}</td>
+        <td>{{t11.a8}}</td>
+        <td>{{t11.a9}}</td>
+        <td>{{t11.a10}}</td>
+        <td>{{t11.a11}}</td>
+        <td>{{t11.a12}}</td>
+        <td>{{t11.a13}}</td>
+         <td>{{t11.a14}}</td>
+        <td>{{t11.a14}}</td>
+        <td>{{t11.a16}}</td>
+    </tr>
+    <tr>
+        <th>合计</th>
+        <th>{{table12TotalP3.a1}}</th>
+        <th>{{table12TotalP3.a2}}</th>
+        <th>{{table12TotalP3.a3}}</th>
+        <th>{{table12TotalP3.a4}}</th>
+        <th>{{table12TotalP3.a5}}</th>
+        <th>{{table12TotalP3.a6}}</th>
+        <th>{{table12TotalP3.a7}}</th>
+        <th>{{table12TotalP3.a8}}</th>
+        <th>{{table12TotalP3.a9}}</th>
+        <th>{{table12TotalP3.a10}}</th>
+        <th>{{table12TotalP3.a11}}</th>
+        <th>{{table12TotalP3.a12}}</th>
+        <th>{{table12TotalP3.a13}}</th>
+        <th>{{table12TotalP3.a14}}</th>
+        <th>{{table12TotalP3.a15}}</th>
+        <th>{{table12TotalP3.a16}}</th>
+    </tr>
+</table>
+</div>
+
+<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<p>..</p>
