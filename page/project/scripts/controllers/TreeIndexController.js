@@ -122,33 +122,215 @@ function TreeIndexController($scope, $http, user) {
     $scope.table12DatasP3 = []; //第三页
     $scope.table12TotalP3 = {};
     $scope.getAllTable12Datas = getAllTable12Datas;      //获取1-1数据
+    //表5相关
+    $scope.curTable5 = {};
+    $scope.table5Datas = [];
+    $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
+    $scope.getAllTable5Datas = getAllTable5Datas;
+    $scope.saveTable5Data = saveTable5Data;
+    $scope.getTable5ByPK = getTable5ByPK;
+    $scope.deleteTable5 = deleteTable5;
+    //表7-1相关
+    $scope.curTable71 = {};
+    $scope.table71Datas = [];
+    $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
+    $scope.getAllTable71Datas = getAllTable71Datas;
+    $scope.saveTable71Data = saveTable71Data;
+    $scope.getTable71ByPK = getTable71ByPK;
+    $scope.deleteTable71 = deleteTable71;
 
 
 
     /* 
      * 内部函数
      */
-    function getTable43ByPK(autoID){
+    function getTable71ByPK(autoID) {
+        $http.get('http://localhost:8081/getTable71ByPK?autoID=' + autoID)
+            .success(function (res) {
+                $scope.curTable71 = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function deleteTable71(autoID) {
+        $http.get('http://localhost:8081/deleteTable71?autoID=' + autoID)
+            .success(function (res) {
+                alert("删除成功！");
+                getAllTable71Datas();
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function saveTable71Data() {
+        //更新   //c3 line a1 b1 f1 m1 a2 b2 f2 m2 city
+        if ($scope.curTable71 != null && $scope.curTable71.autoID != null) {
+            var urlPara = '';
+            var t1Para = ['c3', 'line', "a1", "b1", "f1", "m1", "a2", "b2", "f2", "m2", 'autoID'];
+            for (let i = 0; i < t1Para.length; i++) {
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
+            }
+            //console.log(urlPara);
+            $http.get('http://localhost:8081/updateTable71?' + urlPara)
+                .success(function (res) {
+                    alert("更新表71成功！");
+                })
+                .error(function (res) {
+                    alert("更新表71数据出错");
+                });
+        }
+        //添加
+        else {
+            $scope.curTable71.city = $scope.cityName;
+            var urlPara = '';
+            var t1Para = ['c3', 'line', "a1", "b1", "f1", "m1", "a2", "b2", "f2", "m2", 'city'];
+            for (let i = 0; i < t1Para.length; i++) {
+                if ($scope.curTable71[t1Para[i]] == null)
+                    $scope.curTable71[t1Para[i]] = '';
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
+            }
+            //console.log(urlPara);
+            $http.get('http://localhost:8081/addTable71?' + urlPara)
+                .success(function (res) {
+                    alert("添加表71成功！");
+                })
+                .error(function (res) {
+                    alert("添加表71数据出错");
+                });
+        }
+        $scope.curTable71 = {};
+        getAllTable71Datas();
+    }
+    function getAllTable71Datas() {
+        $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0};
+        $http.get('http://localhost:8081/getTable71')
+            .success(function (res) {
+                $scope.table71Datas = res;
+                for (var i = 0; i < res.length; i++) {
+                    var t71Arr = ["a1", "b1", "f1", "m1", "a2", "b2", "f2", "m2"];
+                    
+                    for(var j=0;j<t71Arr.length;j++){
+                        res[i][t71Arr[j]] = res[i][t71Arr[j]] * 1;
+                        $scope.table71Total[t71Arr[j]] = $scope.table71Total[t71Arr[j]] + res[i][t71Arr[j]];
+                    }
+                    $scope.table71Datas[i].t1 = res[i].a1 + res[i].b1;
+                    $scope.table71Datas[i].t2 = res[i].a2 + res[i].b2;
+                    $scope.table71Total.t1 = $scope.table71Total.t1 + $scope.table71Datas[i].t1;
+                    $scope.table71Total.t2 = $scope.table71Total.t2 + $scope.table71Datas[i].t2;
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getTable5ByPK(autoID) {
+        $http.get('http://localhost:8081/getTable5ByPK?autoID=' + autoID)
+            .success(function (res) {
+                $scope.curTable5 = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function deleteTable5(autoID) {
+        $http.get('http://localhost:8081/deleteTable5?autoID=' + autoID)
+            .success(function (res) {
+                alert("删除成功！");
+                getAllTable5Datas();
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function saveTable5Data() {
+        //更新  // id name address area a1 a2 a3 a4 a5 doc city
+        if ($scope.curTable5 != null && $scope.curTable5.autoID != null) {
+            var urlPara = '';
+            var t1Para = ['name', 'id', 'address', 'area', 'a1', 'a2', 'a3', 'a4', 'a5', 'doc', 'autoID'];
+            for (let i = 0; i < t1Para.length; i++) {
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
+            }
+            //console.log(urlPara);
+            $http.get('http://localhost:8081/updateTable5?' + urlPara)
+                .success(function (res) {
+                    alert("更新表5成功！");
+                })
+                .error(function (res) {
+                    alert("更新表5数据出错");
+                });
+        }
+        //添加
+        else {
+            //name id type unit quantity price total city
+            $scope.curTable5.city = $scope.cityName;
+            var urlPara = '';
+            var t1Para = ['name', 'id', 'address', 'area', 'a1', 'a2', 'a3', 'a4', 'a5', 'doc', 'city'];
+            for (let i = 0; i < t1Para.length; i++) {
+                if ($scope.curTable5[t1Para[i]] == null)
+                    $scope.curTable5[t1Para[i]] = '';
+                urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
+            }
+            console.log(urlPara);
+            $http.get('http://localhost:8081/addTable5?' + urlPara)
+                .success(function (res) {
+                    alert("添加表5成功！");
+                })
+                .error(function (res) {
+                    alert("添加表5数据出错");
+                });
+        }
+        $scope.curTable5 = {};
+        getAllTable5Datas();
+    }
+    function getAllTable5Datas() {
+        $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
+        $http.get('http://localhost:8081/getTable5')
+            .success(function (res) {
+                $scope.table5Datas = res;
+                for (var i = 0; i < res.length; i++) {
+                    res[i].area = res[i].area * 1;
+                    res[i].a1 = res[i].a1 * 1;
+                    res[i].a2 = res[i].a2 * 1;
+                    res[i].a3 = res[i].a3 * 1;
+                    res[i].a4 = res[i].a4 * 1;
+                    res[i].a5 = res[i].a5 * 1;
+                    $scope.table5Datas[i].total = res[i].a1 + res[i].a2 + res[i].a3 + res[i].a4 + res[i].a5;
+                    $scope.table5Datas[i].total = $scope.table5Datas[i].total * 1;
+                    $scope.table5Total.area = $scope.table5Total.area + res[i].area;
+                    $scope.table5Total.a1 = $scope.table5Total.a1 + res[i].a1;
+                    $scope.table5Total.a2 = $scope.table5Total.a2 + res[i].a2;
+                    $scope.table5Total.a3 = $scope.table5Total.a3 + res[i].a3;
+                    $scope.table5Total.a4 = $scope.table5Total.a4 + res[i].a4;
+                    $scope.table5Total.a5 = $scope.table5Total.a5 + res[i].a5;
+                    $scope.table5Total.total = $scope.table5Total.total + $scope.table5Datas[i].total;
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getTable43ByPK(autoID) {
         $http.get('http://localhost:8081/getTable43ByPK?autoID=' + autoID)
-                .success(function (res) {
-                    $scope.curTable43 = res[0];
-                })
-                .error(function (res) {
-                    alert("网络出错");
-                });   
+            .success(function (res) {
+                $scope.curTable43 = res[0];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
     }
-    function deleteTable43(autoID){
+    function deleteTable43(autoID) {
         $http.get('http://localhost:8081/deleteTable43?autoID=' + autoID)
-                .success(function (res) {
-                    alert("删除成功！");
-                    getAllTable43Datas();
-                })
-                .error(function (res) {
-                    alert("网络出错");
-                });  
+            .success(function (res) {
+                alert("删除成功！");
+                getAllTable43Datas();
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
     }
-    function saveTable43Data(){
-         //更新
+    function saveTable43Data() {
+        //更新
         if ($scope.curTable43 != null && $scope.curTable43.autoID != null) {
             var urlPara = '';
             var t1Para = ['name', 'id', 'type', 'price', 'total', 'unit', 'quantity', 'autoID'];
@@ -164,7 +346,7 @@ function TreeIndexController($scope, $http, user) {
                     alert("更新表4-3数据出错");
                 });
         }
-         //添加
+        //添加
         else {
             //name id type unit quantity price total city
             $scope.curTable43.city = $scope.cityName;
@@ -187,12 +369,12 @@ function TreeIndexController($scope, $http, user) {
         $scope.curTable43 = {};
         getAllTable43Datas();
     }
-    function getAllTable43Datas(){
+    function getAllTable43Datas() {
         $scope.table43Total = { "t1": 0, "t2": 0 };
         $http.get('http://localhost:8081/getTable43')
             .success(function (res) {
                 $scope.table43Datas = res;
-                for(var i=0;i<res.length;i++){
+                for (var i = 0; i < res.length; i++) {
                     res[i].quantity = res[i].quantity * 1;
                     res[i].total = res[i].total * 1;
                     $scope.table43Total.t1 = $scope.table43Total.t1 + res[i].quantity;
@@ -1283,6 +1465,9 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case '4':
                 getPeopleList();
+                break;
+            case '5':
+                getAllTable5Datas();
                 break;
             case '11':
                 getAllTable11Datas();

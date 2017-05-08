@@ -1,58 +1,101 @@
 <!--建协7-1-->
-                <div ng-if="_ttrl.tableIndex == '71'">
-                    <h4>新建铁路统征统迁完成数量统计表</h4>
-                    <div>
-                        <table border="1" class="table table-striped table-hover">
-                            <tr>
-                                <th rowspan="3">镇(乡、街办)</th>
-                                <th rowspan="3">起讫里程</th>
-                                <th colspan="5">统征统迁数量</th>
-                                <th colspan="5">实际完成数量</th>
-                            </tr>
-                            <tr>
-                                <th colspan="3">用地</th>
-                                <th colspan="2">拆迁</th>
-                                <th colspan="3">用地</th>
-                                <th colspan="2">拆迁</th>
-                            </tr>
-                            <tr>
-                                <th>国有土地（亩）</th>
-                                <th>集体土地（亩）</th>
-                                <th>合计（亩）</th>
-                                <th>户数</th>
-                                <th>房屋面积</th>
-                                <th>国有土地（亩）</th>
-                                <th>集体土地（亩）</th>
-                                <th>合计（亩）</th>
-                                <th>户数</th>
-                                <th>房屋面积</th>
-                            </tr>
-                            <tr ng-repeat="t5 in _ttrl.table5Datas">
-                                <td>{{t43.name}}</td>
-                                <td>{{t43.id}}</td>
-                                <td>{{t43.type}}</td>
-                                <td>{{t43.unit}}</td>
-                                <td>{{t43.quantity}}</td>
-                                <td>{{t43.price}}</td>
-                                <td>{{t43.total}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.name" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.id" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.type" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.unit" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.quantity" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.price" type="text" style="width:60px;"></td>
-                                <td>
-                                    <input ng-model="_ttrl.curTable43.total" type="text" style="width:60px;"></td>
-                            </tr>
-                        </table>
-                        <md-button ng-click="_ttrl.saveTable43Data()" class="md-raised md-info">保存数据</md-button>
-                    </div>
-                </div>
+<h3 align="center">新建铁路统征统迁完成数量统计表</h3>
+<label style="display: inline-block">建协7-1</label>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+
+<table border="1" class="table table-striped table-hover">
+    <tr>
+        <th rowspan="3">镇(乡、街办)</th>
+        <th rowspan="3">起讫里程</th>
+        <th colspan="5">统征统迁数量</th>
+        <th colspan="5">实际完成数量</th>
+        <th rowspan="3">编辑</th>
+        <th rowspan="3">删除</th>
+    </tr>
+    <tr>
+        <th colspan="3">用地</th>
+        <th colspan="2">拆迁</th>
+        <th colspan="3">用地</th>
+        <th colspan="2">拆迁</th>
+    </tr>
+    <tr>
+        <th>国有土地（亩）</th>
+        <th>集体土地（亩）</th>
+        <th>合计（亩）</th>
+        <th>户数</th>
+        <th>房屋面积</th>
+        <th>国有土地（亩）</th>
+        <th>集体土地（亩）</th>
+        <th>合计（亩）</th>
+        <th>户数</th>
+        <th>房屋面积</th>
+    </tr> 
+    <tr ng-repeat="t71 in table71Datas">
+        <td>{{t71.c3}}</td>
+        <td>{{t71.line}}</td>
+        <td>{{t71.a1}}</td>
+        <td>{{t71.b1}}</td>
+        <td>{{t71.t1}}</td>
+        <td>{{t71.f1}}</td>
+        <td>{{t71.m1}}</td>
+        <td>{{t71.a2}}</td>
+        <td>{{t71.b2}}</td>
+        <td>{{t71.t2}}</td>
+        <td>{{t71.f2}}</td>
+        <td>{{t71.m2}}</td>
+        <td>
+            <button ng-click="getTable71ByPK(t71.autoID)" class="btn btn-primary btn-small">编辑</button>
+        </td>
+        <td>
+            <button ng-click="deleteTable71(t71.autoID)" class="btn btn-danger btn-middle">删除</button>
+        </td>
+    </tr>
+     <tr>
+        <th colspan="2">本页合计</th>
+        <td>{{table71Total.a1}}</td>
+        <td>{{table71Total.b1}}</td>
+        <td>{{table71Total.t1}}</td>
+        <td>{{table71Total.f1}}</td>
+        <td>{{table71Total.m1}}</td>
+        <td>{{table71Total.a2}}</td>
+        <td>{{table71Total.b2}}</td>
+        <td>{{table71Total.t2}}</td>
+        <td>{{table71Total.f2}}</td>
+        <td>{{table71Total.m2}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+            <th colspan="14">正在添加/编辑的数据：</th>
+    </tr>
+    <tr>
+        <td> 
+            <input ng-model="curTable71.c3" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.line" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.a1" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.b1" type="text" style="width:60px;"></td>
+        <td></td>
+        <td>
+            <input ng-model="curTable71.f1" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.m1" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.a2" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.b2" type="text" style="width:60px;"></td>
+        <td></td>
+        <td>
+            <input ng-model="curTable71.f2" type="text" style="width:60px;"></td>
+        <td>
+            <input ng-model="curTable71.m2" type="text" style="width:60px;"></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<md-button ng-click="saveTable71Data()" class="btn btn-default">保存数据</md-button>
+<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
