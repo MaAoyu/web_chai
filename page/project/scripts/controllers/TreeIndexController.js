@@ -138,12 +138,244 @@ function TreeIndexController($scope, $http, user) {
     $scope.saveTable71Data = saveTable71Data;
     $scope.getTable71ByPK = getTable71ByPK;
     $scope.deleteTable71 = deleteTable71;
+    //表9-1相关 
+    $scope.table91Datas = [];
+    $scope.table91NumDatas = ["", "", "", "", "", "", "", "二"];
+    $scope.table91NameDatas = ["1、土地补偿费", "2、安置补偿费", "3、人员社保补贴费用", "4、青苗补偿费", "5、房屋安置费用",
+        "6、地上附着物", "7、农户搬迁及相关费费用", "工作经费"];
+    $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+    $scope.getAllTable91Datas = getAllTable91Datas;
+    $scope.saveTable91Data = saveTable91Data;
+    //表9-2相关 
+    $scope.table92Datas = [];
+    $scope.table92Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+    //表9-3相关 
+    $scope.table93Datas = [];
+    $scope.table93NumDatas = ["一", "", "", "", "", "", "二", "三"];
+    $scope.table93NameDatas = ["征地补偿及拆迁安置费用", "", "", "", "", "", "工作经费", "税费"];
+    $scope.table93Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+    $scope.getAllTable93Datas = getAllTable93Datas;
+    $scope.saveTable93Data = saveTable93Data;
+    //表9相关 
+    $scope.table9Datas = [];
+    $scope.table9NumDatas = ["一", "", "", "", "二", "", "三", "", "四"];
+    $scope.table9NameDatas = ["征收国有土地补偿安置费用", "", "", "", "征收集体土地补偿安置费用", "", "工作经费", "", "税费等其他费用"];
+    $scope.table9Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+    //表10-1相关 
+    $scope.table101Datas = [];
+    $scope.table101NumDatas = ["一", "二"];
+    $scope.table101NameDatas = ["国有土地", "集体土地"];
+    $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+    $scope.getAllTable101Datas = getAllTable101Datas;
+    $scope.saveTable101Data = saveTable101Data;
 
 
 
     /* 
      * 内部函数
      */
+    function saveTable101Data(autoID, index) {
+        //unit price a1 a2 a3 a4 autoID
+        var urlPara = '';
+        var t1Para = ['unit', 'price', "a1", "a2", "a3", "a4", 'autoID'];
+        for (let i = 0; i < t1Para.length; i++) {
+            urlPara = urlPara + t1Para[i] + '=' + $scope.table101Datas[index][t1Para[i]] + '&';
+        }
+        console.log(urlPara);
+        $http.get('http://localhost:8081/updateTable101?' + urlPara)
+            .success(function (res) {
+                alert("更新表101成功！");
+            })
+            .error(function (res) {
+                alert("更新表101数据出错");
+            });
+        getAllTable101Datas();
+    }
+    function getAllTable101Datas() {
+        $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+        $http.get('http://localhost:8081/getTable101?city=' + $scope.cityName)
+            .success(function (res) {
+                res.sort(function (a, b) {
+                    return a.index1 - b.index1
+                });
+                console.log(JSON.stringify(res));
+
+                $scope.table101Datas = res;
+                // for (var i = 0; i < res.length; i++) {
+                //     var t101Arr = ["a1", "a2", "a3", "a4"];
+                //     for (var j = 0; j < t101Arr.length; j++) {
+                //         res[i][t101Arr[j]] = res[i][t101Arr[j]] * 1;
+                //         $scope.table101Total[t101Arr[j]] = $scope.table101Total[t101Arr[j]] + res[i][t101Arr[j]];
+                //     }
+                //     $scope.table101Datas[i].b1 = res[i].a1 * res[i].price;
+                //     $scope.table101Datas[i].b2 = res[i].a2 * res[i].price;
+                //     $scope.table101Datas[i].b3 = res[i].a3 * res[i].price;
+                //     $scope.table101Datas[i].b4 = res[i].a4 * res[i].price;
+                //     $scope.table101Total.b1 = $scope.table101Total.b1 + $scope.table101Datas[i].b1;
+                //     $scope.table101Total.b2 = $scope.table101Total.b2 + $scope.table101Datas[i].b2;
+                //     $scope.table101Total.b3 = $scope.table101Total.b3 + $scope.table101Datas[i].b3;
+                //     $scope.table101Total.b4 = $scope.table101Total.b4 + $scope.table101Datas[i].b4;
+                // }
+                //console.log(JSON.stringify($scope.table101Datas));
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function saveTable93Data(autoID, index) {
+        //unit price a1 a2 a3 a4 autoID
+        var urlPara = '';
+        var t1Para = ['unit', 'price', "a1", "a2", "a3", "a4", 'autoID'];
+        for (let i = 0; i < t1Para.length; i++) {
+            urlPara = urlPara + t1Para[i] + '=' + $scope.table93Datas[index][t1Para[i]] + '&';
+        }
+        console.log(urlPara);
+        $http.get('http://localhost:8081/updateTable93?' + urlPara)
+            .success(function (res) {
+                alert("更新表93成功！");
+            })
+            .error(function (res) {
+                alert("更新表93数据出错");
+            });
+        getAllTable93Datas();
+    }
+    function getAllTable93Datas() {
+        $scope.table93Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+        $http.get('http://localhost:8081/getTable93?city=' + $scope.cityName)
+            .success(function (res) {
+                res.sort(function (a, b) {
+                    return a.index1 - b.index1
+                });
+                // console.log(JSON.stringify(res));
+
+                $scope.table93Datas = res;
+                for (var i = 0; i < res.length; i++) {
+                    var t93Arr = ["a1", "a2", "a3", "a4"];
+                    for (var j = 0; j < t93Arr.length; j++) {
+                        res[i][t93Arr[j]] = res[i][t93Arr[j]] * 1;
+                        $scope.table93Total[t93Arr[j]] = $scope.table93Total[t93Arr[j]] + res[i][t93Arr[j]];
+                    }
+                    $scope.table93Datas[i].b1 = res[i].a1 * res[i].price;
+                    $scope.table93Datas[i].b2 = res[i].a2 * res[i].price;
+                    $scope.table93Datas[i].b3 = res[i].a3 * res[i].price;
+                    $scope.table93Datas[i].b4 = res[i].a4 * res[i].price;
+                    $scope.table93Total.b1 = $scope.table93Total.b1 + $scope.table93Datas[i].b1;
+                    $scope.table93Total.b2 = $scope.table93Total.b2 + $scope.table93Datas[i].b2;
+                    $scope.table93Total.b3 = $scope.table93Total.b3 + $scope.table93Datas[i].b3;
+                    $scope.table93Total.b4 = $scope.table93Total.b4 + $scope.table93Datas[i].b4;
+                }
+                //console.log(JSON.stringify($scope.table93Datas));
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function getAllTable92Datas() {
+        $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+        $http.get('http://localhost:8081/getTable92Sum?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.table92Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+                for (var j = 0; j < res.length; j++) {
+                    var new92 = new Object();
+                    new92.index1 = res[j].index1;
+                    new92.a1 = res[j]["sum(a1)"];
+                    new92.a2 = res[j]["sum(a2)"];
+                    new92.a3 = res[j]["sum(a3)"];
+                    new92.a4 = res[j]["sum(a4)"];
+                    $scope.table92Total.a1 = $scope.table92Total.a1 + new92.a1;
+                    $scope.table92Total.a2 = $scope.table92Total.a2 + new92.a2;
+                    $scope.table92Total.a3 = $scope.table92Total.a3 + new92.a3;
+                    $scope.table92Total.a4 = $scope.table92Total.a4 + new92.a4;
+                    $scope.table92Datas.push(new92);
+                }
+                $http.get('http://localhost:8081/getTable92?city=' + $scope.cityName)
+                    .success(function (res2) {
+                        //console.log(JSON.stringify(res2));
+                        for (var j = 0; j < res2.length; j++) {
+                            for (var i = 0; i < 8; i++) {
+                                if (res2[j].index1 == $scope.table92Datas[i].index1) {
+                                    console.log("i:" + i + ";j:" + j);
+                                    if (res2[j].unit != null && res2[j].price != null) {
+                                        $scope.table92Datas[i].unit = res2[j].unit;
+                                        $scope.table92Datas[i].price = res2[j].price;
+                                        $scope.table92Datas[i].b1 = $scope.table92Datas[i].a1 * res2[j].price;
+                                        $scope.table92Datas[i].b2 = $scope.table92Datas[i].a2 * res2[j].price;
+                                        $scope.table92Datas[i].b3 = $scope.table92Datas[i].a3 * res2[j].price;
+                                        $scope.table92Datas[i].b4 = $scope.table92Datas[i].a4 * res2[j].price;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        var t92Arr = ['b1','b2','b3','b4'];
+                        for (var i = 0; i < 8; i++) {
+                            for (var j = 0; j < t92Arr.length; j++) {
+                                if($scope.table92Datas[i][t92Arr[j]]==null){
+                                     $scope.table92Datas[i][t92Arr[j]]=0;
+                                }
+                                $scope.table92Total[t92Arr[j]] = $scope.table92Total[t92Arr[j]] + $scope.table92Datas[i][t92Arr[j]];
+                            }
+                        }
+                        $scope.table92Datas.sort(function (a, b) {
+                            return a.index1 - b.index1
+                        });
+                        //console.log(JSON.stringify($scope.table92Datas));
+                    })
+                    .error(function (res2) {
+                    });
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function saveTable91Data(autoID, index) {
+        //unit price a1 a2 a3 a4 autoID
+        var urlPara = '';
+        var t1Para = ['unit', 'price', "a1", "a2", "a3", "a4", 'autoID'];
+        for (let i = 0; i < t1Para.length; i++) {
+            urlPara = urlPara + t1Para[i] + '=' + $scope.table91Datas[index][t1Para[i]] + '&';
+        }
+        console.log(urlPara);
+        $http.get('http://localhost:8081/updateTable91?' + urlPara)
+            .success(function (res) {
+                alert("更新表91成功！");
+            })
+            .error(function (res) {
+                alert("更新表91数据出错");
+            });
+        getAllTable91Datas();
+    }
+    function getAllTable91Datas() {
+        $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+        $http.get('http://localhost:8081/getTable91?city=' + $scope.cityName)
+            .success(function (res) {
+                res.sort(function (a, b) {
+                    return a.index1 - b.index1
+                });
+                // console.log(JSON.stringify(res));
+
+                $scope.table91Datas = res;
+                for (var i = 0; i < res.length; i++) {
+                    var t91Arr = ["a1", "a2", "a3", "a4"];
+                    for (var j = 0; j < t91Arr.length; j++) {
+                        res[i][t91Arr[j]] = res[i][t91Arr[j]] * 1;
+                        $scope.table91Total[t91Arr[j]] = $scope.table91Total[t91Arr[j]] + res[i][t91Arr[j]];
+                    }
+                    $scope.table91Datas[i].b1 = res[i].a1 * res[i].price;
+                    $scope.table91Datas[i].b2 = res[i].a2 * res[i].price;
+                    $scope.table91Datas[i].b3 = res[i].a3 * res[i].price;
+                    $scope.table91Datas[i].b4 = res[i].a4 * res[i].price;
+                    $scope.table91Total.b1 = $scope.table91Total.b1 + $scope.table91Datas[i].b1;
+                    $scope.table91Total.b2 = $scope.table91Total.b2 + $scope.table91Datas[i].b2;
+                    $scope.table91Total.b3 = $scope.table91Total.b3 + $scope.table91Datas[i].b3;
+                    $scope.table91Total.b4 = $scope.table91Total.b4 + $scope.table91Datas[i].b4;
+                }
+                //console.log(JSON.stringify($scope.table91Datas));
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
     function getTable71ByPK(autoID) {
         $http.get('http://localhost:8081/getTable71ByPK?autoID=' + autoID)
             .success(function (res) {
@@ -203,14 +435,14 @@ function TreeIndexController($scope, $http, user) {
         getAllTable71Datas();
     }
     function getAllTable71Datas() {
-        $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0};
+        $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
         $http.get('http://localhost:8081/getTable71')
             .success(function (res) {
                 $scope.table71Datas = res;
                 for (var i = 0; i < res.length; i++) {
                     var t71Arr = ["a1", "b1", "f1", "m1", "a2", "b2", "f2", "m2"];
-                    
-                    for(var j=0;j<t71Arr.length;j++){
+
+                    for (var j = 0; j < t71Arr.length; j++) {
                         res[i][t71Arr[j]] = res[i][t71Arr[j]] * 1;
                         $scope.table71Total[t71Arr[j]] = $scope.table71Total[t71Arr[j]] + res[i][t71Arr[j]];
                     }
@@ -1480,6 +1712,18 @@ function TreeIndexController($scope, $http, user) {
                 break;
             case '43':
                 getAllTable43Datas();
+                break;
+            case '91':
+                getAllTable91Datas();
+                break;
+            case '92':
+                getAllTable92Datas();
+                break;
+            case '93':
+                getAllTable93Datas();
+                break;
+            case '101':
+                getAllTable101Datas();
                 break;
             default:
                 break;

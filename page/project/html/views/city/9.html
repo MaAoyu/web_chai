@@ -1,50 +1,81 @@
 <!--建协9-->
-<h4>新建铁路征地拆迁投资完成计价表</h4>
-<div>
-    <table border="1" class="table table-striped table-hover">
-        <tr>
-            <th rowspan="2">序号</th>
-            <th rowspan="2">项目及费用名称</th>
-            <th rowspan="2">计量单位</th>
-            <th rowspan="2">单价</th>
-            <th colspan="2">本月（上、中、下）旬完成(元)</th>
-            <th colspan="2">本季完成(元)</th>
-            <th colspan="2">本年完成(元)</th>
-            <th colspan="2">开累完成(元)</th>
-        </tr>
-        <tr>
-            <th>数量</th>
-            <th>价值(元)</th>
-            <th>数量</th>
-            <th>价值(元)</th>
-            <th>数量</th>
-            <th>价值(元)</th>
-            <th>数量</th>
-            <th>价值(元)</th>
-        </tr>
-        <tr>
-            <th>一</th>
-            <th>征地补偿及拆迁安置费用</th>
-            <td>
-                <input ng-model="_ttrl.curTable91.unit" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.price" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.q1" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.v1" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.q2" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.v2" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.q3" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.v3" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.q4" type="text" style="width:60px;"></td>
-            <td>
-                <input ng-model="_ttrl.curTable91.v4" type="text" style="width:60px;"></td>
-        </tr>
-    </table>
-</div>
+<h3 align="center">新建铁路征地拆迁投资完成计价表</h3>
+<label style="display: inline-block">建协9</label>
+<label style="display: inline-block">工程名称：川南城际铁路</label>
+<input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+
+<table border="1" class="table table-striped table-hover">
+    <tr>
+        <th rowspan="2">序号</th>
+        <th rowspan="2">项目及费用名称</th>
+        <th rowspan="2">计量单位</th>
+        <th rowspan="2">单价</th>
+        <th colspan="2">本月（上、中、下）旬完成(元)</th>
+        <th colspan="2">本季完成(元)</th>
+        <th colspan="2">本年完成(元)</th>
+        <th colspan="2">开累完成(元)</th>
+    </tr>
+    <tr>
+        <th>数量</th>
+        <th>价值</th>
+        <th>数量</th>
+        <th>价值</th>
+        <th>数量</th>
+        <th>价值</th>
+        <th>数量</th>
+        <th>价值</th>
+    </tr> 
+    <tr>
+        <td>一</td>
+        <td>征地补偿及拆迁安置费用</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr ng-repeat="t91 in table9Datas">
+        <td>{{table9NumDatas[$index]}}</td>
+        <td>{{table9NameDatas[$index]}}</td>
+        <td>{{t91.unit}}</td>
+        <td>{{t91.price}}</td>
+        <td>{{t91.a1}}</td>
+        <td>{{t91.b1}}</td>
+        <td>{{t91.a2}}</td>
+        <td>{{t91.b2}}</td>
+        <td>{{t91.a3}}</td>
+        <td>{{t91.b3}}</td>
+        <td>{{t91.a4}}</td>
+        <td>{{t91.b4}}</td>
+    </tr>
+    <tr>
+        <th>五</th>
+        <th>合计</th>
+        <td></td>
+        <td></td>
+        <td>{{table9Total.a1}}</td>
+        <td>{{table9Total.b1}}</td>
+        <td>{{table9Total.a2}}</td>
+        <td>{{table9Total.b2}}</td>
+        <td>{{table9Total.a3}}</td>
+        <td>{{table9Total.b3}}</td>
+        <td>{{table9Total.a4}}</td>
+        <td>{{table9Total.b4}}</td>
+        <td></td>
+    </tr>
+</table>
+<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<p>..</p>
