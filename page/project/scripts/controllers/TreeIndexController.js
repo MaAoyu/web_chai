@@ -102,6 +102,7 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.getAllTable412Datas = getAllTable412Datas;      //根据村名获取4-1建筑物数据
     //表4-2相关
     $scope.table42Datas = [];
+    $scope.realtable42Datas = [];
     $scope.table42Total = { "t1": 0, "t2": 0 };
     $scope.getAllTable42Datas = getAllTable42Datas;      //获取4-2数据
     //表4-3相关
@@ -422,6 +423,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("更新表71数据出错");
                 });
+            getAllTable71Datas($scope.currPage);
         }
         //添加
         else {
@@ -441,18 +443,38 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("添加表71数据出错");
                 });
+            $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+                .success(function (res) {
+                    if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
+                        getAllTable71Datas($scope.totalPages + 1);
+                    }
+                    else {
+                        getAllTable71Datas($scope.totalPages);
+                    }
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
         }
         $scope.curTable71 = {};
-        getAllTable71Datas();
     }
-    function getAllTable71Datas() {
+    function getAllTable71Datas(page) {
+        $scope.currPage = page;
+        $scope.table71Datas = [];
+        $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+
         $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
-        $http.get('http://localhost:8081/getTable71')
+        $http.get('http://localhost:8081/getTable71?city='+ $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table71Datas = res;
                 for (var i = 0; i < res.length; i++) {
                     var t71Arr = ["a1", "b1", "f1", "m1", "a2", "b2", "f2", "m2"];
-
                     for (var j = 0; j < t71Arr.length; j++) {
                         res[i][t71Arr[j]] = res[i][t71Arr[j]] * 1;
                         $scope.table71Total[t71Arr[j]] = $scope.table71Total[t71Arr[j]] + res[i][t71Arr[j]];
@@ -502,6 +524,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("更新表5数据出错");
                 });
+            getAllTable5Datas($scope.currPage);
         }
         //添加
         else {
@@ -522,13 +545,34 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("添加表5数据出错");
                 });
+            $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+                .success(function (res) {
+                    if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
+                        getAllTable5Datas($scope.totalPages + 1);
+                    }
+                    else {
+                        getAllTable5Datas($scope.totalPages);
+                    }
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
         }
         $scope.curTable5 = {};
-        getAllTable5Datas();
     }
-    function getAllTable5Datas() {
+    function getAllTable5Datas(page) {
+        $scope.currPage = page;
+        $scope.table5Datas = [];
+        $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+
         $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
-        $http.get('http://localhost:8081/getTable5')
+        $http.get('http://localhost:8081/getTable5?city='+ $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table5Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -588,6 +632,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("更新表4-3数据出错");
                 });
+            getAllTable43Datas($scope.currPage);
         }
         //添加
         else {
@@ -608,13 +653,34 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("添加表4-3数据出错");
                 });
+            $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+                .success(function (res) {
+                    if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
+                        getAllTable43Datas($scope.totalPages + 1);
+                    }
+                    else {
+                        getAllTable43Datas($scope.totalPages);
+                    }
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
         }
         $scope.curTable43 = {};
-        getAllTable43Datas();
+        
     }
-    function getAllTable43Datas() {
+    function getAllTable43Datas(page) {
+        $scope.currPage = page;
+        $scope.table43Datas = [];
         $scope.table43Total = { "t1": 0, "t2": 0 };
-        $http.get('http://localhost:8081/getTable43')
+        $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getTable43?city='+ $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table43Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -887,14 +953,30 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
         }
     }
-    function getAllTable42Datas() {
+    function getAllTable42Datas(page) {
         $scope.table42Total = { "t1": 0, "t2": 0 };
         $scope.table42Datas = [];
         var count1 = 0;
         var count2 = 0;
-        for (var i = 0; i < $scope.c4CurrList.length; i++) {//1.遍历所有村
+        $scope.currPage = page;
+        if ($scope.c4CurrList.length > 3) {
+            $scope.totalPages = 2;
+            var begin = page == 1 ? 0 : 3;
+            count1 = page == 1 ? 0 : 3;
+            count2 = page == 1 ? 0 : 3;
+            var end = page == 1 ? 3 : $scope.c4CurrList.length;
+        }
+        else {
+            $scope.totalPages = 1;
+            var begin = 0;
+            var end = $scope.c4CurrList.length;
+        }
+        console.log('begin:' + begin + 'end:' + end);
+
+        for (var i = begin; i < end; i++) {//1.遍历所有村
             $http.get('http://localhost:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {                       //2.青苗 
+                    //console.log(JSON.stringify(res));
                     var new42 = new Object();
                     new42.c4 = $scope.c4CurrList[count1];
                     new42.type = "青苗";
@@ -911,7 +993,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     };
                     $scope.table42Datas.push(new42);
                     count1++;
-                    //console.log(JSON.stringify($scope.table42Datas));
+
                     $scope.table42Total.t1 = $scope.table42Total.t1 + new42.quantity;
                     $scope.table42Total.t2 = $scope.table42Total.t2 + new42.total;
                 })
@@ -940,6 +1022,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 })
                 .error(function (res) {
                 });
+            var new42 = new Object();
+            new42.c4 = $scope.c4CurrList[i];
+            new42.type = "土地";
+            new42.unit = "m²";
+            new42.quantity = 0;
+            new42.total = 0;
+            new42.price = 0;
+            $scope.table42Datas.push(new42);
         }
     }
     function getC4List() {
@@ -1309,7 +1399,6 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("网络出错");
                 });
-
         }
         //重载表单
         $scope.curTable3 = {};
@@ -1516,11 +1605,23 @@ function TreeIndexController($scope, $http, $location, user) {
             case '4':
                 getAllTable4Datas($scope.searchName.id, page);
                 break;
+            case '5':
+                getAllTable5Datas(page);
+                break;
             case '411':
                 getAllTable411Datas($scope.table411Total.city4Name, page);
                 break;
             case '412':
                 getAllTable412Datas($scope.table412Total.city4Name, page);
+                break;
+            case '42':
+                getAllTable42Datas(page);
+                break;
+            case '43':
+                getAllTable43Datas(page);
+                break;
+            case '71':
+                getAllTable71Datas(page);
                 break;
             default:
                 console.log("no datas..");
@@ -1805,7 +1906,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 getPeopleList();
                 break;
             case '5':
-                getAllTable5Datas();
+                getAllTable5Datas(1);
                 break;
             case '11':
                 getAllTable11Datas();
@@ -1814,10 +1915,13 @@ function TreeIndexController($scope, $http, $location, user) {
                 getAllTable12Datas();
                 break;
             case '42':
-                getAllTable42Datas();
+                getAllTable42Datas(1);
                 break;
             case '43':
-                getAllTable43Datas();
+                getAllTable43Datas(1);
+                break;
+            case '71':
+                getAllTable71Datas(1);
                 break;
             case '91':
                 getAllTable91Datas();
