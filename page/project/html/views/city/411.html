@@ -10,45 +10,66 @@
 <input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
 <label class="pull-right" style="display: inline-block"> 共 {{totalPages}}   页    第  {{currPage}}  页</label>
 
-<table border="1" class="table table-striped table-hover">
-    <tr>
-        <th>户名</th>
-        <th>凭证编号</th>
-        <th>补偿类别</th>
-        <th>单位</th>
-        <th>数量</th>
-        <th>单价(元)</th>
-        <th>金额(元)</th>
-        <th>领款人（单位）签字盖章</th>
-        <th>备注</th>
-    </tr>
-    <tr ng-repeat="t41 in table411Datas">
-        <td>{{t41.name}}</td>
-        <td></td>
-        <td>青苗</td>
-        <td>{{t41.unit}}</td>
-        <td>{{t41.quantity}}</td>
-        <td>{{t41.price}}</td>
-        <td>{{t41.total}}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <th>合计</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th>{{table411Total.t1}}</th>
-        <th></th>
-        <th>{{table411Total.t2}}</th>
-        <th></th>
-        <th></th>
-    </tr>
-</table>
-<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
-<div style="float: right">
-    <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
-    <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
-    <md-button ng-click="getNextPage(2)" class="btn btn-default">下一页</md-button>
-    <md-button ng-click="getNextPage(3)" class="btn btn-default">末页</md-button>
+<div>
+    <table border="1" class="table table-striped table-hover">
+        <tr>
+            <th>户名</th>
+            <th>凭证编号</th>
+            <th>补偿类别</th>
+            <th>单位</th>
+            <th>数量</th>
+            <th>单价(元)</th>
+            <th>金额(元)</th>
+            <th>领款人（单位）签字盖章</th>
+            <th>备注</th>
+        </tr>
+        <tr ng-repeat="t41 in table411Datas">
+            <td>{{t41.name}}</td>
+            <td></td>
+            <td>青苗</td>
+            <td>亩</td>
+            <td>{{t41.quantity}}</td>
+            <td>{{t41.price}}</td>
+            <td>{{t41.total}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>合计</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>{{table411Total.t1}}</th>
+            <th></th>
+            <th>{{table411Total.t2}}</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </table>
+    <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+    <div style="float: right">
+        <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
+        <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
+        <md-button ng-click="getNextPage(2)" class="btn btn-default">下一页</md-button>
+        <md-button ng-click="getNextPage(3)" class="btn btn-default">末页</md-button>
+    </div>
 </div>
+
+</br>
+<div>
+    <h6>备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、</h6>
+    <h6>青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。</h6>
+    </br>
+    <p style="display: inline-block;margin-right: 100px;">村（社区）：     （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">主管领导：    </p>
+    <p style="display: inline-block;margin-right: 100px;">复核：           </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人：            </p>
+     <p style="display: inline-block;">    年  月  日</p>
+</div>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<p>..</p>
