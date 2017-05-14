@@ -4,7 +4,7 @@ app.value('user', {})
 app.config(function ($locationProvider,$httpProvider,$routeProvider) {
     console.log("载入angular config，跳转到login");
     $routeProvider
-      .when('/log', {
+      .when('/login', {
          //templateUrl: '/page/project/html/views/table2.html'
         templateUrl: '/page/project/html/views/login.html',
         //controller: 'indexController'

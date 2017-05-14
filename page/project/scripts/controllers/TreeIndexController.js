@@ -4,7 +4,7 @@ function TreeIndexController($scope, $http, $location, user) {
     //     //alert("请登陆！");
     //     $location.path("/");
     // }
-    //框架参数
+    // //框架参数
     // $scope.userName = user.name;
     // $scope.userCity1 = user.city1;
     // $scope.userCity2 = user.city2;
