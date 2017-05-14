@@ -146,6 +146,11 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.saveTable71Data = saveTable71Data;
     $scope.getTable71ByPK = getTable71ByPK;
     $scope.deleteTable71 = deleteTable71;
+    //表7相关
+    $scope.c2CurrList = [];
+    $scope.table7Datas = [];
+    $scope.table7Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
+    $scope.getAllTable7Datas = getAllTable7Datas;
     //表9-1相关 
     $scope.table91Datas = [];
     $scope.table91NumDatas = ["", "", "", "", "", "", "", "二"];
@@ -165,12 +170,15 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.getAllTable93Datas = getAllTable93Datas;
     $scope.saveTable93Data = saveTable93Data;
     //表9相关 
-    $scope.table9Datas = [];
-    $scope.table9NumDatas = ["一", "", "", "", "二", "", "三", "", "四"];
-    $scope.table9NameDatas = ["征收国有土地补偿安置费用", "", "", "", "征收集体土地补偿安置费用", "", "工作经费", "", "税费等其他费用"];
+    $scope.t9Data1 = {};
+    $scope.t9Data5 = [1, 2, 3];
+    $scope.t9Data3 = {};
+    $scope.t9Data4 = {};
+    $scope.t9Data2 = {};
     $scope.table9Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
     //表10-1相关 
     $scope.table101Datas = [];
+    $scope.table101Datas2 = [1,2,3,4,5,6,7,8,9,10,11];
     $scope.table101NumDatas = ["一", "二"];
     $scope.table101NameDatas = ["国有土地", "集体土地"];
     $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
@@ -182,6 +190,37 @@ function TreeIndexController($scope, $http, $location, user) {
     /* 
      * 内部函数
      */
+    function getAllTable7Datas() {
+        var count = 0;
+        $scope.table7Datas = [];
+        $scope.table7Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
+        for (var k = 0; k < $scope.c2CurrList.length; k++) {
+            $http.get('http://localhost:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
+                .success(function (res) {
+                    console.log(JSON.stringify(res));
+                    for (var i = 0; i < res.length; i++) {
+                        var new7 = new Object();
+                        new7.c2 = $scope.c2CurrList[count];
+                        count++;
+                        var t7Arr = ['a1', 'b1', 'f1', 'm1', 'a2', 'b2', 'f2', 'm2'];
+                        for (var j = 0; j < t7Arr.length; j++) {
+                            var sumVar = 'sum(' + t7Arr[j] + ')';
+                            new7[t7Arr[j]] = res[i][sumVar];
+                        }
+                        new7.t1 = new7.a1 + new7.b1;
+                        new7.t2 = new7.a2 + new7.b2;
+                        var t7Arr2 = ['a1', 'b1', 't1', 'f1', 'm1', 'a2', 'b2', 't2', 'f2', 'm2'];
+                        for (var j = 0; j < t7Arr2.length; j++) {
+                            $scope.table7Total[t7Arr2[j]] = $scope.table7Total[t7Arr2[j]] + new7[t7Arr2[j]];
+                        }
+                        $scope.table7Datas.push(new7);
+                    }
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
+        }
+    }
     function logout() {
         user = {};
         $location.path("/");
@@ -189,7 +228,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function saveTable101Data(autoID, index) {
         //unit price a1 a2 a3 a4 autoID
         var urlPara = '';
-        var t1Para = ['unit', 'price', "a1", "a2", "a3", "a4", 'autoID'];
+        var t1Para = ['unit', 'price', "a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4", 'autoID'];
         for (let i = 0; i < t1Para.length; i++) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table101Datas[index][t1Para[i]] + '&';
         }
@@ -207,31 +246,86 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
         $http.get('http://localhost:8081/getTable101?city=' + $scope.cityName)
             .success(function (res) {
-                res.sort(function (a, b) {
-                    return a.index1 - b.index1
-                });
-                console.log(JSON.stringify(res));
-
                 $scope.table101Datas = res;
-                // for (var i = 0; i < res.length; i++) {
-                //     var t101Arr = ["a1", "a2", "a3", "a4"];
-                //     for (var j = 0; j < t101Arr.length; j++) {
-                //         res[i][t101Arr[j]] = res[i][t101Arr[j]] * 1;
-                //         $scope.table101Total[t101Arr[j]] = $scope.table101Total[t101Arr[j]] + res[i][t101Arr[j]];
-                //     }
-                //     $scope.table101Datas[i].b1 = res[i].a1 * res[i].price;
-                //     $scope.table101Datas[i].b2 = res[i].a2 * res[i].price;
-                //     $scope.table101Datas[i].b3 = res[i].a3 * res[i].price;
-                //     $scope.table101Datas[i].b4 = res[i].a4 * res[i].price;
-                //     $scope.table101Total.b1 = $scope.table101Total.b1 + $scope.table101Datas[i].b1;
-                //     $scope.table101Total.b2 = $scope.table101Total.b2 + $scope.table101Datas[i].b2;
-                //     $scope.table101Total.b3 = $scope.table101Total.b3 + $scope.table101Datas[i].b3;
-                //     $scope.table101Total.b4 = $scope.table101Total.b4 + $scope.table101Datas[i].b4;
-                // }
-                //console.log(JSON.stringify($scope.table101Datas));
+                for (var i = 0; i < res.length; i++) {
+                    var t101Arr = ["a1", "a2", "a3", "a4","b1", "b2", "b3", "b4"];
+                    for (var j = 0; j < t101Arr.length; j++) {
+                        res[i][t101Arr[j]] = res[i][t101Arr[j]] * 1;
+                        $scope.table101Total[t101Arr[j]] = $scope.table101Total[t101Arr[j]] + res[i][t101Arr[j]];
+                    }
+                }
             })
             .error(function (res) {
                 alert("网络出错");
+            });
+    }
+    function getAllTable9Datas() {
+        $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
+        $http.get('http://localhost:8081/getTable9L1?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.t9Data1.a1 = res[0]['sum(a1)'];
+                $scope.t9Data1.b1 = res[0]['sum(a1*price)'];
+                $scope.t9Data1.a2 = res[0]['sum(a2)'];
+                $scope.t9Data1.b2 = res[0]['sum(a2*price)'];
+                $scope.t9Data1.a3 = res[0]['sum(a3)'];
+                $scope.t9Data1.b3 = res[0]['sum(a3*price)'];
+                $scope.t9Data1.a4 = res[0]['sum(a4)'];
+                $scope.t9Data1.b4 = res[0]['sum(a4*price)'];
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        $http.get('http://localhost:8081/getTable9L2?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.t9Data2.a1 = res[0]['sum(a1)'];
+                $scope.t9Data2.b1 = res[0]['sum(a1*price)'];
+                $scope.t9Data2.a2 = res[0]['sum(a2)'];
+                $scope.t9Data2.b2 = res[0]['sum(a2*price)'];
+                $scope.t9Data2.a3 = res[0]['sum(a3)'];
+                $scope.t9Data2.b3 = res[0]['sum(a3*price)'];
+                $scope.t9Data2.a4 = res[0]['sum(a4)'];
+                $scope.t9Data2.b4 = res[0]['sum(a4*price)'];
+            })
+            .error(function (res) {
+            });
+        $http.get('http://localhost:8081/getTable9L4?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.t9Data4.a1 = res[0]['sum(a1)'];
+                $scope.t9Data4.b1 = res[0]['sum(a1*price)'];
+                $scope.t9Data4.a2 = res[0]['sum(a2)'];
+                $scope.t9Data4.b2 = res[0]['sum(a2*price)'];
+                $scope.t9Data4.a3 = res[0]['sum(a3)'];
+                $scope.t9Data4.b3 = res[0]['sum(a3*price)'];
+                $scope.t9Data4.a4 = res[0]['sum(a4)'];
+                $scope.t9Data4.b4 = res[0]['sum(a4*price)'];
+            })
+            .error(function (res) {
+            });
+        $http.get('http://localhost:8081/getTable9L31?city=' + $scope.cityName)
+            .success(function (res) {
+                $scope.t9Data3.a1 = res[0]['sum(a1)'];
+                $scope.t9Data3.b1 = res[0]['sum(a1*price)'];
+                $scope.t9Data3.a2 = res[0]['sum(a2)'];
+                $scope.t9Data3.b2 = res[0]['sum(a2*price)'];
+                $scope.t9Data3.a3 = res[0]['sum(a3)'];
+                $scope.t9Data3.b3 = res[0]['sum(a3*price)'];
+                $scope.t9Data3.a4 = res[0]['sum(a4)'];
+                $scope.t9Data3.b4 = res[0]['sum(a4*price)'];
+                $http.get('http://localhost:8081/getTable9L32?city=' + $scope.cityName)
+                    .success(function (res) {
+                        $scope.t9Data3.a1 = $scope.t9Data3.a1+res[0]['sum(a1)'];
+                        $scope.t9Data3.b1 = $scope.t9Data3.b1+res[0]['sum(a1*price)'];
+                        $scope.t9Data3.a2 = $scope.t9Data3.a2+res[0]['sum(a2)'];
+                        $scope.t9Data3.b2 = $scope.t9Data3.b2+res[0]['sum(a2*price)'];
+                        $scope.t9Data3.a3 = $scope.t9Data3.a3+res[0]['sum(a3)'];
+                        $scope.t9Data3.b3 = $scope.t9Data3.b3+res[0]['sum(a3*price)'];
+                        $scope.t9Data3.a4 = $scope.t9Data3.a4+res[0]['sum(a4)'];
+                        $scope.t9Data3.b4 = $scope.t9Data3.b4+res[0]['sum(a4*price)'];
+                    })
+                    .error(function (res) {
+                    });
+            })
+            .error(function (res) {
             });
     }
     function saveTable93Data(autoID, index) {
@@ -470,7 +564,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
-        $http.get('http://localhost:8081/getTable71?city='+ $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable71?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table71Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -572,7 +666,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
-        $http.get('http://localhost:8081/getTable5?city='+ $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable5?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table5Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -667,7 +761,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
         }
         $scope.curTable43 = {};
-        
+
     }
     function getAllTable43Datas(page) {
         $scope.currPage = page;
@@ -680,7 +774,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable43?city='+ $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable43?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table43Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -817,6 +911,11 @@ function TreeIndexController($scope, $http, $location, user) {
                     alert("网络出错");
                 });
         }
+    }
+    function getC2List() {
+        $http.get('page/project/conf/city2.json').success(function (data) {
+            $scope.c2CurrList = data[$scope.cityName];
+        });
     }
     function getC3List() {
         $http.get('page/project/conf/city3.json').success(function (data) {
@@ -1857,6 +1956,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.cityLevel = '1';
         $scope.tableIndex = '0';
         $scope.isManageUser = 0;
+        getC2List();
         //console.log("$scope.citys1[index].flag:"+$scope.citys1[index].flag);
     }
     function isShowCity2(index) {  //第二层展开
@@ -1907,6 +2007,15 @@ function TreeIndexController($scope, $http, $location, user) {
                 break;
             case '5':
                 getAllTable5Datas(1);
+                break;
+            case '7':
+                getAllTable7Datas();
+                break;
+            case '9':
+                getAllTable9Datas();
+                break;
+            case '10':
+                getAllTable101Datas();
                 break;
             case '11':
                 getAllTable11Datas();

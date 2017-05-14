@@ -1,6 +1,6 @@
 <!--建协7-->
 <h3 align="center">新建铁路统征统迁完成数量统计表</h3>
-<label style="display: inline-block">建协7-1</label>
+<label style="display: inline-block">建协7</label>
 <label style="display: inline-block">工程名称：川南城际铁路</label>
 <input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
 <input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
@@ -30,20 +30,50 @@
         <th>户数</th>
         <th>房屋面积</th>
     </tr>
+     <tr ng-repeat="t7 in table7Datas">
+        <td>{{t7.c2}}</td>
+        <td>{{t7.line}}</td>
+        <td>{{t7.a1}}</td>
+        <td>{{t7.b1}}</td>
+        <td>{{t7.t1}}</td>
+        <td>{{t7.f1}}</td>
+        <td>{{t7.m1}}</td>
+        <td>{{t7.a2}}</td>
+        <td>{{t7.b2}}</td>
+        <td>{{t7.t2}}</td>
+        <td>{{t7.f2}}</td>
+        <td>{{t7.m2}}</td>
+     </tr>
     <tr>
         <th colspan="2">本页合计</th>
-        <td>{{table71Total.a1}}</td>
-        <td>{{table71Total.b1}}</td>
-        <td>{{table71Total.t1}}</td>
-        <td>{{table71Total.f1}}</td>
-        <td>{{table71Total.m1}}</td>
-        <td>{{table71Total.a2}}</td>
-        <td>{{table71Total.b2}}</td>
-        <td>{{table71Total.t2}}</td>
-        <td>{{table71Total.f2}}</td>
-        <td>{{table71Total.m2}}</td>
-        <td></td>
-        <td></td>
+        <td>{{table7Total.a1}}</td>
+        <td>{{table7Total.b1}}</td>
+        <td>{{table7Total.t1}}</td>
+        <td>{{table7Total.f1}}</td>
+        <td>{{table7Total.m1}}</td>
+        <td>{{table7Total.a2}}</td>
+        <td>{{table7Total.b2}}</td>
+        <td>{{table7Total.t2}}</td>
+        <td>{{table7Total.f2}}</td>
+        <td>{{table7Total.m2}}</td>
     </tr>
 </table>
 <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+
+</br>
+<div>
+    <h6>备注：本表由市铁建办依据各县（区）填写的建协表—7—1填制，统征统迁数量一栏中填写本线在本区域所需征拆总量。</h6>
+    </br>
+    <p style="display: inline-block;margin-right: 100px;">市政府主管单位: （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">主管领导： </p>
+    <p style="display: inline-block;margin-right: 100px;">复核： </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人： </p>
+    <p style="display: inline-block;"> 年 月 日</p>
+</div>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<p>..</p>

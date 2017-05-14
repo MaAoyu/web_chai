@@ -25,10 +25,23 @@
         <th>价值</th>
         <th>数量</th>
         <th>价值</th>
-    </tr> 
+    </tr>
     <tr>
         <td>一</td>
-        <td>征地补偿及拆迁安置费用</td>
+        <td>征收国有土地补偿安置费用</td>
+        <td></td>
+        <td></td>
+        <td>{{t9Data1.a1}}</td>
+        <td>{{t9Data1.b1}}</td>
+        <td>{{t9Data1.a2}}</td>
+        <td>{{t9Data1.b2}}</td>
+        <td>{{t9Data1.a3}}</td>
+        <td>{{t9Data1.b3}}</td>
+        <td>{{t9Data1.a4}}</td>
+        <td>{{t9Data1.b4}}</td>
+    </tr>
+    <tr ng-repeat="t9 in t9Data5">
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -41,37 +54,103 @@
         <td></td>
         <td></td>
     </tr>
-    <tr ng-repeat="t91 in table9Datas">
-        <td>{{table9NumDatas[$index]}}</td>
-        <td>{{table9NameDatas[$index]}}</td>
-        <td>{{t91.unit}}</td>
-        <td>{{t91.price}}</td>
-        <td>{{t91.a1}}</td>
-        <td>{{t91.b1}}</td>
-        <td>{{t91.a2}}</td>
-        <td>{{t91.b2}}</td>
-        <td>{{t91.a3}}</td>
-        <td>{{t91.b3}}</td>
-        <td>{{t91.a4}}</td>
-        <td>{{t91.b4}}</td>
+    <tr>
+        <td>二</td>
+        <td>征收集体土地补偿安置费用</td>
+        <td></td>
+        <td></td>
+        <td>{{t9Data2.a1}}</td>
+        <td>{{t9Data2.b1}}</td>
+        <td>{{t9Data2.a2}}</td>
+        <td>{{t9Data2.b2}}</td>
+        <td>{{t9Data2.a3}}</td>
+        <td>{{t9Data2.b3}}</td>
+        <td>{{t9Data2.a4}}</td>
+        <td>{{t9Data2.b4}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>三</td>
+        <td>工作经费</td>
+        <td></td>
+        <td></td>
+        <td>{{t9Data3.a1}}</td>
+        <td>{{t9Data3.b1}}</td>
+        <td>{{t9Data3.a2}}</td>
+        <td>{{t9Data3.b2}}</td>
+        <td>{{t9Data3.a3}}</td>
+        <td>{{t9Data3.b3}}</td>
+        <td>{{t9Data3.a4}}</td>
+        <td>{{t9Data3.b4}}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>四</td>
+        <td>税费等其他费用</td>
+        <td></td>
+        <td></td>
+        <td>{{t9Data4.a1}}</td>
+        <td>{{t9Data4.b1}}</td>
+        <td>{{t9Data4.a2}}</td>
+        <td>{{t9Data4.b2}}</td>
+        <td>{{t9Data4.a3}}</td>
+        <td>{{t9Data4.b3}}</td>
+        <td>{{t9Data4.a4}}</td>
+        <td>{{t9Data4.b4}}</td>
     </tr>
     <tr>
         <th>五</th>
         <th>合计</th>
         <td></td>
         <td></td>
-        <td>{{table9Total.a1}}</td>
-        <td>{{table9Total.b1}}</td>
-        <td>{{table9Total.a2}}</td>
-        <td>{{table9Total.b2}}</td>
-        <td>{{table9Total.a3}}</td>
-        <td>{{table9Total.b3}}</td>
-        <td>{{table9Total.a4}}</td>
-        <td>{{table9Total.b4}}</td>
+        <td>{{t9Data1.a1+t9Data2.a1+t9Data3.a1+t9Data4.a1}}</td>
+        <td>{{t9Data1.b1+t9Data2.b1+t9Data3.b1+t9Data4.b1}}</td>
+        <td>{{t9Data1.a2+t9Data2.a2+t9Data3.a2+t9Data4.a2}}</td>
+        <td>{{t9Data1.b2+t9Data2.b2+t9Data3.b2+t9Data4.b2}}</td>
+        <td>{{t9Data1.a3+t9Data2.a3+t9Data3.a3+t9Data4.a3}}</td>
+        <td>{{t9Data1.b3+t9Data2.b3+t9Data3.b3+t9Data4.b3}}</td>
+        <td>{{t9Data1.a4+t9Data2.a4+t9Data3.a4+t9Data4.a4}}</td>
+        <td>{{t9Data1.b4+t9Data2.b4+t9Data3.b4+t9Data4.b4}}</td>
         <td></td>
     </tr>
 </table>
 <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+</br>
+<div>
+    <h6>备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。</h6>
+    </br>
+    <p style="display: inline-block;margin-right: 100px;">主管部门： （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">分管领导： </p>
+    <p style="display: inline-block;margin-right: 100px;">复核： </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人： </p>
+    <p style="display: inline-block;"> 年 月 日</p>
+</div>
 </br>
 </br>
 </br>

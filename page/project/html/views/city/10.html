@@ -27,51 +27,59 @@
         <th>价值</th>
     </tr> 
     <tr>
-        <td>一</td>
-        <td>征收国有、集体土地补偿安置费用</td>
+        <th>一</th>
+        <th>征收国有、集体土地补偿安置费用</th>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{table101Total.a1}}</td>
+        <td>{{table101Total.b1}}</td>
+        <td>{{table101Total.a2}}</td>
+        <td>{{table101Total.b2}}</td>
+        <td>{{table101Total.a3}}</td>
+        <td>{{table101Total.b3}}</td>
+        <td>{{table101Total.a4}}</td>
+        <td>{{table101Total.b4}}</td>
+        <th></th>
     </tr>
-    <tr ng-repeat="t91 in table9Datas">
-        <td>{{table9NumDatas[$index]}}</td>
-        <td>{{table9NameDatas[$index]}}</td>
-        <td>{{t91.unit}}</td>
-        <td>{{t91.price}}</td>
-        <td>{{t91.a1}}</td>
-        <td>{{t91.b1}}</td>
-        <td>{{t91.a2}}</td>
-        <td>{{t91.b2}}</td>
-        <td>{{t91.a3}}</td>
-        <td>{{t91.b3}}</td>
-        <td>{{t91.a4}}</td>
-        <td>{{t91.b4}}</td>
+    <tr ng-repeat="t101 in table101Datas2">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <th>二</th>
         <th>合计</th>
         <td></td>
-        <td></td>
-        <td>{{table9Total.a1}}</td>
-        <td>{{table9Total.b1}}</td>
-        <td>{{table9Total.a2}}</td>
-        <td>{{table9Total.b2}}</td>
-        <td>{{table9Total.a3}}</td>
-        <td>{{table9Total.b3}}</td>
-        <td>{{table9Total.a4}}</td>
-        <td>{{table9Total.b4}}</td>
-        <td></td>
+        <td>{{table101Total.a1}}</td>
+        <td>{{table101Total.b1}}</td>
+        <td>{{table101Total.a2}}</td>
+        <td>{{table101Total.b2}}</td>
+        <td>{{table101Total.a3}}</td>
+        <td>{{table101Total.b3}}</td>
+        <td>{{table101Total.a4}}</td>
+        <td>{{table101Total.b4}}</td>
+        <th></th>
     </tr>
 </table>
 <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+</br>
+<div>
+    <h6>备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。</h6>
+    </br>
+    <p style="display: inline-block;margin-right: 100px;">主管部门： （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">分管领导： </p>
+    <p style="display: inline-block;margin-right: 100px;">复核： </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人： </p>
+    <p style="display: inline-block;"> 年 月 日</p>
+</div>
 </br>
 </br>
 </br>
