@@ -1,12 +1,13 @@
 <h4 align="center">修改密码</h4>
 <div>
 <label style="display: inline-block">旧密码</label>
-<input ng-model="Table1Head.line" type="text" style="width:60px;display: inline-block">
+<input ng-model="password.p1" type="text" style="width:60px;display: inline-block">
 </br>
 <label style="display: inline-block">新密码</label>
-<input ng-model="Table1Head.line" type="text" style="width:60px;display: inline-block">
+<input ng-model="password.p2" type="text" style="width:60px;display: inline-block">
 </br>
 <label style="display: inline-block">新密码确认</label>
-<input ng-model="Table1Head.line" type="text" style="width:60px;display: inline-block">
+<input ng-model="password.p3" type="text" style="width:60px;display: inline-block">
 </br>
+<button ng-click="modifyPassword()" class="btn btn-primary btn-small" type="submit">确认</button>
 </div>

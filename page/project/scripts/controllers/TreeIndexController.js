@@ -1,18 +1,20 @@
 function TreeIndexController($scope, $http, $location, user) {
     console.log("载入TreeIndexController");
-    // if(user.name==null||user.name==''){
-    //     //alert("请登陆！");
-    //     $location.path("/");
-    // }
-    // //框架参数
-    // $scope.userName = user.name;
-    // $scope.userCity1 = user.city1;
-    // $scope.userCity2 = user.city2;
-    // $scope.userCity3 = user.city3;
-    $scope.userName = 'admin';
-    $scope.userCity1 = 1;
-    $scope.userCity2 = 1;
-    $scope.userCity3 = 1;
+    if (user.name == null || user.name == '') {
+        //alert("请登陆！");
+        $location.path("/");
+    }
+    //框架参数
+    $scope.userName = user.name;
+    $scope.userCity1 = user.city1;
+    $scope.userCity2 = user.city2;
+    $scope.userCity3 = user.city3;
+    console.log($scope.userCity2);
+    $scope.password = {};
+    // $scope.userName = 'admin';
+    // $scope.userCity1 = 1;
+    // $scope.userCity2 = 1;
+    // $scope.userCity3 = 1;
     $scope.isManageUser = -1;
     $scope.cityName = "";
     $scope.cityLevel = '0';
@@ -41,6 +43,7 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.manageUser = manageUser;
     $scope.manageTable = manageTable;
     $scope.logout = logout;
+    $scope.modifyPassword = modifyPassword;
     //分页
     $scope.getNextPage = getNextPage;
     //导出excel
@@ -178,7 +181,7 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.table9Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
     //表10-1相关 
     $scope.table101Datas = [];
-    $scope.table101Datas2 = [1,2,3,4,5,6,7,8,9,10,11];
+    $scope.table101Datas2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     $scope.table101NumDatas = ["一", "二"];
     $scope.table101NameDatas = ["国有土地", "集体土地"];
     $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
@@ -221,8 +224,36 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
         }
     }
+    function modifyPassword() {
+        if($scope.password.p2!=$scope.password.p3){
+            alert("两次输入新密码不一致，请重新输入！");
+        }
+        else{
+            $http.get('http://localhost:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
+            .success(function (res) {
+                if (res['ok'] == -1)
+                    alert("帐号不存在");
+                else if (res['ok'] == 0)
+                    alert("旧密码输入错误");
+                else {
+                    console.log($scope.password.p2);
+                    $http.get('http://localhost:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
+                        .success(function (res) {
+                            alert("修改密码成功！");
+                        })
+                        .error(function (res) {
+                            alert("修改失败");
+                        });
+                    $scope.password = {};
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        }
+    }
     function logout() {
-        user = {};
+        user.name = '';
         $location.path("/");
     }
     function saveTable101Data(autoID, index) {
@@ -248,7 +279,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .success(function (res) {
                 $scope.table101Datas = res;
                 for (var i = 0; i < res.length; i++) {
-                    var t101Arr = ["a1", "a2", "a3", "a4","b1", "b2", "b3", "b4"];
+                    var t101Arr = ["a1", "a2", "a3", "a4", "b1", "b2", "b3", "b4"];
                     for (var j = 0; j < t101Arr.length; j++) {
                         res[i][t101Arr[j]] = res[i][t101Arr[j]] * 1;
                         $scope.table101Total[t101Arr[j]] = $scope.table101Total[t101Arr[j]] + res[i][t101Arr[j]];
@@ -313,14 +344,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 $scope.t9Data3.b4 = res[0]['sum(a4*price)'];
                 $http.get('http://localhost:8081/getTable9L32?city=' + $scope.cityName)
                     .success(function (res) {
-                        $scope.t9Data3.a1 = $scope.t9Data3.a1+res[0]['sum(a1)'];
-                        $scope.t9Data3.b1 = $scope.t9Data3.b1+res[0]['sum(a1*price)'];
-                        $scope.t9Data3.a2 = $scope.t9Data3.a2+res[0]['sum(a2)'];
-                        $scope.t9Data3.b2 = $scope.t9Data3.b2+res[0]['sum(a2*price)'];
-                        $scope.t9Data3.a3 = $scope.t9Data3.a3+res[0]['sum(a3)'];
-                        $scope.t9Data3.b3 = $scope.t9Data3.b3+res[0]['sum(a3*price)'];
-                        $scope.t9Data3.a4 = $scope.t9Data3.a4+res[0]['sum(a4)'];
-                        $scope.t9Data3.b4 = $scope.t9Data3.b4+res[0]['sum(a4*price)'];
+                        $scope.t9Data3.a1 = $scope.t9Data3.a1 + res[0]['sum(a1)'];
+                        $scope.t9Data3.b1 = $scope.t9Data3.b1 + res[0]['sum(a1*price)'];
+                        $scope.t9Data3.a2 = $scope.t9Data3.a2 + res[0]['sum(a2)'];
+                        $scope.t9Data3.b2 = $scope.t9Data3.b2 + res[0]['sum(a2*price)'];
+                        $scope.t9Data3.a3 = $scope.t9Data3.a3 + res[0]['sum(a3)'];
+                        $scope.t9Data3.b3 = $scope.t9Data3.b3 + res[0]['sum(a3*price)'];
+                        $scope.t9Data3.a4 = $scope.t9Data3.a4 + res[0]['sum(a4)'];
+                        $scope.t9Data3.b4 = $scope.t9Data3.b4 + res[0]['sum(a4*price)'];
                     })
                     .error(function (res) {
                     });
@@ -1276,6 +1307,9 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function addUser() { //添加用户
         //console.log(JSON.stringify($scope.newUser));
+        $scope.newUser.city1 = $scope.newUser.city1==null?false:$scope.newUser.city1;
+        $scope.newUser.city2 = $scope.newUser.city2==null?false:$scope.newUser.city2;
+        $scope.newUser.city3 = $scope.newUser.city3==null?false:$scope.newUser.city3;
         var url = 'name=' + $scope.newUser.name + '&password=' + $scope.newUser.password + '&city1=' + $scope.newUser.city1 +
             '&city2=' + $scope.newUser.city2 + '&city3=' + $scope.newUser.city3;
         $http.get('http://localhost:8081/addUser?' + url)
