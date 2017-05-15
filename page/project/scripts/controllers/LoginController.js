@@ -1,8 +1,41 @@
-function LoginController($scope, $http, $location,user) {
+function LoginController($scope, $http, $location, user) {
   console.log("载入loginController");
   $scope.userName = "";
   $scope.passWord = "";
+  $scope.rememberAccount = false;
+  $scope.rememberPassword = false;
+  var defuserName = getCookie("username");
+  if (defuserName) {
+    $scope.userName = defuserName;
+  }
+  var defPassword = getCookie("password");
+  if (defPassword) {
+    $scope.passWord = defPassword;
+  }
+
+  function setCookie(name, value, timeout) {
+    var d = new Date();
+    d.setDate(d.getDate() + timeout);
+    document.cookie = name + '=' + value + ';expires=' + d;
+  }
+  function getCookie(name) {
+    var arr = document.cookie.split('; ');
+    for (var i = 0; i < arr.length; i++) {
+      var arr2 = arr[i].split('='); //['abc','cba']  
+      if (arr2[0] == name) {
+        return arr2[1];
+      }
+    }
+    return '';
+  }
+
   $scope.login = function () {
+    if ($scope.rememberAccount) {
+      setCookie("username", $scope.userName, 1);
+    }
+    if ($scope.rememberPassword) {
+      setCookie("password", $scope.passWord, 1);
+    }
     $http.get('http://localhost:8081/login?name='+$scope.userName+'&passWord='+$scope.passWord)
       .success(function (res) {
         if(res['ok']==-1)
