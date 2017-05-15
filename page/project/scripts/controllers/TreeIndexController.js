@@ -1,19 +1,19 @@
 function TreeIndexController($scope, $http, $location, user) {
     console.log("载入TreeIndexController");
-    // if (user.name == null || user.name == '') {
-    //     //alert("请登陆！");
-    //     $location.path("/");
-    // }
-    // //框架参数
-    // $scope.userName = user.name;
-    // $scope.userCity1 = user.city1;
-    // $scope.userCity2 = user.city2;
-    // $scope.userCity3 = user.city3;
+    if (user.name == null || user.name == '') {
+        //alert("请登陆！");
+        $location.path("/");
+    }
+    //框架参数
+    $scope.userName = user.name;
+    $scope.userCity1 = user.city1;
+    $scope.userCity2 = user.city2;
+    $scope.userCity3 = user.city3;
     $scope.password = {};
-    $scope.userName = 'admin';
-    $scope.userCity1 = 1;
-    $scope.userCity2 = 1;
-    $scope.userCity3 = 1;
+    // $scope.userName = 'admin';
+    // $scope.userCity1 = 1;
+    // $scope.userCity2 = 1;
+    // $scope.userCity3 = 1;
     $scope.isManageUser = -1;
     $scope.cityName = "";
     $scope.cityLevel = '0';
