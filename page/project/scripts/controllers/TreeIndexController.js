@@ -1187,7 +1187,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     var new411 = new Object();
                     new411.name = rawT4Datas[i]["name"];
                     new411.area1 = rawT4Datas[i]["sum(area1)"];
-                    new411.total = rawT4Datas[i]["sum(area1*price)"];
+                    new411.total = rawT4Datas[i]["sum(area1*price+quantity*price2+o1+o2+o3+o4)"];
                     if (new411.area1 == 0) {
                         new411.price = 0;
                     }
@@ -2107,6 +2107,12 @@ function TreeIndexController($scope, $http, $location, user) {
             case '10':
                 outputExcel10();
                 break;
+            case '11':
+                outputExcel11();
+                break;
+            case '12':
+                outputExcel12();
+                break;
             case '42':
                 outputExcel42();
                 break;
@@ -2141,6 +2147,370 @@ function TreeIndexController($scope, $http, $location, user) {
                 console.log("no this table..");
         }
     }
+    function outputExcel12() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路统迁建(构)筑物数量汇总表";
+        lines[1] = "建协1—2 " + $scope.cityName;
+        lines[2] = "工程名称：川南城际铁路 线   标段 第1页 共3页";
+        for (let i = 0; i < 3; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 13;
+            if (i == 0) {
+                cellLine.style.align.h = 'center';
+            }
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['镇（乡、街办）', '征地面积(亩)', '房屋(m2)', '构筑物(亩、m、m2、m3、个、口、套)'];
+        for (let i = 0; i < 8; i++) {
+            if (i > 1) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 5;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 1;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 2; i++) {
+            row2.addCell();
+        }
+        var table1Head2 = [['户数'], ['框架'], ['砖混'], ['砖瓦'], ['土木'], ['小计'], ["院坝", "a1"], ["围墙", "a2"], ["灶头", "a3"], ["粪（水）池", "a4"], ["水缸", "a5"]
+            , ["粮仓", "a6"], ["堡坎", "a1"], ["坟墓", "a2"], ["沼气池", "a3"], ["简易棚", "a4"], ["金属棚架", "a5"], ["水井", "a6"],
+        ["水窖", "a7"], ["钢管", "a8"], ["胶管", "a9"], ["烤烟房", "a10"], ["公路或机耕道", "a11"], ["卫星接收器", "a12"], ["太阳能", "a13"],
+        ["水泥管", "a1"], ["水泥梯步", "a2"], ["围墙大门", "a3"], ["电杆", "a4"], ["电线", "a5"], ["水泥碗柜", "a6"],
+        ["闸阀", "a7"], ["PVC管", "a8"], ["沟渠", "a9"], ["鱼池", "a10"], ["大棚", "a11"], ["花台", "a12"], ["洗衣台", "a13"]
+            , ["砖瓦窑", "a14"], ["石灰窑", "a14"], ["畜圈", "a16"]];
+        for (let i = 0; i < 12; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content = ['c4', 'area', 'familys', 't1', 't2', 't3', 't4', 'total',
+            'a1', 'a2', 'a3', 'a4', 'a5', 'a6'];
+        for (let i = 0; i < $scope.table12DatasP1.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table12DatasP1[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT2 = rowTotal.addCell();
+        cellT2.value = "合计";
+        for (let i = 1; i < table1Content.length; i++) {
+            const cellT3 = rowTotal.addCell();
+            cellT3.value = $scope.table12TotalP1[table1Content[i]];
+        }
+        //第二页
+        const rowLine2 = sheet.addRow();
+        const cellLine21 = rowLine2.addCell();
+        cellLine21.value = "工程名称：川南城际铁路 线   标段 第2页 共3页";
+        cellLine21.hMerge = 13;
+        //多级表头
+        const row21 = sheet.addRow();
+        const cell1 = row21.addCell();
+        cell1.value = '镇（乡、街办）';
+        cell1.vMerge = 1;
+        cell1.style.align.v = 'center';
+        const cell21 = row21.addCell();
+        cell21.value = '构筑物(亩、m、m2、m3、个、口、套)';
+        cell21.hMerge = 12;
+        cell21.style.align.h = 'center';
+
+        const row22 = sheet.addRow();
+        for (let i = 0; i < 1; i++) {
+            row22.addCell();
+        }
+        for (let i = 12; i < 25; i++) {
+            var cell3 = row22.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content2 = ['c4','a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 
+        'a8', 'a9', 'a10', 'a11', 'a12', 'a13'];
+        for (let i = 0; i < $scope.table12DatasP2.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content2.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table12DatasP2[i][table1Content2[j]];
+            }
+        }
+        //合计行
+        const rowTotal2 = sheet.addRow();
+        const cellT22 = rowTotal2.addCell();
+        cellT22.value = "合计";
+        for (let i = 1; i < table1Content2.length; i++) {
+            const cellT3 = rowTotal2.addCell();
+            cellT3.value = $scope.table12TotalP2[table1Content2[i]];
+        }
+         //第三页
+        const rowLine3 = sheet.addRow();
+        const cellLine31 = rowLine3.addCell();
+        cellLine31.value = "工程名称：川南城际铁路 线   标段 第3页 共3页";
+        cellLine31.hMerge = 13;
+        //多级表头
+        const row31 = sheet.addRow();
+        const cell13 = row31.addCell();
+        cell13.value = '镇（乡、街办）';
+        cell13.vMerge = 1;
+        cell13.style.align.v = 'center';
+        const cell31 = row31.addCell();
+        cell31.value = '构筑物(亩、m、m2、m3、个、口、套)';
+        cell31.hMerge = 12;
+        cell31.style.align.h = 'center';
+
+        const row32 = sheet.addRow();
+        for (let i = 0; i < 1; i++) {
+            row32.addCell();
+        }
+        for (let i = 25; i < table1Head2.length; i++) {
+            var cell3 = row32.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content3 = ['c4','a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 
+        'a8', 'a9', 'a10', 'a11', 'a12', 'a13', 'a14', 'a15', 'a16'];
+        for (let i = 0; i < $scope.table12DatasP3.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content3.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table12DatasP3[i][table1Content3[j]];
+            }
+        }
+        //合计行
+        const rowTotal3 = sheet.addRow();
+        const cellT32 = rowTotal3.addCell();
+        cellT32.value = "合计";
+        for (let i = 1; i < table1Content3.length; i++) {
+            const cellT3 = rowTotal3.addCell();
+            cellT3.value = $scope.table12TotalP3[table1Content3[i]];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表以各方现场核对签认的勘验表汇总，构筑物种类多时可以增加续表。结合地验交—4表对每个村（社区）分别填出汇总数据，并汇总本镇（乡、街办）数据。本表由镇（乡、街办）一级填制。本表签字盖章后扫描为电子版';
+        cellOver1.hMerge = 13;
+        var tableOver = ["镇（乡、街办）主管部门: （章) ", "负责人", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 1;
+            for (let i = 0; i < 1; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '--表1-2.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
+    }
+    function outputExcel11() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路统迁建(构)筑物数量汇总表";
+        lines[1] = "建协1—1 " + $scope.cityName;
+        lines[2] = "工程名称：川南城际铁路 线   标段 第1页 共3页";
+        for (let i = 0; i < 3; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 13;
+            if (i == 0) {
+                cellLine.style.align.h = 'center';
+            }
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['村(社区)', '征地面积(亩)', '房屋(m2)', '构筑物(亩、m、m2、m3、个、口、套)'];
+        for (let i = 0; i < 8; i++) {
+            if (i > 1) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 5;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 1;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 2; i++) {
+            row2.addCell();
+        }
+        var table1Head2 = [['户数'], ['框架'], ['砖混'], ['砖瓦'], ['土木'], ['小计'], ["院坝", "a1"], ["围墙", "a2"], ["灶头", "a3"], ["粪（水）池", "a4"], ["水缸", "a5"]
+            , ["粮仓", "a6"], ["堡坎", "a1"], ["坟墓", "a2"], ["沼气池", "a3"], ["简易棚", "a4"], ["金属棚架", "a5"], ["水井", "a6"],
+        ["水窖", "a7"], ["钢管", "a8"], ["胶管", "a9"], ["烤烟房", "a10"], ["公路或机耕道", "a11"], ["卫星接收器", "a12"], ["太阳能", "a13"],
+        ["水泥管", "a1"], ["水泥梯步", "a2"], ["围墙大门", "a3"], ["电杆", "a4"], ["电线", "a5"], ["水泥碗柜", "a6"],
+        ["闸阀", "a7"], ["PVC管", "a8"], ["沟渠", "a9"], ["鱼池", "a10"], ["大棚", "a11"], ["花台", "a12"], ["洗衣台", "a13"]
+            , ["砖瓦窑", "a14"], ["石灰窑", "a14"], ["畜圈", "a16"]];
+        for (let i = 0; i < 12; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content = ['c4', 'area', 'familys', 't1', 't2', 't3', 't4', 'total',
+            'a1', 'a2', 'a3', 'a4', 'a5', 'a6'];
+        for (let i = 0; i < $scope.table11DatasP1.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table11DatasP1[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT2 = rowTotal.addCell();
+        cellT2.value = "合计";
+        for (let i = 1; i < table1Content.length; i++) {
+            const cellT3 = rowTotal.addCell();
+            cellT3.value = $scope.table11TotalP1[table1Content[i]];
+        }
+        //第二页
+        const rowLine2 = sheet.addRow();
+        const cellLine21 = rowLine2.addCell();
+        cellLine21.value = "工程名称：川南城际铁路 线   标段 第2页 共3页";
+        cellLine21.hMerge = 13;
+        //多级表头
+        const row21 = sheet.addRow();
+        const cell1 = row21.addCell();
+        cell1.value = '村(社区)';
+        cell1.vMerge = 1;
+        cell1.style.align.v = 'center';
+        const cell21 = row21.addCell();
+        cell21.value = '构筑物(亩、m、m2、m3、个、口、套)';
+        cell21.hMerge = 12;
+        cell21.style.align.h = 'center';
+
+        const row22 = sheet.addRow();
+        for (let i = 0; i < 1; i++) {
+            row22.addCell();
+        }
+        for (let i = 12; i < 25; i++) {
+            var cell3 = row22.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content2 = ['c4','a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 
+        'a8', 'a9', 'a10', 'a11', 'a12', 'a13'];
+        for (let i = 0; i < $scope.table11DatasP2.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content2.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table11DatasP2[i][table1Content2[j]];
+            }
+        }
+        //合计行
+        const rowTotal2 = sheet.addRow();
+        const cellT22 = rowTotal2.addCell();
+        cellT22.value = "合计";
+        for (let i = 1; i < table1Content2.length; i++) {
+            const cellT3 = rowTotal2.addCell();
+            cellT3.value = $scope.table11TotalP2[table1Content2[i]];
+        }
+         //第三页
+        const rowLine3 = sheet.addRow();
+        const cellLine31 = rowLine3.addCell();
+        cellLine31.value = "工程名称：川南城际铁路 线   标段 第3页 共3页";
+        cellLine31.hMerge = 13;
+        //多级表头
+        const row31 = sheet.addRow();
+        const cell13 = row31.addCell();
+        cell13.value = '村(社区)';
+        cell13.vMerge = 1;
+        cell13.style.align.v = 'center';
+        const cell31 = row31.addCell();
+        cell31.value = '构筑物(亩、m、m2、m3、个、口、套)';
+        cell31.hMerge = 12;
+        cell31.style.align.h = 'center';
+
+        const row32 = sheet.addRow();
+        for (let i = 0; i < 1; i++) {
+            row32.addCell();
+        }
+        for (let i = 25; i < table1Head2.length; i++) {
+            var cell3 = row32.addCell();
+            cell3.value = table1Head2[i][0];
+        }
+        //表内容 
+        var table1Content3 = ['c4','a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 
+        'a8', 'a9', 'a10', 'a11', 'a12', 'a13', 'a14', 'a15', 'a16'];
+        for (let i = 0; i < $scope.table11DatasP3.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content3.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table11DatasP3[i][table1Content3[j]];
+            }
+        }
+        //合计行
+        const rowTotal3 = sheet.addRow();
+        const cellT32 = rowTotal3.addCell();
+        cellT32.value = "合计";
+        for (let i = 1; i < table1Content3.length; i++) {
+            const cellT3 = rowTotal3.addCell();
+            cellT3.value = $scope.table11TotalP3[table1Content3[i]];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表以各方现场核对签认的勘验表汇总，构筑物种类多时可以增加续表。结合地验交—4表对每个村（社区）分别填出汇总数据，并汇总本镇（乡、街办）数据。本表由镇（乡、街办）一级填制。本表签字盖章后扫描为电子版。';
+        cellOver1.hMerge = 13;
+        var tableOver = ["镇（乡、街办）主管部门: （章) ", "负责人", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 1;
+            for (let i = 0; i < 1; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '--表1-1.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
+    }
     function outputExcel413() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -2160,11 +2530,11 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['户名','凭证编号','补偿类别','单位','数量','单价(元)','金额(元)','领款人（单位）签字盖章','备注'];
+        var table1Head = ['户名', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
-                const cell1 = row1.addCell();
-                cell1.value = table1Head[i];
-                cell1.style.align.v = 'center';
+            const cell1 = row1.addCell();
+            cell1.value = table1Head[i];
+            cell1.style.align.v = 'center';
         }
         //表内容
         var table1Content = ['name', '', '土地', 'm²', 'quantity', 'price', 'total'];
@@ -2172,10 +2542,10 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
-                if(j==0||j>3){
+                if (j == 0 || j > 3) {
                     cellContent.value = $scope.table413Datas[i][table1Content[j]];
                 }
-                else{
+                else {
                     cellContent.value = table1Content[j];
                 }
             }
@@ -2213,7 +2583,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1土地--第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '--表4-1土地--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2243,60 +2613,60 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['户名','凭证编号','补偿类别','单位','数量','单价(元)','金额(元)','领款人（单位）签字盖章','备注'];
+        var table1Head = ['户名', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
-                const cell1 = row1.addCell();
-                cell1.value = table1Head[i];
-                cell1.style.align.v = 'center';
+            const cell1 = row1.addCell();
+            cell1.value = table1Head[i];
+            cell1.style.align.v = 'center';
         }
-        //表内容
+        //表内容 
         var table1Content = ['name', '', '地面建筑物', 'm²', 'area1', 'price', 'total'];
         for (let i = 0; i < $scope.table412Datas.length; i++) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
-                if(j==0||j>3){
+                if (j == 0 || j > 3) {
                     cellContent.value = $scope.table412Datas[i][table1Content[j]];
                 }
-                else{
+                else {
                     cellContent.value = table1Content[j];
                 }
             }
         }
-        // //合计行
-        // const rowTotal = sheet.addRow();
-        // const cellT2 = rowTotal.addCell();
-        // cellT2.value = "合计";
-        // for (let i = 0; i < 3; i++) {
-        //     rowTotal.addCell();
-        // }
-        // var table1Content = ['t1', 't2'];
-        // for (let i = 0; i < table1Content.length; i++) {
-        //     const cellT3 = rowTotal.addCell();
-        //     cellT3.value = $scope.table412Total[table1Content[i]];
-        //     rowTotal.addCell();
-        // }
-        // //表尾
-        // const rowOver1 = sheet.addRow();
-        // const cellOver1 = rowOver1.addCell();
-        // cellOver1.value = '备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、';
-        // cellOver1.hMerge = 8;
-        // const rowOver2 = sheet.addRow();
-        // const cellOver2 = rowOver2.addCell();
-        // cellOver2.value = '青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。';
-        // cellOver2.hMerge = 8;
-        // var tableOver = ["村（社区）: （章) ", "主管领导：", "复核：", "经办人："];
-        // const rowOver = sheet.addRow();
-        // for (let i = 0; i < 4; i++) {
-        //     const cellOver = rowOver.addCell();
-        //     cellOver.value = tableOver[i];
-        //     cellOver.hMerge = 1;
-        //     for (let i = 0; i < 1; i++) {
-        //         rowOver.addCell();
-        //     }
-        // }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT2 = rowTotal.addCell();
+        cellT2.value = "合计";
+        for (let i = 0; i < 3; i++) {
+            rowTotal.addCell();
+        }
+        var table1Content = ['t1', 't2'];
+        for (let i = 0; i < table1Content.length; i++) {
+            const cellT3 = rowTotal.addCell();
+            cellT3.value = $scope.table412Total[table1Content[i]];
+            rowTotal.addCell();
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、';
+        cellOver1.hMerge = 8;
+        const rowOver2 = sheet.addRow();
+        const cellOver2 = rowOver2.addCell();
+        cellOver2.value = '青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。';
+        cellOver2.hMerge = 8;
+        var tableOver = ["村（社区）: （章) ", "主管领导：", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 1;
+            for (let i = 0; i < 1; i++) {
+                rowOver.addCell();
+            }
+        }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1地面建筑物--第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '--表4-1地面建筑物--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2326,11 +2696,11 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['户名','凭证编号','补偿类别','单位','数量','单价(元)','金额(元)','领款人（单位）签字盖章','备注'];
+        var table1Head = ['户名', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
-                const cell1 = row1.addCell();
-                cell1.value = table1Head[i];
-                cell1.style.align.v = 'center';
+            const cell1 = row1.addCell();
+            cell1.value = table1Head[i];
+            cell1.style.align.v = 'center';
         }
         //表内容
         var table1Content = ['name', '', '青苗', '亩', 'quantity', 'price', 'total'];
@@ -2338,10 +2708,10 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
-                if(j==0||j>3){
+                if (j == 0 || j > 3) {
                     cellContent.value = $scope.table411Datas[i][table1Content[j]];
                 }
-                else{
+                else {
                     cellContent.value = table1Content[j];
                 }
             }
@@ -2379,7 +2749,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1青苗--第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '--表4-1青苗--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2409,11 +2779,11 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['村(社区)','凭证编号','补偿类别','单位','数量','单价(元)','金额(元)','领款人（单位）签字盖章','备注'];
+        var table1Head = ['村(社区)', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
-                const cell1 = row1.addCell();
-                cell1.value = table1Head[i];
-                cell1.style.align.v = 'center';
+            const cell1 = row1.addCell();
+            cell1.value = table1Head[i];
+            cell1.style.align.v = 'center';
         }
         //表内容
         var table1Content = ['c4', '', 'type', 'unit', 'quantity', 'price', 'total'];
@@ -2421,7 +2791,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
-                if(j!=1){
+                if (j != 1) {
                     cellContent.value = $scope.table42Datas[i][table1Content[j]];
                 }
             }
@@ -2459,7 +2829,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-2--第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '--表4-2--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2489,11 +2859,11 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['被拆迁单位名称','凭证编号','补偿类别','单位','数量','单价(元)','金额(元)','领款人（单位）签字盖章','备注'];
+        var table1Head = ['被拆迁单位名称', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
-                const cell1 = row1.addCell();
-                cell1.value = table1Head[i];
-                cell1.style.align.v = 'center';
+            const cell1 = row1.addCell();
+            cell1.value = table1Head[i];
+            cell1.style.align.v = 'center';
         }
         //表内容
         var table1Content = ['name', 'id', 'type', 'unit', 'quantity', 'price', 'total'];
@@ -2533,7 +2903,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-3--第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '--表4-3--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2563,7 +2933,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '被拆迁单位名称','地址（所属地、街道名称及门牌号）','占地面积（亩）','厂矿企事业单位的拆迁主要项目（㎡）','说明'];
+        var table1Head = ['序号', '被拆迁单位名称', '地址（所属地、街道名称及门牌号）', '占地面积（亩）', '厂矿企事业单位的拆迁主要项目（㎡）', '说明'];
         for (let i = 0; i < 6; i++) {
             if (i == 4) {
                 const cell2 = row1.addCell();
@@ -2587,7 +2957,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             row2.addCell();
         }
-        var table1Head2 = ['住房','办公','铺面','厂房','其它','小计'];
+        var table1Head2 = ['住房', '办公', '铺面', '厂房', '其它', '小计'];
         for (let i = 0; i < 6; i++) {
             var cell3 = row2.addCell();
             cell3.value = table1Head2[i];
@@ -2631,7 +3001,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '-表5-第'+$scope.currPage+'页.xlsx';
+        var excelRoot = $scope.cityName + '-表5-第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2718,7 +3088,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 1; i++) {
             rowContent13.addCell();
         }
-         var table2Content = ['a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
+        var table2Content = ['a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent9 = rowContent13.addCell();
             cellContent9.value = $scope.table101Total[table2Content[j]];
@@ -3803,9 +4173,9 @@ function TreeIndexController($scope, $http, $location, user) {
         console.log("excel2...")
         const file = new xlsx.File();
         const style = new xlsx.Style();
-        style.fill.patternType = 'solid';
-        style.fill.fgColor = '00FF0000';
-        style.fill.bgColor = 'FF000000';
+        // style.fill.patternType = 'solid';
+        // style.fill.fgColor = '00FF0000';
+        // style.fill.bgColor = 'FF000000';
         style.align.h = 'center';
         style.align.v = 'center';
         const sheet = file.addSheet('Sheet1');
@@ -3917,9 +4287,9 @@ function TreeIndexController($scope, $http, $location, user) {
     function outputExcel1() {
         const file = new xlsx.File();
         const style = new xlsx.Style();
-        style.fill.patternType = 'solid';
-        style.fill.fgColor = '00FF0000';
-        style.fill.bgColor = 'FF000000';
+        // style.fill.patternType = 'solid';
+        // style.fill.fgColor = '00FF0000';
+        // style.fill.bgColor = 'FF000000';
         style.align.h = 'center';
         style.align.v = 'center';
         const sheet = file.addSheet('Sheet1');
@@ -3933,8 +4303,8 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 12;
-            // if (i == 1)
-            //     cellLine.style = style;
+            if (i == 1)
+                cellLine.style = style;
         }
 
         //多级表头
@@ -3945,7 +4315,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 2;
-                // cell2.style = style;
+                cell2.style = style;
                 row1.addCell();
                 row1.addCell();
             }
@@ -3953,7 +4323,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 const cell1 = row1.addCell();
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
-                // cell1.style = style;
+                cell1.style = style;
             }
         }
         const row2 = sheet.addRow();
@@ -3963,7 +4333,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 9; i < 15; i++) {
             const cell3 = row2.addCell();
             cell3.value = table1Head[i];
-            //cell3.style = style;
+            cell3.style = style;
         }
         //表内容
         var table1Content = ["name", "id", "family", "people", "rail", "type", "area",

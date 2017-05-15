@@ -10,13 +10,13 @@
 <input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
 <label class="pull-right" style="display: inline-block">第 1 页 共 3 页</label>
 <table border="1" class="table table-striped table-hover">
-    <tr>
+    <tr> 
         <th rowspan="2">村(社区)</th>
         <th rowspan="2">征地面积(亩)</th>
         <th colspan="6">房屋(m2)</th>
         <th colspan="6">构筑物(亩、m、m2、m3、个、口、套)</th>
     </tr>
-    <tr>
+    <tr> 
         <th>户数</th>
         <th>框架</th>
         <th>砖混</th>
@@ -200,12 +200,16 @@
 </div>
 
 <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
-
 </br>
-</br>
-</br>
-</br>
-</br>
+<div>
+    <h6>备注：本表以各方现场核对签认的勘验表汇总，构筑物种类多时可以增加续表。结合地验交—4表对每个村（社区）分别填出汇总数据，并汇总本镇（乡、街办）数据。本表由镇（乡、街办）一级填制。本表签字盖章后扫描为电子版。</h6>
+    </br>
+    <p style="display: inline-block;margin-right: 100px;">镇（乡、街办）主管部门： （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">负责人： </p>
+    <p style="display: inline-block;margin-right: 100px;">复核： </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人： </p>
+    <p style="display: inline-block;"> 年 月 日</p>
+</div>
 </br>
 </br>
 </br>
