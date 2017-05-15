@@ -1,20 +1,19 @@
 function TreeIndexController($scope, $http, $location, user) {
     console.log("载入TreeIndexController");
-    if (user.name == null || user.name == '') {
-        //alert("请登陆！");
-        $location.path("/");
-    }
-    //框架参数
-    $scope.userName = user.name;
-    $scope.userCity1 = user.city1;
-    $scope.userCity2 = user.city2;
-    $scope.userCity3 = user.city3;
-    console.log($scope.userCity2);
+    // if (user.name == null || user.name == '') {
+    //     //alert("请登陆！");
+    //     $location.path("/");
+    // }
+    // //框架参数
+    // $scope.userName = user.name;
+    // $scope.userCity1 = user.city1;
+    // $scope.userCity2 = user.city2;
+    // $scope.userCity3 = user.city3;
     $scope.password = {};
-    // $scope.userName = 'admin';
-    // $scope.userCity1 = 1;
-    // $scope.userCity2 = 1;
-    // $scope.userCity3 = 1;
+    $scope.userName = 'admin';
+    $scope.userCity1 = 1;
+    $scope.userCity2 = 1;
+    $scope.userCity3 = 1;
     $scope.isManageUser = -1;
     $scope.cityName = "";
     $scope.cityLevel = '0';
@@ -200,7 +199,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (var k = 0; k < $scope.c2CurrList.length; k++) {
             $http.get('http://localhost:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
                 .success(function (res) {
-                    console.log(JSON.stringify(res));
+                    //console.log(JSON.stringify(res));
                     for (var i = 0; i < res.length; i++) {
                         var new7 = new Object();
                         new7.c2 = $scope.c2CurrList[count];
@@ -225,31 +224,31 @@ function TreeIndexController($scope, $http, $location, user) {
         }
     }
     function modifyPassword() {
-        if($scope.password.p2!=$scope.password.p3){
+        if ($scope.password.p2 != $scope.password.p3) {
             alert("两次输入新密码不一致，请重新输入！");
         }
-        else{
+        else {
             $http.get('http://localhost:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
-            .success(function (res) {
-                if (res['ok'] == -1)
-                    alert("帐号不存在");
-                else if (res['ok'] == 0)
-                    alert("旧密码输入错误");
-                else {
-                    console.log($scope.password.p2);
-                    $http.get('http://localhost:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
-                        .success(function (res) {
-                            alert("修改密码成功！");
-                        })
-                        .error(function (res) {
-                            alert("修改失败");
-                        });
-                    $scope.password = {};
-                }
-            })
-            .error(function (res) {
-                alert("网络出错");
-            });
+                .success(function (res) {
+                    if (res['ok'] == -1)
+                        alert("帐号不存在");
+                    else if (res['ok'] == 0)
+                        alert("旧密码输入错误");
+                    else {
+                        console.log($scope.password.p2);
+                        $http.get('http://localhost:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
+                            .success(function (res) {
+                                alert("修改密码成功！");
+                            })
+                            .error(function (res) {
+                                alert("修改失败");
+                            });
+                        $scope.password = {};
+                    }
+                })
+                .error(function (res) {
+                    alert("网络出错");
+                });
         }
     }
     function logout() {
@@ -1307,9 +1306,9 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function addUser() { //添加用户
         //console.log(JSON.stringify($scope.newUser));
-        $scope.newUser.city1 = $scope.newUser.city1==null?false:$scope.newUser.city1;
-        $scope.newUser.city2 = $scope.newUser.city2==null?false:$scope.newUser.city2;
-        $scope.newUser.city3 = $scope.newUser.city3==null?false:$scope.newUser.city3;
+        $scope.newUser.city1 = $scope.newUser.city1 == null ? false : $scope.newUser.city1;
+        $scope.newUser.city2 = $scope.newUser.city2 == null ? false : $scope.newUser.city2;
+        $scope.newUser.city3 = $scope.newUser.city3 == null ? false : $scope.newUser.city3;
         var url = 'name=' + $scope.newUser.name + '&password=' + $scope.newUser.password + '&city1=' + $scope.newUser.city1 +
             '&city2=' + $scope.newUser.city2 + '&city3=' + $scope.newUser.city3;
         $http.get('http://localhost:8081/addUser?' + url)
@@ -2096,9 +2095,522 @@ function TreeIndexController($scope, $http, $location, user) {
             case '4':
                 outputExcel4();
                 break;
+            case '7':
+                outputExcel7();
+                break;
+            case '9':
+                outputExcel9();
+                break;
+            case '71':
+                outputExcel71();
+                break;
+            case '92':
+                outputExcel92();
+                break;
             default:
                 console.log("no this table..");
         }
+    }
+    function outputExcel9() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路征地拆迁投资完成计价表";
+        lines[1] = "建协9 工程名称：川南城际铁路 线   标段";
+        for (let i = 0; i < 2; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 11;
+            if (i == 0) {
+                cellLine.style.align.h = 'center';
+            }
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        for (let i = 0; i < 8; i++) {
+            if (i > 3) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 1;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 1;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            row2.addCell();
+        }
+        for (let i = 0; i < 4; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = '数量';
+            var cell4 = row2.addCell();
+            cell4.value = '价值';
+        }
+        //表内容
+        const rowContent1 = sheet.addRow();
+        var cell5 = rowContent1.addCell();
+        cell5.value = '一';
+        var cell6 = rowContent1.addCell();
+        cell6.value = '征收国有土地补偿安置费用';
+        for (let i = 0; i < 2; i++) {
+            rowContent1.addCell();
+        }
+        var table1Content = ['a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
+        for (let j = 0; j < table1Content.length; j++) {
+            const cellContent = rowContent1.addCell();
+            cellContent.value = $scope.t9Data1[table1Content[j]];
+        }
+        const rowContent2 = sheet.addRow();
+        const rowContent3 = sheet.addRow();
+        const rowContent4 = sheet.addRow();
+        const rowContent5 = sheet.addRow();
+        var cell51 = rowContent5.addCell();
+        cell51.value = '二';
+        var cell52 = rowContent5.addCell();
+        cell52.value = '征收集体土地补偿安置费用';
+        for (let i = 0; i < 2; i++) {
+            rowContent5.addCell();
+        }
+        for (let j = 0; j < table1Content.length; j++) {
+            const cellContent5 = rowContent5.addCell();
+            cellContent5.value = $scope.t9Data2[table1Content[j]];
+        }
+        const rowContent6 = sheet.addRow();
+        const rowContent7 = sheet.addRow();
+        var cell71 = rowContent7.addCell();
+        cell71.value = '三';
+        var cell72 = rowContent7.addCell();
+        cell72.value = '工作经费';
+        for (let i = 0; i < 2; i++) {
+            rowContent7.addCell();
+        }
+        for (let j = 0; j < table1Content.length; j++) {
+            const cellContent7 = rowContent7.addCell();
+            cellContent7.value = $scope.t9Data3[table1Content[j]];
+        }
+        const rowContent8 = sheet.addRow();
+        const rowContent9 = sheet.addRow();
+        var cell91 = rowContent9.addCell();
+        cell91.value = '四';
+        var cell92 = rowContent9.addCell();
+        cell92.value = '税费等其他费用';
+        for (let i = 0; i < 2; i++) {
+            rowContent9.addCell();
+        }
+        for (let j = 0; j < table1Content.length; j++) {
+            const cellContent9 = rowContent9.addCell();
+            cellContent9.value = $scope.t9Data4[table1Content[j]];
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT1 = rowTotal.addCell();
+        cellT1.value = "五";
+        const cellT2 = rowTotal.addCell();
+        cellT2.value = "合计";
+        for (let i = 0; i < 2; i++) {
+            rowTotal.addCell();
+        }
+        var totalLine = [];
+        for (let j = 0; j < table1Content.length; j++) {
+            totalLine[j] = $scope.t9Data1[table1Content[j]] + $scope.t9Data2[table1Content[j]] + $scope.t9Data3[table1Content[j]] + $scope.t9Data4[table1Content[j]];
+        }
+        for (let i = 0; i < totalLine.length; i++) {
+            const cellT3 = rowTotal.addCell();
+            cellT3.value = totalLine[i];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。';
+        cellOver1.hMerge = 11;
+        var tableOver = ["主管部门: （章) ", "分管领导：", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 2;
+            for (let i = 0; i < 2; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '-表9.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
+    }
+    function outputExcel92() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路（集体土地）征地拆迁投资完成计价表";
+        lines[1] = "建协9-2 工程名称：川南城际铁路 线   标段";
+        for (let i = 0; i < 2; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 11;
+            if (i == 0) {
+                cellLine.style.align.h = 'center';
+            }
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        for (let i = 0; i < 8; i++) {
+            if (i > 3) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 1;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 1;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            row2.addCell();
+        }
+        for (let i = 0; i < 4; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = '数量';
+            var cell4 = row2.addCell();
+            cell4.value = '价值';
+        }
+        //表内容
+        const rowContent1 = sheet.addRow();
+        var cell5 = rowContent1.addCell();
+        cell5.value = '一';
+        var cell6 = rowContent1.addCell();
+        cell6.value = '征地补偿及拆迁安置费用';
+        var table1Content = ['unit', 'price', 'a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
+        for (let i = 0; i < $scope.table92Datas.length; i++) {
+            const rowContent = sheet.addRow();
+            const cellContent1 = rowContent.addCell();
+            cellContent1.value = $scope.table91NumDatas[i];
+            const cellContent2 = rowContent.addCell();
+            cellContent2.value = $scope.table91NameDatas[i];
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table92Datas[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT1 = rowTotal.addCell();
+        cellT1.value = "三";
+        const cellT2 = rowTotal.addCell();
+        cellT2.value = "以上合计";
+        for (let i = 0; i < 2; i++) {
+            rowTotal.addCell();
+        }
+        var totalLine = [];
+        totalLine[0] = $scope.table92Total.a1;
+        totalLine[1] = $scope.table92Total.b1;
+        totalLine[2] = $scope.table92Total.a2;
+        totalLine[3] = $scope.table92Total.b2;
+        totalLine[4] = $scope.table92Total.a3;
+        totalLine[5] = $scope.table92Total.b3;
+        totalLine[6] = $scope.table92Total.a4;
+        totalLine[7] = $scope.table92Total.b4;
+        for (let i = 0; i < totalLine.length; i++) {
+            const cellT3 = rowTotal.addCell();
+            cellT3.value = totalLine[i];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表由市铁建办根据各县（区）所填制建协表—9—1汇总填制。';
+        cellOver1.hMerge = 11;
+        var tableOver = ["市政府主管部门: （章) ", "分管领导：", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 2;
+            for (let i = 0; i < 2; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '-表9-2.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
+    }
+    function outputExcel71() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路统征统迁完成数量统计表";
+        lines[1] = "建协71 工程名称：川南城际铁路 线   标段";
+        lines[2] = $scope.cityName + " 年 月 日 共 " + $scope.totalPages + "页 第" + $scope.currPage + "页";
+        for (let i = 0; i < 3; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 11;
+            if (i == 0) {
+                cellLine.style.align.h = 'center';
+            }
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['镇(乡、街办)', '起讫里程', '统征统迁数量', '实际完成数量'];
+        for (let i = 0; i < 4; i++) {
+            if (i > 1) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 4;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 2;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 2; i++) {
+            row2.addCell();
+        }
+        for (let i = 0; i < 2; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = '用地';
+            cell3.hMerge = 2;
+            cell3.style.align.h = 'center';
+            row2.addCell();
+            row2.addCell();
+            var cell4 = row2.addCell();
+            cell4.value = '拆迁';
+            cell4.hMerge = 1;
+            cell4.style.align.h = 'center';
+            row2.addCell();
+        }
+        const row3 = sheet.addRow();
+        var tableHead2 = ['国有土地（亩）', '集体土地（亩）', '合计（亩）', '户数', '房屋面积'];
+        for (let i = 0; i < 2; i++) {
+            row3.addCell();
+        }
+        for (let j = 0; j < 2; j++) {
+            for (let i = 0; i < 5; i++) {
+                const cell5 = row3.addCell();
+                cell5.value = tableHead2[i];
+            }
+        }
+        //表内容
+        var table1Content = ['c3', 'line', 'a1', 'b1', 't1', 'f1', 'm1', 'a2', 'b2', 't2', 'f2', 'm2'];
+        for (let i = 0; i < $scope.table71Datas.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table71Datas[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT1 = rowTotal.addCell();
+        cellT1.value = "本页合计";
+        cellT1.hMerge = 1;
+        for (let i = 0; i < 1; i++) {
+            rowTotal.addCell();
+        }
+        var totalLine = [];
+        totalLine[0] = $scope.table71Total.a1;
+        totalLine[1] = $scope.table71Total.b1;
+        totalLine[2] = $scope.table71Total.t1;
+        totalLine[3] = $scope.table71Total.f1;
+        totalLine[4] = $scope.table71Total.m1;
+        totalLine[5] = $scope.table71Total.a2;
+        totalLine[6] = $scope.table71Total.b2;
+        totalLine[7] = $scope.table71Total.t2;
+        totalLine[8] = $scope.table71Total.f2;
+        totalLine[9] = $scope.table71Total.m2;
+        for (let i = 0; i < totalLine.length; i++) {
+            const cellT2 = rowTotal.addCell();
+            cellT2.value = totalLine[i];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表由县（区）一级填制，统征统迁数量一栏中填写本线在本区域所需征拆总量。本表签字盖章后扫描为电子版。';
+        cellOver1.hMerge = 11;
+        var tableOver = ["县（区）主管部门（单位）: （章) ", "主管领导：", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 2;
+            for (let i = 0; i < 2; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '-表7-1-第' + $scope.currPage + '页.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
+    }
+    function outputExcel7() {
+        const file = new xlsx.File();
+        const sheet = file.addSheet('Sheet1');
+        //表上面内容
+        var lines = [];
+        lines[0] = "新建铁路统征统迁完成数量统计表";
+        lines[1] = "建协7 工程名称：川南城际铁路 线   标段";
+        for (let i = 0; i < 2; i++) {
+            const rowLine = sheet.addRow();
+            const cellLine = rowLine.addCell();
+            cellLine.value = lines[i];
+            cellLine.hMerge = 11;
+            cellLine.style.align.h = 'center';
+        }
+        //多级表头
+        const row1 = sheet.addRow();
+        var table1Head = ['县（区）', '起讫里程', '统征统迁数量', '实际完成数量'];
+        for (let i = 0; i < 4; i++) {
+            if (i > 1) {
+                const cell2 = row1.addCell();
+                cell2.value = table1Head[i];
+                cell2.hMerge = 4;
+                cell2.style.align.h = 'center';
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+                row1.addCell();
+            }
+            else {
+                const cell1 = row1.addCell();
+                cell1.value = table1Head[i];
+                cell1.vMerge = 2;
+                cell1.style.align.v = 'center';
+            }
+        }
+        const row2 = sheet.addRow();
+        for (let i = 0; i < 2; i++) {
+            row2.addCell();
+        }
+        for (let i = 0; i < 2; i++) {
+            var cell3 = row2.addCell();
+            cell3.value = '用地';
+            cell3.hMerge = 2;
+            cell3.style.align.h = 'center';
+            row2.addCell();
+            row2.addCell();
+            var cell4 = row2.addCell();
+            cell4.value = '拆迁';
+            cell4.hMerge = 1;
+            cell4.style.align.h = 'center';
+            row2.addCell();
+        }
+        const row3 = sheet.addRow();
+        var tableHead2 = ['国有土地（亩）', '集体土地（亩）', '合计（亩）', '户数', '房屋面积'];
+        for (let i = 0; i < 2; i++) {
+            row3.addCell();
+        }
+        for (let j = 0; j < 2; j++) {
+            for (let i = 0; i < 5; i++) {
+                const cell5 = row3.addCell();
+                cell5.value = tableHead2[i];
+            }
+        }
+        //表内容
+        var table1Content = ['c2', 'line', 'a1', 'b1', 't1', 'f1', 'm1', 'a2', 'b2', 't2', 'f2', 'm2'];
+        for (let i = 0; i < $scope.table7Datas.length; i++) {
+            const rowContent = sheet.addRow();
+            for (let j = 0; j < table1Content.length; j++) {
+                const cellContent = rowContent.addCell();
+                cellContent.value = $scope.table7Datas[i][table1Content[j]];
+            }
+        }
+        //合计行
+        const rowTotal = sheet.addRow();
+        const cellT1 = rowTotal.addCell();
+        cellT1.value = "本页合计";
+        cellT1.hMerge = 1;
+        for (let i = 0; i < 1; i++) {
+            rowTotal.addCell();
+        }
+        var totalLine = [];
+        totalLine[0] = $scope.table7Total.a1;
+        totalLine[1] = $scope.table7Total.b1;
+        totalLine[2] = $scope.table7Total.t1;
+        totalLine[3] = $scope.table7Total.f1;
+        totalLine[4] = $scope.table7Total.m1;
+        totalLine[5] = $scope.table7Total.a2;
+        totalLine[6] = $scope.table7Total.b2;
+        totalLine[7] = $scope.table7Total.t2;
+        totalLine[8] = $scope.table7Total.f2;
+        totalLine[9] = $scope.table7Total.m2;
+        for (let i = 0; i < totalLine.length; i++) {
+            const cellT2 = rowTotal.addCell();
+            cellT2.value = totalLine[i];
+        }
+        //表尾
+        const rowOver1 = sheet.addRow();
+        const cellOver1 = rowOver1.addCell();
+        cellOver1.value = '备注：本表由市铁建办依据各县（区）填写的建协表—7—1填制，统征统迁数量一栏中填写本线在本区域所需征拆总量。';
+        cellOver1.hMerge = 11;
+        var tableOver = ["市政府主管单位: （章) ", "主管领导：", "复核：", "经办人："];
+        const rowOver = sheet.addRow();
+        for (let i = 0; i < 4; i++) {
+            const cellOver = rowOver.addCell();
+            cellOver.value = tableOver[i];
+            cellOver.hMerge = 2;
+            for (let i = 0; i < 2; i++) {
+                rowOver.addCell();
+            }
+        }
+        //导出
+        var excelRoot = $scope.cityName + '-表7-' + $scope.currPage + '.xlsx';
+        file
+            .saveAs('blob')
+            .then(function (content) {
+                saveAs(content, excelRoot);
+            });
+        // var excelRoot = 'table/table1/' + $scope.cityName + $scope.currPage + '.xlsx';
+        // file
+        //     .saveAs()
+        //     .pipe(fs.createWriteStream(excelRoot));
     }
     function outputExcel4() {
         console.log("excel4...")
@@ -2457,8 +2969,8 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 12;
-            if (i == 1)
-                cellLine.style = style;
+            // if (i == 1)
+            //     cellLine.style = style;
         }
 
         //多级表头
@@ -2469,7 +2981,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 2;
-                cell2.style = style;
+                // cell2.style = style;
                 row1.addCell();
                 row1.addCell();
             }
@@ -2477,7 +2989,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 const cell1 = row1.addCell();
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
-                cell1.style = style;
+                // cell1.style = style;
             }
         }
         const row2 = sheet.addRow();
