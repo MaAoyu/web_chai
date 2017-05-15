@@ -6,6 +6,9 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     //框架参数
     $scope.userName = user.name;
+    if($scope.userName == 'admin'){
+        $scope.userName = '系统管理员';
+    }
     $scope.userCity1 = user.city1;
     $scope.userCity2 = user.city2;
     $scope.userCity3 = user.city3;
