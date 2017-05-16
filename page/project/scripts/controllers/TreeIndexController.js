@@ -6,7 +6,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     //框架参数
     $scope.userName = user.name;
-    if($scope.userName == 'admin'){
+    if ($scope.userName == 'admin') {
         $scope.userName = '系统管理员';
     }
     $scope.userCity1 = user.city1;
@@ -2160,7 +2160,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 console.log("no this table..");
         }
     }
-    function output2Excel(num){
+    function output2Excel(num) {
         switch (num) {
             case 11:
                 outputExcel111();
@@ -4542,10 +4542,12 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 3; i++) {
             const rowLine = sheet.addRow();
             const cellLine = rowLine.addCell();
+            if (i == 1) {
+                rowLine.setHeightCM(1.4);
+                cellLine.style = style;
+            }
             cellLine.value = lines[i];
             cellLine.hMerge = 12;
-            if (i == 1)
-                cellLine.style = style;
         }
 
         //多级表头
@@ -4621,6 +4623,10 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
             cellOver2.hMerge = 6;
+        }
+        //设置列宽度
+        for (let i = 0; i < 13; i++) {
+            sheet.col(i).width = 6;
         }
         //导出
         var excelRoot = $scope.cityName + '-表1-第' + $scope.currPage + '页.xlsx';
