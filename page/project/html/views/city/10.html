@@ -30,6 +30,7 @@
         <th>一</th>
         <th>征收国有、集体土地补偿安置费用</th>
         <td></td>
+        <td></td>
         <td>{{table101Total.a1}}</td>
         <td>{{table101Total.b1}}</td>
         <td>{{table101Total.a2}}</td>
@@ -38,7 +39,6 @@
         <td>{{table101Total.b3}}</td>
         <td>{{table101Total.a4}}</td>
         <td>{{table101Total.b4}}</td>
-        <th></th>
     </tr>
     <tr ng-repeat="t101 in table101Datas2">
         <td></td>
@@ -58,6 +58,7 @@
         <th>二</th>
         <th>合计</th>
         <td></td>
+        <td></td>
         <td>{{table101Total.a1}}</td>
         <td>{{table101Total.b1}}</td>
         <td>{{table101Total.a2}}</td>
@@ -66,10 +67,9 @@
         <td>{{table101Total.b3}}</td>
         <td>{{table101Total.a4}}</td>
         <td>{{table101Total.b4}}</td>
-        <th></th>
     </tr>
 </table>
-<md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+<button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button>
 </br>
 <div>
     <h6>备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。</h6>

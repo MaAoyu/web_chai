@@ -2963,8 +2963,8 @@ p {
     font-family: inherit;
     font-weight: normal;
     font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1.25rem;
+    line-height: 1;
+    margin-bottom: 1.2rem;
     text-rendering: optimizeLegibility; }
 p aside {
     font-size: 0.875rem;
@@ -4191,7 +4191,7 @@ table tfoot tr td {
 table tr th,
 table tr td {
     padding: 0.5625rem 0.625rem;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: #222222; }
 table tr.even, table tr.alt, table tr:nth-of-type(even) {
     background: #f9f9f9; }
@@ -4254,13 +4254,14 @@ select {
     background-position-x: 97%;
     background-position-y: center;
     border: 1px solid #cccccc;
-    padding: 0.5rem;
+    padding: 2px;
+    height: 28px;
     font-size: 0.875rem;
     -webkit-border-radius: 0;
-    border-radius: 0; }
-select.radius {
+    border-radius: 0;
     -webkit-border-radius: 3px;
     border-radius: 3px; }
+
 select:hover {
     background: #f2f2f2 url("data:image/svg+xml;base64, PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iM3B4IiB2aWV3Qm94PSIwIDAgNiAzIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2IDMiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIHBvaW50cz0iNS45OTIsMCAyLjk5MiwzIC0wLjAwOCwwICIvPjwvc3ZnPg==") no-repeat;
     background-position-x: 97%;
@@ -4437,7 +4438,7 @@ textarea {
     color: rgba(0, 0, 0, 0.75);
     display: block;
     font-size: 0.875rem;
-    margin: 0 0.2rem 1rem 0.2rem;
+    margin: 0 0.2rem 0.2rem 0.2rem;
     padding: 0.2rem;
     height: 1.8rem;
     width: 100%;
@@ -4503,7 +4504,7 @@ input[type="file"],
 input[type="checkbox"],
 input[type="radio"],
 select {
-    margin: 0 0 1rem 0; }
+    margin: 0 0 0 0; }
 
 input[type="checkbox"] + label,
 input[type="radio"] + label {

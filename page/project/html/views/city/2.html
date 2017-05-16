@@ -1,12 +1,12 @@
 <!--表单2-->
 <div align="right">
     <label style="display: inline-block">搜索户主</label>
-    <input style="width:65px;display: inline-block" required ng-model="filterText">
-    <button ng-click="filter(filterText)" class="btn btn-primary btn-middle">搜索</button>
+    <input style="width:60px;display: inline-block;height: 28px;border-radius: 3px;border: 1px solid #cccccc;" required ng-model="filterText";type="text">
+    <button ng-click="filter(filterText)" class="btn btn-primary btn-middle" style="margin-right: -5px">搜索</button>
     </br>
     </br>
     <label style="display: inline-block">选择户主</label>
-    <select style="width:60px;display: inline-block" ng-init="searchName = peopleLists[0].name" ng-model="searchName" ng-options="x.name for x in peopleLists">
+    <select class="dropdown" style="width:60px;display: inline-block" ng-init="searchName = peopleLists[0].name" ng-model="searchName" ng-options="x.name for x in peopleLists">
     </select>
     <button ng-click="search(searchName)" class="btn btn-primary btn-middle">确认</button>
 </div>
@@ -91,8 +91,8 @@
             <th colspan="13"> 应补偿金额合计：{{table2Total.total+table2Total.total2}}（小写） （大写）</th>
         </tr>
     </table>
-    <button ng-click="updateTable2(Table2Type1,Table2Type2)" class="btn btn-primary btn-middle">保存设置</button>
-    <button ng-click="outputExcel()" class="btn btn-primary btn-middle">导出excel</button>
+    <button type="button" ng-click="updateTable2(Table2Type1,Table2Type2)" class="btn btn-success">保存数据</button>
+    <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button> 
     <div style="float: right">
         <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
         <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
@@ -105,7 +105,7 @@
 </div>
 
 
-<div>
+<div style="margin-bottom: 20px">
     <p style="display: inline-block;margin-right: 150px;">乡镇人民政府（公章）： </p>
     <p style="display: inline-block;">被拆迁人（签字/章）：</p>
     </br>

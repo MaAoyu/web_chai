@@ -56,6 +56,7 @@
                 <button ng-click="deleteTable1(t1.autoID,t1.id)" class="btn btn-danger btn-middle">删除</button>
             </td>
         </tr>
+
         <tr>
             <th colspan="2"> 本页合计</th>
             <td></td>
@@ -105,8 +106,8 @@
             <td></td>
         </tr>
     </table>
-    <md-button ng-click="saveTable1Data()" class="btn btn-default">保存数据</md-button>
-    <md-button ng-click="outputExcel()" class="btn btn-default">导出excel</md-button>
+    <button type="button" ng-click="saveTable1Data()" class="btn btn-success">保存数据</button>
+    <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button> 
     <div style="float: right">
         <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
         <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
@@ -116,7 +117,7 @@
 </div>
 
 </br>
-<div>
+<div style="margin-bottom: 20px">
     <p style="display: inline-block;margin-right: 185px;">乡镇人民政府签字（公章）： </p>
     <p style="display: inline-block;">县（区）铁建办签字（公章）</p>
     </br>

@@ -32,9 +32,13 @@ function LoginController($scope, $http, $location, user) {
   $scope.login = function () {
     if ($scope.rememberAccount) {
       setCookie("username", $scope.userName, 1);
+    }else{
+      setCookie("username", '', 1);
     }
     if ($scope.rememberPassword) {
       setCookie("password", $scope.passWord, 1);
+    }else{
+      setCookie("password", '', 1);
     }
     $http.get('http://localhost:8081/login?name='+$scope.userName+'&passWord='+$scope.passWord)
       .success(function (res) {
