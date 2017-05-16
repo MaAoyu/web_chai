@@ -12,6 +12,14 @@ function LoginController($scope, $http, $location, user) {
   if (defPassword) {
     $scope.passWord = defPassword;
   }
+  var defrememberAccount = getCookie("rememberAccount");
+  if (defrememberAccount) {
+    $scope.rememberAccount = true;
+  }
+  var defrememberPassword = getCookie("rememberPassword");
+  if (defrememberPassword) {
+    $scope.rememberPassword = true;
+  }
 
   function setCookie(name, value, timeout) {
     var d = new Date();
@@ -32,13 +40,17 @@ function LoginController($scope, $http, $location, user) {
   $scope.login = function () {
     if ($scope.rememberAccount) {
       setCookie("username", $scope.userName, 1);
+      setCookie("rememberAccount", true, 1);
     }else{
       setCookie("username", '', 1);
+      setCookie("rememberAccount", '', 1);
     }
     if ($scope.rememberPassword) {
       setCookie("password", $scope.passWord, 1);
+      setCookie("rememberPassword", true, 1);
     }else{
       setCookie("password", '', 1);
+      setCookie("rememberPassword", '', 1);
     }
     $http.get('http://localhost:8081/login?name='+$scope.userName+'&passWord='+$scope.passWord)
       .success(function (res) {

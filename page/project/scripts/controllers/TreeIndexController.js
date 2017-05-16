@@ -6,17 +6,19 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     //框架参数
     $scope.userName = user.name;
-    if ($scope.userName == 'admin') {
-        $scope.userName = '系统管理员';
-    }
     $scope.userCity1 = user.city1;
     $scope.userCity2 = user.city2;
     $scope.userCity3 = user.city3;
-    $scope.password = {};
+   
     // $scope.userName = 'adn';
     // $scope.userCity1 = 1;
     // $scope.userCity2 = 1;
     // $scope.userCity3 = 1;
+
+    if ($scope.userName == 'admin') {
+        $scope.userName = '系统管理员';
+    }
+     $scope.password = {};
     $scope.isManageUser = -1;
     $scope.cityName = "";
     $scope.cityLevel = '0';
@@ -101,11 +103,13 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.table411Total = { "city4Name": '', "t1": 0, "t2": 0 };
     $scope.table412Datas = [];
     $scope.table412Total = { "city4Name": '', "t1": 0, "t2": 0 };
+    $scope.table413Total = { "city4Name": '', "t1": 0, "t2": 0 };
     $scope.c4CurrList = [];
     $scope.table413Datas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     $scope.getC4List = getC4List; //根据镇名获取下属村列表
     $scope.getAllTable411Datas = getAllTable411Datas;      //根据村名获取4-1青苗数据
     $scope.getAllTable412Datas = getAllTable412Datas;      //根据村名获取4-1建筑物数据
+    $scope.getAllTable413Datas = getAllTable413Datas;      //根据村名获取4-1土地
     //表4-2相关
     $scope.table42Datas = [];
     $scope.realtable42Datas = [];
@@ -411,6 +415,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getAllTable92Datas() {
+        $scope.table92Datas = [];
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
         $http.get('http://localhost:8081/getTable92Sum?city=' + $scope.cityName)
             .success(function (res) {
@@ -1184,6 +1189,9 @@ function TreeIndexController($scope, $http, $location, user) {
             //console.log(JSON.stringify($scope.c4CurrList));
         });
     }
+    function getAllTable413Datas(city4Name, page) {    //根据村名获取表4-1－3全部数据
+        $scope.table413Total.city4Name = city4Name;
+    }
     function getAllTable412Datas(city4Name, page) {    //根据村名获取表4-1－2全部数据
         $scope.currPage = page;
         $scope.table412Total.city4Name = city4Name;
@@ -1893,7 +1901,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $http.get('http://localhost:8081/deleteTable1?pk=' + pk)//1.删除表一
             .success(function (res) {
                 //重新加载表1
-                getAllTable1Datas(1);
+                getAllTable1Datas($scope.currPage);
             })
             .error(function (res) {
                 alert("删除表一数据出错");
@@ -2679,10 +2687,6 @@ function TreeIndexController($scope, $http, $location, user) {
         ["水泥管", "a1"], ["水泥梯步", "a2"], ["围墙大门", "a3"], ["电杆", "a4"], ["电线", "a5"], ["水泥碗柜", "a6"],
         ["闸阀", "a7"], ["PVC管", "a8"], ["沟渠", "a9"], ["鱼池", "a10"], ["大棚", "a11"], ["花台", "a12"], ["洗衣台", "a13"]
             , ["砖瓦窑", "a14"], ["石灰窑", "a14"], ["畜圈", "a16"]];
-        for (let i = 0; i < 12; i++) {
-            var cell3 = row2.addCell();
-            cell3.value = table1Head2[i][0];
-        }
         //第三页
         const rowLine3 = sheet.addRow();
         const cellLine31 = rowLine3.addCell();
@@ -2824,7 +2828,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1土地--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName +$scope.table413Total.city4Name+ '--表4-1土地--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2907,7 +2911,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1地面建筑物--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName +$scope.table412Total.city4Name+ '--表4-1地面建筑物--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2990,7 +2994,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '--表4-1青苗--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName + $scope.table411Total.city4Name+'--表4-1青苗--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -4176,7 +4180,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //导出
-        var excelRoot = $scope.cityName + '-表7-' + $scope.currPage + '.xlsx';
+        var excelRoot = $scope.cityName + '-表7-第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
