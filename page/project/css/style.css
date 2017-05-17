@@ -4185,17 +4185,11 @@ table thead tr td,
 table tfoot tr th,
 table tfoot tr td {
     padding: 0.2rem;
-    /*padding: 0.5rem 0.625rem 0.625rem;*/
-    /*font-size: 0.875rem;*/
-    font-size:10px;
+    font-size: 0.875rem;
     color: #222222;
     text-align: left; }
 table tr th,
 table tr td {
-    /*padding: 0.5625rem 0.625rem;*/
-    padding: 0.2rem;
-    /*font-size: 0.4rem;*/
-    font-size:10px;
     color: #222222; }
 table tr.even, table tr.alt, table tr:nth-of-type(even) {
     background: #f9f9f9; }
