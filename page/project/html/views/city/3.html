@@ -12,7 +12,7 @@
 </div>
 <label style="display: inline-block">建设项目名称：川南城际铁路</label>
 <input ng-model="Table1Head.line" type="text" style="width:30px;display: inline-block">线
-<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">标段
+<input ng-model="Table1Head.line2" type="text" style="width:30px;display: inline-block">
 <h4 align="center">铁路建设项目拆迁农村建（构）筑物登记清册</h4>
 <label style="display: inline-block">{{cityName}}</label>
 <input ng-model="Table1Head.city5" type="text" style="width:30px;display: inline-block">社
@@ -32,7 +32,7 @@
             <th colspan="1">户主姓名</th>
             <th colspan="1">{{current.name}}</th>
             <th colspan="1">身份证号码</th>
-            <th colspan="1">{{current.id}}</th>
+            <th colspan="1"style="width: 160px">{{current.id}}</th>
             <th colspan="2">家庭人口</th>
             <th colspan="1">{{current.family}}</th>
             <th rowspan="3">户主签名</th>
@@ -44,16 +44,16 @@
             <th colspan="3">拆迁其他建（构）筑物</th>
         </tr>
         <tr>
-            <th>房屋顺序</th>
-            <th>长(米)</th>
-            <th>宽(米)</th>
-            <th>高(米)</th>
-            <th>建筑面积</th>
-            <th>房屋性质</th>
-            <th>房屋类别</th>
-            <th>项目类别</th>
-            <th>单位</th>
-            <th>数量</th>
+            <th >房屋顺序</th>
+            <th >长(米)</th>
+            <th >宽(米)</th>
+            <th >高(米)</th>
+            <th >建筑面积</th>
+            <th >房屋性质</th>
+            <th >房屋类别</th>
+            <th >项目类别</th>
+            <th >单位</th>
+            <th >数量</th>
         </tr>
         <tr ng-repeat="t3 in table3Datas">
             <td>{{t3.index}}</td>
