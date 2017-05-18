@@ -1,19 +1,19 @@
 function TreeIndexController($scope, $http, $location, user) {
     console.log("载入TreeIndexController");
-    if (user.name == null || user.name == '') {
-        //alert("请登陆！");
-        $location.path("/");
-    }
-    //框架参数
-    $scope.userName = user.name;
-    $scope.userCity1 = user.city1;
-    $scope.userCity2 = user.city2;
-    $scope.userCity3 = user.city3;
+    // if (user.name == null || user.name == '') {
+    //     //alert("请登陆！");
+    //     $location.path("/");
+    // }
+    // //框架参数
+    // $scope.userName = user.name;
+    // $scope.userCity1 = user.city1;
+    // $scope.userCity2 = user.city2;
+    // $scope.userCity3 = user.city3;
    
-    // $scope.userName = 'adn';
-    // $scope.userCity1 = 1;
-    // $scope.userCity2 = 1;
-    // $scope.userCity3 = 1;
+    $scope.userName = 'admin';
+    $scope.userCity1 = 1;
+    $scope.userCity2 = 1;
+    $scope.userCity3 = 1;
 
     if ($scope.userName == 'admin') {
         $scope.userName = '系统管理员';
@@ -79,7 +79,7 @@ function TreeIndexController($scope, $http, $location, user) {
     //表三相关
     $scope.curTable3 = {}; //表三当前添加数据
     $scope.table3Datas = []; //表三所有数据
-    $scope.buildingNames = ["框架", "砖混", "砖木", "土木", "简易", "其它"];//表三建筑物类别
+    $scope.buildingNames = ["框架", "砖混", "砖瓦", "土木"];//表三建筑物类别
     $scope.getTable3ByPK = getTable3ByPK;
     $scope.saveTable3Data = saveTable3Data;
     $scope.deleteTable3 = deleteTable3;
@@ -1026,7 +1026,7 @@ function TreeIndexController($scope, $http, $location, user) {
                                     case "砖混":
                                         new11.t2 = new11.t2 + rawT4Datas[i]["area"];
                                         break;
-                                    case "砖木":
+                                    case "砖瓦":
                                         new11.t3 = new11.t3 + rawT4Datas[i]["area"];
                                         break;
                                     case "土木":
@@ -1911,6 +1911,12 @@ function TreeIndexController($scope, $http, $location, user) {
             })
             .error(function (res) {
                 alert("删除表二数据出错");
+            });
+        $http.get('http://localhost:8081/deleteTable2ByT1?pk=' + id)//2.删除表三
+            .success(function (res) {
+            })
+            .error(function (res) {
+                alert("删除表三数据出错");
             });
         $http.get('http://localhost:8081/getTable2Count?id=' + id)//3.删除用户表
             .success(function (res) {
