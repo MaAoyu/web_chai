@@ -7,42 +7,57 @@
 <label class="pull-right" style="display: inline-block"> 共 {{totalPages}}   页    第  {{currPage}}  页</label>
 
 <div>
-<table border="1" class="table table-striped table-hover">
-    <tr>
-        <th>村(社区)</th>
-        <th>凭证编号</th>
-        <th>补偿类别</th>
-        <th>单位</th>
-        <th>数量</th>
-        <th>单价(元)</th>
-        <th>金额(元)</th>
-        <th>领款人（单位）签字盖章</th>
-        <th>备注</th>
-    </tr>
-    <tr ng-repeat="t42 in table42Datas">
-        <td>{{t42.c4}}</td>
-        <td></td>
-        <td>{{t42.type}}</td>
-        <td>{{t42.unit}}</td>
-        <td>{{t42.quantity}}</td>
-        <td>{{t42.price}}</td>
-        <td>{{t42.total}}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>合计</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>{{table42Total.t1}}</td>
-        <td></td>
-        <td>{{table42Total.t2}}</td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-<button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button> 
+    <table border="1" class="table table-striped table-hover">
+        <tr>
+            <th>村(社区)</th>
+            <th>凭证编号</th>
+            <th>补偿类别</th>
+            <th>单位</th>
+            <th>数量</th>
+            <th>单价(元)</th>
+            <th>金额(元)</th>
+            <th>领款人（单位）签字盖章</th>
+            <th>备注</th>
+            <td>编辑</td>
+        </tr>
+        <tr ng-repeat="t42 in table42Datas">
+            <td>{{t42.c4}}</td>
+            <td>{{t42.mId}}</td>
+            <td>{{t42.type}}</td>
+            <td>{{t42.unit}}</td>
+            <td>{{t42.quantity}}</td>
+            <td>{{t42.price}}</td>
+            <td>{{t42.total}}</td>
+            <td></td>
+            <td></td>
+            <td>
+                <button ng-click="getTable42mIdByPK(t42.c4,t42.type)" class="btn btn-primary btn-small">编辑</button>
+            </td>
+        </tr>
+        <tr>
+            <td>合计</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{table42Total.t1}}</td>
+            <td></td>
+            <td>{{table42Total.t2}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="15">正在编辑的凭证编号：</td>
+        </tr>
+        <tr>
+            <td>{{currTable42.c4}}</td>
+            <td>
+                <input value="currTable42.mId" ng-model="currTable42.mId" type="text" style="width:100%;margin: 3px auto;"></td>
+            <td>{{currTable42.type}}</td>
+        </tr>
+    </table>
+    <button ng-click="saveTable42mId()" class="btn btn-success">保存</button>
+    <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button>
     <div style="float: right">
         <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>
         <md-button ng-click="getNextPage(1)" class="btn btn-default">上一页</md-button>
@@ -57,11 +72,11 @@
     <h6>号，补偿类别为村为单位的“补偿款”总额、土地补偿款等由镇（乡、街办）补偿到村（社区）的各类费用。本表签字盖章后同相关附件（各村报</h6>
     <h6>送资料）扫描为电子版。</h6>
     </br>
-    <p style="display: inline-block;margin-right: 100px;">镇（乡、街办）：     （章)</p>
-    <p style="display: inline-block;margin-right: 100px;">主管领导：    </p>
-    <p style="display: inline-block;margin-right: 100px;">复核：           </p>
-    <p style="display: inline-block;margin-right: 100px;">经办人：            </p>
-     <p style="display: inline-block;">    年  月  日</p>
+    <p style="display: inline-block;margin-right: 100px;">镇（乡、街办）： （章)</p>
+    <p style="display: inline-block;margin-right: 100px;">主管领导： </p>
+    <p style="display: inline-block;margin-right: 100px;">复核： </p>
+    <p style="display: inline-block;margin-right: 100px;">经办人： </p>
+    <p style="display: inline-block;"> 年 月 日</p>
 </div>
 </br>
 </br>

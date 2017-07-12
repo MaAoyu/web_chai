@@ -1,24 +1,24 @@
 function TreeIndexController($scope, $http, $location, user) {
     console.log("载入TreeIndexController");
-    if (user.name == null || user.name == '') {
-        //alert("请登陆！");
-        $location.path("/");
-    }
-    //框架参数
-    $scope.userName = user.name;
-    $scope.userCity1 = user.city1;
-    $scope.userCity2 = user.city2;
-    $scope.userCity3 = user.city3;
+    // if (user.name == null || user.name == '') {
+    //     //alert("请登陆！");
+    //     $location.path("/");
+    // }
+    // //框架参数
+    // $scope.userName = user.name;
+    // $scope.userCity1 = user.city1;
+    // $scope.userCity2 = user.city2;
+    // $scope.userCity3 = user.city3;
 
-    // $scope.userName = 'admin';
-    // $scope.userCity1 = 1;
-    // $scope.userCity2 = 1;
-    // $scope.userCity3 = 1;
+    $scope.userName = 'admin';
+    $scope.userCity1 = 1;
+    $scope.userCity2 = 1;
+    $scope.userCity3 = 1;
 
     if ($scope.userName == 'admin') {
         $scope.userName = '系统管理员';
     }
-     $scope.password = {};
+    $scope.password = {};
     $scope.isManageUser = -1;
     $scope.cityName = "";
     $scope.cityLevel = '0';
@@ -100,21 +100,34 @@ function TreeIndexController($scope, $http, $location, user) {
     $scope.getUserByName = getUserByName;
     //表4-1相关
     $scope.table411Datas = [];
+    $scope.currTable411 = {};
     $scope.table411Total = { "city4Name": '', "t1": 0, "t2": 0 };
     $scope.table412Datas = [];
     $scope.table412Total = { "city4Name": '', "t1": 0, "t2": 0 };
+    $scope.table413Datas = [];
+    $scope.curTable413 = { 'name': '', 'id': '', 'quantity': '', 'price': '', 'total': '', 'text': '' };
     $scope.table413Total = { "city4Name": '', "t1": 0, "t2": 0 };
     $scope.c4CurrList = [];
-    $scope.table413Datas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    $scope.table413Datas = [];
     $scope.getC4List = getC4List; //根据镇名获取下属村列表
     $scope.getAllTable411Datas = getAllTable411Datas;      //根据村名获取4-1青苗数据
+    $scope.getTable411mIdByPK = getTable411mIdByPK;        //根据户名显示凭证编号
+    $scope.saveTable411mId = saveTable411mId;
     $scope.getAllTable412Datas = getAllTable412Datas;      //根据村名获取4-1建筑物数据
+    $scope.getTable412mIdByPK = getTable412mIdByPK;        //根据户名显示凭证编号
+    $scope.saveTable412mId = saveTable412mId;
     $scope.getAllTable413Datas = getAllTable413Datas;      //根据村名获取4-1土地
+    $scope.getTable413ByPK = getTable413ByPK;
+    $scope.deleteTable413 = deleteTable413;
+    $scope.saveTable413Data = saveTable413Data;
     //表4-2相关
     $scope.table42Datas = [];
     $scope.realtable42Datas = [];
     $scope.table42Total = { "t1": 0, "t2": 0 };
     $scope.getAllTable42Datas = getAllTable42Datas;      //获取4-2数据
+    $scope.currTable42 = {};
+    $scope.getTable42mIdByPK = getTable42mIdByPK;        //根据户名显示凭证编号
+    $scope.saveTable42mId = saveTable42mId;
     //表4-3相关
     $scope.curTable43 = {};
     $scope.table43Datas = [];
@@ -205,7 +218,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.table7Datas = [];
         $scope.table7Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
         for (var k = 0; k < $scope.c2CurrList.length; k++) {
-            $http.get('http://106.14.17.37:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
+            $http.get('http://localhost:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     for (var i = 0; i < res.length; i++) {
@@ -236,7 +249,7 @@ function TreeIndexController($scope, $http, $location, user) {
             alert("两次输入新密码不一致，请重新输入！");
         }
         else {
-            $http.get('http://106.14.17.37:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
+            $http.get('http://localhost:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
                 .success(function (res) {
                     if (res['ok'] == -1)
                         alert("帐号不存在");
@@ -244,7 +257,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         alert("旧密码输入错误");
                     else {
                         console.log($scope.password.p2);
-                        $http.get('http://106.14.17.37:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
+                        $http.get('http://localhost:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
                             .success(function (res) {
                                 alert("修改密码成功！");
                             })
@@ -271,7 +284,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table101Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://106.14.17.37:8081/updateTable101?' + urlPara)
+        $http.get('http://localhost:8081/updateTable101?' + urlPara)
             .success(function (res) {
                 alert("更新表101成功！");
             })
@@ -282,7 +295,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable101Datas() {
         $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://106.14.17.37:8081/getTable101?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable101?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.table101Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -299,7 +312,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable9Datas() {
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://106.14.17.37:8081/getTable9L1?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable9L1?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data1.a1 = res[0]['sum(a1)'];
                 $scope.t9Data1.b1 = res[0]['sum(a1*price)'];
@@ -313,7 +326,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable9L2?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable9L2?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data2.a1 = res[0]['sum(a1)'];
                 $scope.t9Data2.b1 = res[0]['sum(a1*price)'];
@@ -326,7 +339,7 @@ function TreeIndexController($scope, $http, $location, user) {
             })
             .error(function (res) {
             });
-        $http.get('http://106.14.17.37:8081/getTable9L4?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable9L4?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data4.a1 = res[0]['sum(a1)'];
                 $scope.t9Data4.b1 = res[0]['sum(a1*price)'];
@@ -339,7 +352,7 @@ function TreeIndexController($scope, $http, $location, user) {
             })
             .error(function (res) {
             });
-        $http.get('http://106.14.17.37:8081/getTable9L31?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable9L31?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data3.a1 = res[0]['sum(a1)'];
                 $scope.t9Data3.b1 = res[0]['sum(a1*price)'];
@@ -349,7 +362,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 $scope.t9Data3.b3 = res[0]['sum(a3*price)'];
                 $scope.t9Data3.a4 = res[0]['sum(a4)'];
                 $scope.t9Data3.b4 = res[0]['sum(a4*price)'];
-                $http.get('http://106.14.17.37:8081/getTable9L32?city=' + $scope.cityName)
+                $http.get('http://localhost:8081/getTable9L32?city=' + $scope.cityName)
                     .success(function (res) {
                         $scope.t9Data3.a1 = $scope.t9Data3.a1 + res[0]['sum(a1)'];
                         $scope.t9Data3.b1 = $scope.t9Data3.b1 + res[0]['sum(a1*price)'];
@@ -374,7 +387,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table93Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://106.14.17.37:8081/updateTable93?' + urlPara)
+        $http.get('http://localhost:8081/updateTable93?' + urlPara)
             .success(function (res) {
                 alert("更新表93成功！");
             })
@@ -385,7 +398,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable93Datas() {
         $scope.table93Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://106.14.17.37:8081/getTable93?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable93?city=' + $scope.cityName)
             .success(function (res) {
                 res.sort(function (a, b) {
                     return a.index1 - b.index1
@@ -417,7 +430,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable92Datas() {
         $scope.table92Datas = [];
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://106.14.17.37:8081/getTable92Sum?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable92Sum?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.table92Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
                 for (var j = 0; j < res.length; j++) {
@@ -433,7 +446,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     $scope.table92Total.a4 = $scope.table92Total.a4 + new92.a4;
                     $scope.table92Datas.push(new92);
                 }
-                $http.get('http://106.14.17.37:8081/getTable92?city=' + $scope.cityName)
+                $http.get('http://localhost:8081/getTable92?city=' + $scope.cityName)
                     .success(function (res2) {
                         //console.log(JSON.stringify(res2));
                         for (var j = 0; j < res2.length; j++) {
@@ -481,7 +494,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table91Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://106.14.17.37:8081/updateTable91?' + urlPara)
+        $http.get('http://localhost:8081/updateTable91?' + urlPara)
             .success(function (res) {
                 alert("更新表91成功！");
             })
@@ -492,7 +505,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable91Datas() {
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://106.14.17.37:8081/getTable91?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable91?city=' + $scope.cityName)
             .success(function (res) {
                 res.sort(function (a, b) {
                     return a.index1 - b.index1
@@ -522,7 +535,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable71ByPK(autoID) {
-        $http.get('http://106.14.17.37:8081/getTable71ByPK?autoID=' + autoID)
+        $http.get('http://localhost:8081/getTable71ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable71 = res[0];
             })
@@ -531,7 +544,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable71(autoID) {
-        $http.get('http://106.14.17.37:8081/deleteTable71?autoID=' + autoID)
+        $http.get('http://localhost:8081/deleteTable71?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable71Datas();
@@ -549,7 +562,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/updateTable71?' + urlPara)
+            $http.get('http://localhost:8081/updateTable71?' + urlPara)
                 .success(function (res) {
                     alert("更新表71成功！");
                 })
@@ -569,14 +582,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/addTable71?' + urlPara)
+            $http.get('http://localhost:8081/addTable71?' + urlPara)
                 .success(function (res) {
                     alert("添加表71成功！");
                 })
                 .error(function (res) {
                     alert("添加表71数据出错");
                 });
-            $http.get('http://106.14.17.37:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable71Datas($scope.totalPages + 1);
@@ -594,7 +607,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable71Datas(page) {
         $scope.currPage = page;
         $scope.table71Datas = [];
-        $http.get('http://106.14.17.37:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -603,7 +616,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
-        $http.get('http://106.14.17.37:8081/getTable71?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable71?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table71Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -623,7 +636,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable5ByPK(autoID) {
-        $http.get('http://106.14.17.37:8081/getTable5ByPK?autoID=' + autoID)
+        $http.get('http://localhost:8081/getTable5ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable5 = res[0];
             })
@@ -632,7 +645,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable5(autoID) {
-        $http.get('http://106.14.17.37:8081/deleteTable5?autoID=' + autoID)
+        $http.get('http://localhost:8081/deleteTable5?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable5Datas($scope.currPage);
@@ -650,7 +663,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/updateTable5?' + urlPara)
+            $http.get('http://localhost:8081/updateTable5?' + urlPara)
                 .success(function (res) {
                     alert("更新表5成功！");
                 })
@@ -671,14 +684,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
             }
             console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/addTable5?' + urlPara)
+            $http.get('http://localhost:8081/addTable5?' + urlPara)
                 .success(function (res) {
                     alert("添加表5成功！");
                 })
                 .error(function (res) {
                     alert("添加表5数据出错");
                 });
-            $http.get('http://106.14.17.37:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable5Datas($scope.totalPages + 1);
@@ -696,7 +709,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable5Datas(page) {
         $scope.currPage = page;
         $scope.table5Datas = [];
-        $http.get('http://106.14.17.37:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -705,7 +718,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
-        $http.get('http://106.14.17.37:8081/getTable5?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable5?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table5Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -731,7 +744,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable43ByPK(autoID) {
-        $http.get('http://106.14.17.37:8081/getTable43ByPK?autoID=' + autoID)
+        $http.get('http://localhost:8081/getTable43ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable43 = res[0];
             })
@@ -740,7 +753,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable43(autoID) {
-        $http.get('http://106.14.17.37:8081/deleteTable43?autoID=' + autoID)
+        $http.get('http://localhost:8081/deleteTable43?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable43Datas($scope.currPage);
@@ -758,7 +771,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable43[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/updateTable43?' + urlPara)
+            $http.get('http://localhost:8081/updateTable43?' + urlPara)
                 .success(function (res) {
                     alert("更新表4-3成功！");
                 })
@@ -779,14 +792,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable43[t1Para[i]] + '&';
             }
             console.log(urlPara);
-            $http.get('http://106.14.17.37:8081/addTable43?' + urlPara)
+            $http.get('http://localhost:8081/addTable43?' + urlPara)
                 .success(function (res) {
                     alert("添加表4-3成功！");
                 })
                 .error(function (res) {
                     alert("添加表4-3数据出错");
                 });
-            $http.get('http://106.14.17.37:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable43Datas($scope.totalPages + 1);
@@ -806,14 +819,14 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.currPage = page;
         $scope.table43Datas = [];
         $scope.table43Total = { "t1": 0, "t2": 0 };
-        $http.get('http://106.14.17.37:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable43?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://localhost:8081/getTable43?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table43Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -846,7 +859,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var countc3 = 0;
 
         for (var j = 0; j < $scope.c3CurrList.length; j++) {//2.遍历所有村
-            $http.get('http://106.14.17.37:8081/getTable1SumArea?city=' + $scope.cityName + $scope.c3CurrList[j])
+            $http.get('http://localhost:8081/getTable1SumArea?city=' + $scope.cityName + $scope.c3CurrList[j])
                 .success(function (res) {                   //3.从表一获取征地面积
                     var new12 = new Object();
                     var new12p2 = new Object();
@@ -871,7 +884,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     new12.area = res[0]["sum(area)"] != null ? res[0]["sum(area)"] : 0;
                     $scope.table12TotalP1.area = $scope.table12TotalP1.area + new12.area;
                     //console.log($scope.cityName + new12.c4);
-                    $http.get('http://106.14.17.37:8081/getTable3Bycity3?city=' + $scope.cityName + new12.c4)
+                    $http.get('http://localhost:8081/getTable3Bycity3?city=' + $scope.cityName + new12.c4)
                         .success(function (res2) {                   //3.从表三获取房屋信息
                             //console.log(JSON.stringify(res2));
                             var rawT4Datas = [].concat(res2);
@@ -980,7 +993,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var count1 = 0;
         console.log(JSON.stringify($scope.c4CurrList));
         for (var i = 0; i < $scope.c4CurrList.length; i++) {//1.遍历所有村
-            $http.get('http://106.14.17.37:8081/getTable1Area?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://localhost:8081/getTable1Area?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     var new11 = new Object();
@@ -1009,7 +1022,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     };
                     $scope.table11TotalP1.area = $scope.table11TotalP1.area + new11.area;
                     //房屋
-                    $http.get('http://106.14.17.37:8081/getTable3Bycity?city=' + $scope.cityName + new11.c4)
+                    $http.get('http://localhost:8081/getTable3Bycity?city=' + $scope.cityName + new11.c4)
                         .success(function (res) {
                             var rawT4Datas = [].concat(res);
                             new11.familys = rawT4Datas.length;      //4.房屋户数
@@ -1091,6 +1104,64 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
         }
     }
+    function saveTable42mId() {
+        //TODO.. SERVER端   建筑物、土地取数据
+        var mId = $scope.currTable42.mId;
+        var type = $scope.currTable42.type;
+        var c4 = $scope.cityName + $scope.currTable42.c4;
+        //console.log('###'+mId + name + city4Name);
+        //判断数据库中是否有记录
+        $http.get('http://localhost:8081/isTable42mId?c4=' + c4 + '&type=' + type)
+            .success(function (res) {
+                if (res.length > 0) {
+                    //update
+                    $http.get('http://localhost:8081/updateTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
+                        .success(function (res) {
+                            //console.log(JSON.stringify(res));
+                            alert('修改成功');
+                            getAllTable42Datas($scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                else {
+                    //add
+                    $http.get('http://localhost:8081/saveTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
+                        .success(function (res) {
+                            //console.log(JSON.stringify(res));
+                            alert('添加成功');
+                            getAllTable42Datas($scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                //console.log(JSON.stringify(res));
+            })
+            .error(function (res) {
+                alert('网络出错');
+            });
+
+
+    }
+    function getTable42mIdByPK(c4, type) {    //根据户名显示凭证编号
+        $scope.currTable42 = { 'c4': c4, 'mId': '', 'type': type };
+        c4 = $scope.cityName + c4;
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable42mId')//凭证编号
+            .success(function (res) {
+                mIdList = res;
+                for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
+                    if (type == mIdList[i].type && c4 == mIdList[i].c4) {
+                        $scope.currTable42.mId = mIdList[i].mId;
+                        break;
+                    }
+                }
+            })
+            .error(function (res) {
+            });
+    }
     function getAllTable42Datas(page) {
         $scope.table42Total = { "t1": 0, "t2": 0 };
         $scope.table42Datas = [];
@@ -1111,9 +1182,16 @@ function TreeIndexController($scope, $http, $location, user) {
             var end = $scope.c4CurrList.length;
         }
         //console.log('begin:' + begin + 'end:' + end);
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable42mId')//凭证编号
+            .success(function (res) {
+                mIdList = res;
+            })
+            .error(function (res) {
+            });
 
         for (var i = begin; i < end; i++) {//1.遍历所有村
-            $http.get('http://106.14.17.37:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://localhost:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {                       //2.青苗
                     //console.log(JSON.stringify(res));
                     var new42 = new Object();
@@ -1122,6 +1200,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     new42.unit = "亩";
                     new42.quantity = 0;
                     new42.total = 0;
+                    new42.price = 0;
                     var rawT4Datas = [].concat(res);
                     for (var i = 0; i < rawT4Datas.length; i++) {
                         rawT4Datas[i].quantity = rawT4Datas[i].quantity * 1;
@@ -1130,6 +1209,20 @@ function TreeIndexController($scope, $http, $location, user) {
                         new42.quantity = new42.quantity + rawT4Datas[i].quantity;
                         new42.total = new42.total + rawT4Datas[i].total;
                     };
+
+                    if (new42.quantity == 0) {
+                        new42.price = 0;
+                    }
+                    else {
+                        new42.price = new42.total / new42.quantity;
+                    }
+                    var totalNew42C4 = $scope.cityName + new42.c4;
+                    for (var j = 0; j < mIdList.length; j++) {//添加凭证编号
+                        if (totalNew42C4 == mIdList[j].c4 && new42.type == mIdList[j].type) {
+                            new42.mId = mIdList[j].mId;
+                            break;
+                        }
+                    }
                     $scope.table42Datas.push(new42);
                     count1++;
 
@@ -1139,7 +1232,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("网络出错");
                 });
-            $http.get('http://106.14.17.37:8081/getAllTable412Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://localhost:8081/getAllTable412Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {   //3.地面建筑物  地面建筑物单价不一致
                     var new42 = new Object();
                     new42.c4 = $scope.c4CurrList[count2];
@@ -1147,6 +1240,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     new42.unit = "m²";
                     new42.quantity = 0;
                     new42.total = 0;
+                    new42.price = 0;
                     var rawT4Datas = [].concat(res);
                     for (var i = 0; i < rawT4Datas.length; i++) {
                         rawT4Datas[i].area1 = rawT4Datas[i].area1 * 1;
@@ -1154,6 +1248,20 @@ function TreeIndexController($scope, $http, $location, user) {
                         new42.quantity = new42.quantity + rawT4Datas[i].area1;
                         new42.total = new42.total + rawT4Datas[i].total;
                     };
+                    if (new42.quantity == 0) {
+                        new42.price = 0;
+                    }
+                    else {
+                        new42.price = new42.total / new42.quantity;
+                    }
+                    var totalNew42C4 = $scope.cityName + new42.c4;
+                    for (var j = 0; j < mIdList.length; j++) {//添加凭证编号
+                        if (totalNew42C4 == mIdList[j].c4 && new42.type == mIdList[j].type) {
+                            new42.mId = mIdList[j].mId;
+                            break;
+                        }
+                    }
+
                     $scope.table42Datas.push(new42);
                     count2++;
                     $scope.table42Total.t1 = $scope.table42Total.t1 + new42.quantity;
@@ -1161,19 +1269,43 @@ function TreeIndexController($scope, $http, $location, user) {
                 })
                 .error(function (res) {
                 });
-            $http.get('http://106.14.17.37:8081/getAllTable413Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://localhost:8081/getAllTable413Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {   //3.地面建筑物  地面建筑物单价不一致
+                    console.log(JSON.stringify(res));
                     var new42 = new Object();
                     new42.c4 = $scope.c4CurrList[count3];
-                    new42.type = "地面建筑物";
-                    new42.unit = "m²";
                     new42.type = "土地";
                     new42.unit = "m²";
                     new42.quantity = 0;
                     new42.total = 0;
                     new42.price = 0;
+                    //汇总
+                    var rawT4Datas = [].concat(res);
+                    for (var i = 0; i < rawT4Datas.length; i++) {
+                        rawT4Datas[i].quantity = rawT4Datas[i].quantity * 1;
+                        rawT4Datas[i].total = rawT4Datas[i].total * 1;
+                        new42.quantity = new42.quantity + rawT4Datas[i].quantity;
+                        new42.total = new42.total + rawT4Datas[i].total;
+                        if (new42.quantity == 0) {
+                            new42.price = 0;
+                        }
+                        else {
+                            new42.price = new42.total / new42.quantity;
+                        }
+                    };
+                    //编号
+                    var totalNew42C4 = $scope.cityName + new42.c4;
+                    for (var j = 0; j < mIdList.length; j++) {//添加凭证编号
+                        if (totalNew42C4 == mIdList[j].c4 && new42.type == mIdList[j].type) {
+                            new42.mId = mIdList[j].mId;
+                            break;
+                        }
+                    }
+
                     $scope.table42Datas.push(new42);
                     count3++;
+                    $scope.table42Total.t1 = $scope.table42Total.t1 + new42.quantity;
+                    $scope.table42Total.t2 = $scope.table42Total.t2 + new42.total;
                 })
                 .error(function (res) {
                 });
@@ -1191,12 +1323,166 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable413Datas(city4Name, page) {    //根据村名获取表4-1－3全部数据
         $scope.table413Total.city4Name = city4Name;
+        console.log($scope.table413Total.city4Name);
+        city4Name = $scope.cityName + city4Name;
+        $http.get('http://localhost:8081/getTable413Count?city=' + city4Name)
+            .success(function (res) {
+                $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+        // if (page == $scope.totalPages - 1) {    //添加完毕时显示最后一页
+        //     page = $scope.totalPages;
+        // }
+        $scope.currPage = page;
+        $http.get('http://localhost:8081/getAllTable413Datas?page=' + page + '&city=' + city4Name)
+            .success(function (res) {
+                //console.log(res);
+                $scope.table413Datas = [].concat(res);
+                $scope.table413Total.t1 = 0;
+                $scope.table413Total.t2 = 0;
+                for (let i = 0; i < $scope.table413Datas.length; i++) {
+                    if ($scope.table413Datas[i].quantity != null) {
+                        $scope.table413Datas[i].quantity = $scope.table413Datas[i].quantity * 1;
+                        console.log($scope.table413Datas[i].quantity);
+                        $scope.table413Total.t1 = $scope.table413Total.t1 + $scope.table413Datas[i].quantity;
+                    }
+                    if ($scope.table413Datas[i].total != null) {
+                        $scope.table413Datas[i].total = $scope.table413Datas[i].total * 1;
+                        $scope.table413Total.t2 = $scope.table413Total.t2 + $scope.table413Datas[i].total;
+                    }
+                }
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function saveTable413Data() {
+        //console.log($scope.table413Total.city4Name);
+        var urlPara = 'city=' + $scope.cityName + $scope.table413Total.city4Name + '&';
+        var t1Para = ['name', 'id', 'price', 'total', 'text', 'quantity'];
+        for (let i = 0; i < t1Para.length; i++) {
+            if ($scope.curTable413[t1Para[i]] == null)
+                $scope.curTable413[t1Para[i]] = '';
+            urlPara = urlPara + t1Para[i] + '=' + $scope.curTable413[t1Para[i]] + '&';
+        }
+        if ($scope.curTable413.isExist == 1) {
+            $http.get('http://localhost:8081/updateTable413?' + urlPara)
+                .success(function (res) {
+                    alert("更新成功！");
+                    $scope.curTable413 = {};
+                    getAllTable413Datas($scope.table413Total.city4Name, $scope.currPage);
+                })
+                .error(function (res) {
+                    alert("添加数据出错");
+                });
+        }
+        else {
+            $http.get('http://localhost:8081/addTable413?' + urlPara)
+                .success(function (res) {
+                    alert("添加成功！");
+                    $scope.curTable413 = {};
+                    getAllTable413Datas($scope.table413Total.city4Name, $scope.currPage);
+                })
+                .error(function (res) {
+                    alert("添加数据出错");
+                });
+        }
+    }
+    function getTable413ByPK(id) {
+        $http.get('http://localhost:8081/getTable413ById?id=' + id)
+            .success(function (res) {
+                var rawDatas = [].concat(res);
+                $scope.curTable413 = rawDatas[0];
+                $scope.curTable413.isExist = 1;
+                //console.log($scope.curTable1.name);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+    function deleteTable413(id) {
+        $http.get('http://localhost:8081/deleteTable413?pk=' + id)
+            .success(function (res) {
+                getAllTable413Datas($scope.table413Total.city4Name, $scope.currPage);
+            })
+            .error(function (res) {
+                alert("网络出错");
+            });
+    }
+
+    function saveTable412mId() {
+        var mId = $scope.currTable412.mId;
+        var name = $scope.currTable412.name;
+        var city4Name = $scope.cityName + $scope.table412Total.city4Name;
+        console.log('###' + mId + name + city4Name);
+        //判断数据库中是否有记录
+        $http.get('http://localhost:8081/isTable412mId?name=' + name + '&city=' + city4Name)
+            .success(function (res) {
+                if (res.length > 0) {
+                    //update
+                    $http.get('http://localhost:8081/updateTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                        .success(function (res) {
+                            console.log(JSON.stringify(res));
+                            alert('修改成功');
+                            getAllTable412Datas($scope.table412Total.city4Name, $scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                else {
+                    //add
+                    $http.get('http://localhost:8081/saveTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                        .success(function (res) {
+                            console.log(JSON.stringify(res));
+                            alert('添加成功');
+                            getAllTable412Datas($scope.table412Total.city4Name, $scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                //console.log(JSON.stringify(res));
+            })
+            .error(function (res) {
+                alert('网络出错');
+            });
+
+
+    }
+    function getTable412mIdByPK(name) {    //根据户名显示凭证编号
+        var city4Name = $scope.cityName + $scope.table412Total.city4Name;
+        $scope.currTable412 = { 'name': name, 'mId': '' };
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable412mId?c4name=' + city4Name)//凭证编号
+            .success(function (res) {
+                mIdList = res;
+                for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
+                    if (name == mIdList[i].name) {
+                        $scope.currTable412.mId = mIdList[i].mId;
+                        break;
+                    }
+                }
+            })
+            .error(function (res) {
+            });
     }
     function getAllTable412Datas(city4Name, page) {    //根据村名获取表4-1－2全部数据
         $scope.currPage = page;
         $scope.table412Total.city4Name = city4Name;
         city4Name = $scope.cityName + city4Name;
-        $http.get('http://106.14.17.37:8081/getAllTable412Datas?city=' + city4Name + '&page=' + page)//表内容
+
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable412mId?c4name=' + city4Name)//凭证编号
+            .success(function (res) {
+                mIdList = res;
+            })
+            .error(function (res) {
+            });
+
+        $http.get('http://localhost:8081/getAllTable412Datas?city=' + city4Name + '&page=' + page)//表内容
             .success(function (res) {
                 //console.log(JSON.stringify(res));
                 $scope.totalPages = Math.ceil(res.length / 10);
@@ -1215,8 +1501,14 @@ function TreeIndexController($scope, $http, $location, user) {
                     else {
                         new411.price = new411.total / new411.area1;
                     }
-                    $scope.table412Datas.push(new411);
+                    for (var j = 0; j < mIdList.length; j++) {//添加凭证编号
+                        if (new411.name == mIdList[j].name) {
+                            new411.mId = mIdList[j].mId;
+                            break;
+                        }
+                    }
 
+                    $scope.table412Datas.push(new411);
                     $scope.table412Total.t1 = $scope.table412Total.t1 + new411.area1;
                     $scope.table412Total.t2 = $scope.table412Total.t2 + new411.total;
                 };
@@ -1225,19 +1517,82 @@ function TreeIndexController($scope, $http, $location, user) {
                 alert("网络出错");
             });
     }
+    function saveTable411mId() {
+        var mId = $scope.currTable411.mId;
+        var name = $scope.currTable411.name;
+        var city4Name = $scope.cityName + $scope.table411Total.city4Name;
+        //console.log(mId + name + city4Name);
+        //判断数据库中是否有记录
+        $http.get('http://localhost:8081/isTable411mId?name=' + name + '&city=' + city4Name)
+            .success(function (res) {
+                if (res.length > 0) {
+                    //update
+                    $http.get('http://localhost:8081/updateTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                        .success(function (res) {
+                            alert('修改成功');
+                            getAllTable411Datas($scope.table411Total.city4Name, $scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                else {
+                    //add
+                    $http.get('http://localhost:8081/saveTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                        .success(function (res) {
+                            alert('添加成功');
+                            getAllTable411Datas($scope.table411Total.city4Name, $scope.currPage);
+                        })
+                        .error(function (res) {
+                            alert('网络出错');
+                        });
+                }
+                //console.log(JSON.stringify(res));
+            })
+            .error(function (res) {
+                alert('网络出错');
+            });
+
+
+    }
+    function getTable411mIdByPK(name) {    //根据户名显示凭证编号
+        var city4Name = $scope.cityName + $scope.table411Total.city4Name;
+        $scope.currTable411 = { 'name': name, 'mId': '' };
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable411mId?c4name=' + city4Name)//凭证编号
+            .success(function (res) {
+                mIdList = res;
+                for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
+                    if (name == mIdList[i].name) {
+                        $scope.currTable411.mId = mIdList[i].mId;
+                        break;
+                    }
+                }
+            })
+            .error(function (res) {
+            });
+    }
     function getAllTable411Datas(city4Name, page) {    //根据村名获取表4-1－1全部数据
         $scope.currPage = page;
         $scope.table411Total.city4Name = city4Name;
         city4Name = $scope.cityName + city4Name;
         var limitPeopleList = [];
-        $http.get('http://106.14.17.37:8081/getPeopleList?city=' + city4Name)//1.取到总页数
+        var mIdList = [];
+        $http.get('http://localhost:8081/getTable411mId?c4name=' + city4Name)//凭证编号
+            .success(function (res) {
+                mIdList = res;
+            })
+            .error(function (res) {
+            });
+
+        $http.get('http://localhost:8081/getPeopleList?city=' + city4Name)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res.length / 10);
                 var resLength = 10 * page > res.length ? res.length : 10 * page;
                 for (var i = 10 * (page - 1); i < resLength; i++) {
                     limitPeopleList.push(res[i].id);
                 }
-                $http.get('http://106.14.17.37:8081/getSumTable411Datas?ids=' + limitPeopleList)//2.表内容
+                $http.get('http://localhost:8081/getSumTable411Datas?ids=' + limitPeopleList)//2.表内容
                     .success(function (res) {
                         //console.log(JSON.stringify(res));
                         var rawT4Datas = [].concat(res);
@@ -1255,8 +1610,14 @@ function TreeIndexController($scope, $http, $location, user) {
                             else {
                                 new411.price = new411.total / new411.quantity;
                             }
+                            for (var j = 0; j < mIdList.length; j++) {//添加凭证编号
+                                if (new411.name == mIdList[j].name) {
+                                    new411.mId = mIdList[j].mId;
+                                    break;
+                                }
+                            }
+                            //console.log(JSON.stringify(mIdList));
                             $scope.table411Datas.push(new411);
-
                             $scope.table411Total.t1 = $scope.table411Total.t1 + new411.quantity;
                             $scope.table411Total.t2 = $scope.table411Total.t2 + new411.total;
                         };
@@ -1267,27 +1628,9 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        // $http.get('http://106.14.17.37:8081/getAllTable411Datas?city=' + city4Name + '&page=' + page)//2.表内容
-        //     .success(function (res) {
-        //         //console.log(JSON.stringify(res));
-        //         var rawT4Datas = [].concat(res);
-        //         $scope.table411Total.t1 = 0;
-        //         $scope.table411Total.t2 = 0;
-        //         $scope.table411Datas = [];
-        //         for (var i = 0; i < rawT4Datas.length; i++) {
-        //             $scope.table411Datas[i] = rawT4Datas[i];
-        //             $scope.table411Datas[i].quantity = $scope.table411Datas[i].quantity * 1;
-        //             $scope.table411Datas[i].total = $scope.table411Datas[i].quantity * $scope.table411Datas[i].price;
-        //             $scope.table411Total.t1 = $scope.table411Total.t1 + $scope.table411Datas[i].quantity;
-        //             $scope.table411Total.t2 = $scope.table411Total.t2 + $scope.table411Datas[i].total;
-        //         };
-        //     })
-        //     .error(function (res) {
-        //         alert("网络出错");
-        //     });
     }
     function getUserByName(name) {
-        $http.get('http://106.14.17.37:8081/getUserByName?pk=' + name)
+        $http.get('http://localhost:8081/getUserByName?pk=' + name)
             .success(function (res) {
                 $scope.curUser = res[0];
                 if ($scope.curUser.city1 == 'true')
@@ -1305,7 +1648,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var url = 'name=' + $scope.curUser.name + '&password=' + $scope.curUser.password + '&city1=' + $scope.curUser.city1 +
             '&city2=' + $scope.curUser.city2 + '&city3=' + $scope.curUser.city3;
         //console.log(url);
-        $http.get('http://106.14.17.37:8081/updateUser?' + url)
+        $http.get('http://localhost:8081/updateUser?' + url)
             .success(function (res) {
                 alert("更新成功！");
             })
@@ -1316,7 +1659,7 @@ function TreeIndexController($scope, $http, $location, user) {
         getUserDatas();
     }
     function deleteUser(name) { //删除用户
-        $http.get('http://106.14.17.37:8081/deleteUser?pk=' + name)
+        $http.get('http://localhost:8081/deleteUser?pk=' + name)
             .success(function (res) {
                 alert("删除成功！");
             })
@@ -1332,7 +1675,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.newUser.city3 = $scope.newUser.city3 == null ? false : $scope.newUser.city3;
         var url = 'name=' + $scope.newUser.name + '&password=' + $scope.newUser.password + '&city1=' + $scope.newUser.city1 +
             '&city2=' + $scope.newUser.city2 + '&city3=' + $scope.newUser.city3;
-        $http.get('http://106.14.17.37:8081/addUser?' + url)
+        $http.get('http://localhost:8081/addUser?' + url)
             .success(function (res) {
                 alert("添加成功！");
             })
@@ -1351,7 +1694,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t4Para[i] + '=' + $scope.curTable4[t4Para[i]] + '&';
         }
         //console.log(urlPara);
-        $http.get('http://106.14.17.37:8081/updateTable4?' + urlPara)
+        $http.get('http://localhost:8081/updateTable4?' + urlPara)
             .success(function (res) {
                 alert("更新成功！");
             })
@@ -1362,7 +1705,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.curTable4 = {};
     }
     function getTable4ByPK(pk) {
-        $http.get('http://106.14.17.37:8081/getTable4ByPK?pk=' + pk)
+        $http.get('http://localhost:8081/getTable4ByPK?pk=' + pk)
             .success(function (res) {
                 //console.log(JSON.stringify(res));
                 var rawDatas = [].concat(res);
@@ -1375,14 +1718,14 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable4Datas(id, page) {    //根据户主ID获取表四数据
         $scope.currPage = page;
         $scope.table4Datas = [];
-        $http.get('http://106.14.17.37:8081/getTable4Count?id=' + id)//1.取到总页数
+        $http.get('http://localhost:8081/getTable4Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
@@ -1390,7 +1733,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 alert("网络出错");
             });
         console.log(page);
-        $http.get('http://106.14.17.37:8081/gettable4Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://localhost:8081/gettable4Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 var rawT4Datas = [].concat(res);
                 for (var i = 0; i < rawT4Datas.length; i++) {
@@ -1402,7 +1745,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/gettable4AllDatas?id=' + id)//4.汇总该户主所有数据
+        $http.get('http://localhost:8081/gettable4AllDatas?id=' + id)//4.汇总该户主所有数据
             .success(function (resall) {
                 $scope.table4Total = {
                     "t1": 0, "t2": 0, "t3": 0, "t4": 0, "t5": 0, "total1": 0,
@@ -1425,14 +1768,14 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable3(pk) { //删除表三
-        $http.get('http://106.14.17.37:8081/deleteTable3?pk=' + pk)//1.删除表三
+        $http.get('http://localhost:8081/deleteTable3?pk=' + pk)//1.删除表三
             .success(function (res) {
                 getAllTable3Datas($scope.current.id, $scope.currPage);
             })
             .error(function (res) {
                 alert("删除表三数据出错");
             });
-        $http.get('http://106.14.17.37:8081/deleteTable4?pk=' + pk)//2.删除表四
+        $http.get('http://localhost:8081/deleteTable4?pk=' + pk)//2.删除表四
             .success(function (res) {
             })
             .error(function (res) {
@@ -1484,7 +1827,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //console.log(JSON.stringify($scope.curTable3));
         //4.更新
         if ($scope.curTable3 != null && $scope.curTable3.autoID != "") {
-            $http.get('http://106.14.17.37:8081/updateTable3?' + urlPara)//4.1更新表三
+            $http.get('http://localhost:8081/updateTable3?' + urlPara)//4.1更新表三
                 .success(function (res) {
                     alert("更新表三成功！");
                 })
@@ -1493,7 +1836,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
             urlPara2 = urlPara2 + 'autoID=' + $scope.curTable3.autoID;
             console.log(urlPara2);
-            $http.get('http://106.14.17.37:8081/updateTable4ByT3?' + urlPara2)//4.2更新表四
+            $http.get('http://localhost:8081/updateTable4ByT3?' + urlPara2)//4.2更新表四
                 .success(function (res) {
                 })
                 .error(function (res) {
@@ -1503,7 +1846,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //5.添加
         else {
-            $http.get('http://106.14.17.37:8081/getT4PriceByPrj?prj=' + currTable4.type1)
+            $http.get('http://localhost:8081/getT4PriceByPrj?prj=' + currTable4.type1)
                 .success(function (res) {//5.1 根据type1得到表四price
                     if (res.length != 0)
                         urlPara2 = urlPara2 + 'price=' + res[0]["price"];
@@ -1513,7 +1856,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     urlPara2 = urlPara2 + 'price=0';
                 });
-            $http.get('http://106.14.17.37:8081/getT4Price2ByPrj?prj=' + currTable4.arcName)
+            $http.get('http://localhost:8081/getT4Price2ByPrj?prj=' + currTable4.arcName)
                 .success(function (res) {//5.2 根据arcName得到表四price2
                     if (res.length != 0)
                         urlPara2 = urlPara2 + 'price2=' + res[0]["price2"];
@@ -1524,12 +1867,12 @@ function TreeIndexController($scope, $http, $location, user) {
                     urlPara2 = urlPara2 + 'price2=0';
                 });
             urlPara = urlPara + 'id=' + $scope.current.id + '&city=' + $scope.cityName;
-            $http.get('http://106.14.17.37:8081/addTable3?' + urlPara)//5.3 添加表三
+            $http.get('http://localhost:8081/addTable3?' + urlPara)//5.3 添加表三
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     urlPara2 = urlPara2 + '&id=' + $scope.current.id + '&fID=' + res.insertId
                         + '&city=' + $scope.cityName + '&name=' + $scope.current.name;    //取到表三自增id
-                    $http.get('http://106.14.17.37:8081/addTable4?' + urlPara2) //5.4 添加表四
+                    $http.get('http://localhost:8081/addTable4?' + urlPara2) //5.4 添加表四
                         .success(function (res) {
                         })
                         .error(function (res) {
@@ -1540,7 +1883,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("添加表三数据出错");
                 });
-            $http.get('http://106.14.17.37:8081/getTable3Count?id=' + $scope.current.id)//1.取到总页数
+            $http.get('http://localhost:8081/getTable3Count?id=' + $scope.current.id)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable3Datas($scope.current.id, $scope.totalPages + 1);
@@ -1558,7 +1901,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getTable3ByPK(pk) {    //选择要编辑的数据
         //console.log(pk);
-        $http.get('http://106.14.17.37:8081/getTable3ByPK?pk=' + pk)
+        $http.get('http://localhost:8081/getTable3ByPK?pk=' + pk)
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.curTable3 = rawDatas[0];
@@ -1569,21 +1912,21 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable3Datas(id, page) {//根据户主取出表三信息
         $scope.currPage = page;
-        $http.get('http://106.14.17.37:8081/getTable3Count?id=' + id)//1.取到总页数
+        $http.get('http://localhost:8081/getTable3Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/gettable3Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://localhost:8081/gettable3Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 $scope.table3Datas = [].concat(res);
             })
@@ -1597,7 +1940,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (var i = 0; i < $scope.table2Datas.length; i++) {
             //更改数据库中所有该种类的价格
             if ($scope.Table2Type1[i] != null) {
-                $http.get('http://106.14.17.37:8081/updateTable2?prj=' + $scope.table2Datas[i].prj + '&type=' + $scope.Table2Type1[i])
+                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj + '&type=' + $scope.Table2Type1[i])
                     .success(function (res) {
                         alert("更改成功！");
                     })
@@ -1606,7 +1949,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     });
             }
             if ($scope.Table2Type2[i] != null) {
-                $http.get('http://106.14.17.37:8081/updateTable2?prj=' + $scope.table2Datas[i].prj2 + '&type=' + $scope.Table2Type2[i])
+                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj2 + '&type=' + $scope.Table2Type2[i])
                     .success(function (res) {
                     })
                     .error(function (res) {
@@ -1621,21 +1964,21 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable2Datas(id, page) { //根据户主取出表二信息
         $scope.currPage = page;
         $scope.table2Datas = [];
-        $http.get('http://106.14.17.37:8081/getTable2Count?id=' + id)//1.取到总页数
+        $http.get('http://localhost:8081/getTable2Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://106.14.17.37:8081/gettable2Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://localhost:8081/gettable2Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.table2Total = { "total": 0, "total2": 0 };
@@ -1665,7 +2008,7 @@ function TreeIndexController($scope, $http, $location, user) {
             getPeopleList();
         }
         else {
-            $http.get('http://106.14.17.37:8081/getNameListByName?city=' + $scope.cityName + '&text=' + filterText)
+            $http.get('http://localhost:8081/getNameListByName?city=' + $scope.cityName + '&text=' + filterText)
                 .success(function (res) {
                     $scope.peopleLists = [].concat(res);
                     $scope.current = res[0];
@@ -1698,7 +2041,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
     }
     function getPeopleList() {  //得到户主列表
-        $http.get('http://106.14.17.37:8081/getPeopleList?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getPeopleList?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.peopleLists = [].concat(res);
                 $scope.current = res[0];
@@ -1782,7 +2125,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function saveTable1Data() {   //添加表一数据
         //检验身份证与名字是否对应
-        $http.get('http://106.14.17.37:8081/getPeopleByID?id=' + $scope.curTable1.id)
+        $http.get('http://localhost:8081/getPeopleByID?id=' + $scope.curTable1.id)
             .success(function (res) {
                 if (res != null && res[0] != null && res[0].name != $scope.curTable1.name)
                     alert('身份证号与姓名不匹配，该身份证号已对应姓名:' + res[0].name);
@@ -1796,7 +2139,7 @@ function TreeIndexController($scope, $http, $location, user) {
                             urlPara = urlPara + t1Para[i] + '=' + $scope.curTable1[t1Para[i]] + '&';
                         }
                         //console.log(urlPara);
-                        $http.get('http://106.14.17.37:8081/updateTable1?' + urlPara)
+                        $http.get('http://localhost:8081/updateTable1?' + urlPara)
                             .success(function (res) {
                                 alert("更新表一成功！");
                             })
@@ -1807,7 +2150,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         urlPara2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj + '&unit=' +
                             $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity + '&autoID=' +
                             $scope.curTable1.autoID;
-                        $http.get('http://106.14.17.37:8081/updateTable2ByT1?' + urlPara2)
+                        $http.get('http://localhost:8081/updateTable2ByT1?' + urlPara2)
                             .success(function (res) {
                                 // alert("更新表成功！");
                             })
@@ -1841,7 +2184,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         var urlTable2 = 'city=' + $scope.cityName + '&name=' + $scope.curTable1.name + '&id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
                             '&unit=' + $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity;
                         //根据prj得到表二price
-                        $http.get('http://106.14.17.37:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
+                        $http.get('http://localhost:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
                             .success(function (res) {
                                 if (res.length != 0)
                                     urlTable2 = urlTable2 + '&price=' + res[0]["price"];
@@ -1851,11 +2194,11 @@ function TreeIndexController($scope, $http, $location, user) {
                             .error(function (res) {
                                 urlTable2 = urlTable2 + '&price=0';
                             });
-                        $http.get('http://106.14.17.37:8081/addTable1?' + urlPara)
+                        $http.get('http://localhost:8081/addTable1?' + urlPara)
                             .success(function (res) {
                                 urlTable2 = urlTable2 + '&fID=' + res.insertId;//取到表一自增id
                                 //添加表二
-                                $http.get('http://106.14.17.37:8081/addTable2?' + urlTable2)
+                                $http.get('http://localhost:8081/addTable2?' + urlTable2)
                                     .success(function (res) {
                                     })
                                     .error(function (res) {
@@ -1869,7 +2212,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         //添加用户表，身份证为主键 id name city
                         var urlPeople = 'id=' + $scope.curTable1.id + '&name=' + $scope.curTable1.name
                             + '&city=' + $scope.curTable1.city;
-                        $http.get('http://106.14.17.37:8081/addTablePeople?' + urlPeople)
+                        $http.get('http://localhost:8081/addTablePeople?' + urlPeople)
                             .success(function (res) {
                             })
                             .error(function (res) {
@@ -1877,7 +2220,7 @@ function TreeIndexController($scope, $http, $location, user) {
                             });
                         //重载表单
                         $scope.curTable1 = {};
-                        $http.get('http://106.14.17.37:8081/getTable1Count?city=' + $scope.cityName)
+                        $http.get('http://localhost:8081/getTable1Count?city=' + $scope.cityName)
                             .success(function (res) {
                                 if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                                     getAllTable1Datas($scope.totalPages + 1);
@@ -1898,7 +2241,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable1(pk, id) { //删除表一
-        $http.get('http://106.14.17.37:8081/deleteTable1?pk=' + pk)//1.删除表一
+        $http.get('http://localhost:8081/deleteTable1?pk=' + pk)//1.删除表一
             .success(function (res) {
                 //重新加载表1
                 getAllTable1Datas($scope.currPage);
@@ -1906,23 +2249,23 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("删除表一数据出错");
             });
-        $http.get('http://106.14.17.37:8081/deleteTable2?pk=' + pk)//2.删除表二
+        $http.get('http://localhost:8081/deleteTable2?pk=' + pk)//2.删除表二
             .success(function (res) {
             })
             .error(function (res) {
                 alert("删除表二数据出错");
             });
-        $http.get('http://106.14.17.37:8081/deleteTable2ByT1?pk=' + id)//2.删除表三
+        $http.get('http://localhost:8081/deleteTable2ByT1?pk=' + id)//2.删除表三
             .success(function (res) {
             })
             .error(function (res) {
                 alert("删除表三数据出错");
             });
-        $http.get('http://106.14.17.37:8081/getTable2Count?id=' + id)//3.删除用户表
+        $http.get('http://localhost:8081/getTable2Count?id=' + id)//3.删除用户表
             .success(function (res) {
                 console.log(res[0]["count(*)"] == 0);
                 if (res[0]["count(*)"] == 0) { //此人在表一没有记录则删除用户表数据
-                    $http.get('http://106.14.17.37:8081/deletePeopleTable?pk=' + id)
+                    $http.get('http://localhost:8081/deletePeopleTable?pk=' + id)
                         .success(function (res) {
                         })
                         .error(function (res) {
@@ -1942,7 +2285,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .targetEvent($event);
     }
     function getTable1ByPK(pk) {    //根据主键获取表一数据
-        $http.get('http://106.14.17.37:8081/getTable1ByPK?pk=' + pk)
+        $http.get('http://localhost:8081/getTable1ByPK?pk=' + pk)
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.curTable1 = rawDatas[0];
@@ -1953,7 +2296,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getAllTable1Datas(page) {  //得到表一全部数据
-        $http.get('http://106.14.17.37:8081/getTable1Count?city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getTable1Count?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
                 //alert(res[0]["count(*)"]);
@@ -1965,7 +2308,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     page = $scope.totalPages;
         // }
         $scope.currPage = page;
-        $http.get('http://106.14.17.37:8081/getAllTable1Datas?page=' + page + '&city=' + $scope.cityName)
+        $http.get('http://localhost:8081/getAllTable1Datas?page=' + page + '&city=' + $scope.cityName)
             .success(function (res) {
                 //console.log(res);
                 $scope.table1Datas = [].concat(res);
@@ -1990,7 +2333,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getUserDatas() {
-        $http.get('http://106.14.17.37:8081/getUserTable')
+        $http.get('http://localhost:8081/getUserTable')
             .success(function (res) {
                 $scope.userDatas = [].concat(res);
             })
@@ -2762,6 +3105,8 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+
+
     function outputExcel413() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -2775,6 +3120,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 8;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -2786,6 +3132,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cell1 = row1.addCell();
             cell1.value = table1Head[i];
             cell1.style.align.v = 'center';
+            border(cell1, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['name', '', '土地', 'm²', 'quantity', 'price', 'total'];
@@ -2793,6 +3140,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
+                border(cellContent, 0, 0, 1, 0);
                 if (j == 0 || j > 3) {
                     cellContent.value = $scope.table413Datas[i][table1Content[j]];
                 }
@@ -2800,11 +3148,16 @@ function TreeIndexController($scope, $http, $location, user) {
                     cellContent.value = table1Content[j];
                 }
             }
+            for (let j = 0; j < 2; j++) {
+                cellContents = rowContent.addCell();
+                border(cellContents, 0, 0, 1, 0);
+            }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
@@ -2812,29 +3165,45 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = '';
+            border(cellT3, 0, 0, 1, 0);
             rowTotal.addCell();
+        }
+        for (let i = 0; i < 1; i++) {
+            cellTs = rowTotal.addCell();
+            cellTs.value = '';
+            border(cellTs, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、';
         cellOver1.hMerge = 8;
+        border(cellOver1, 0, 0, 1, 0);
         const rowOver2 = sheet.addRow();
         const cellOver2 = rowOver2.addCell();
         cellOver2.value = '青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。';
         cellOver2.hMerge = 8;
+        border(cellOver2, 0, 0, 1, 0);
         var tableOver = ["村（社区）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
+            if(i==3){
+                cellOver.hMerge = 2;
+            }
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 1; i++) {
                 rowOver.addCell();
             }
         }
+        //设置列宽度
+        for (let i = 0; i < 7; i++) {
+            sheet.col(i).width = 11;
+        }
         //导出
-        var excelRoot = $scope.cityName +$scope.table413Total.city4Name+ '--表4-1土地--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName + $scope.table413Total.city4Name + '--表4-1土地--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2858,6 +3227,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 8;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -2869,6 +3239,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cell1 = row1.addCell();
             cell1.value = table1Head[i];
             cell1.style.align.v = 'center';
+            border(cell1, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['name', '', '地面建筑物', 'm²', 'area1', 'price', 'total'];
@@ -2876,6 +3247,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
+                border(cellContent, 0, 0, 1, 0);
                 if (j == 0 || j > 3) {
                     cellContent.value = $scope.table412Datas[i][table1Content[j]];
                 }
@@ -2883,11 +3255,16 @@ function TreeIndexController($scope, $http, $location, user) {
                     cellContent.value = table1Content[j];
                 }
             }
+            for (let j = 0; j < 2; j++) {
+                cellContents = rowContent.addCell();
+                border(cellContents, 0, 0, 1, 0);
+            }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
@@ -2895,29 +3272,45 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = $scope.table412Total[table1Content[i]];
+            border(cellT3, 0, 0, 1, 0);
             rowTotal.addCell();
+        }
+        for (let i = 0; i < 1; i++) {
+            cellTs = rowTotal.addCell();
+            cellTs.value = '';
+            border(cellTs, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、';
         cellOver1.hMerge = 8;
+        border(cellOver1, 0, 0, 1, 0);
         const rowOver2 = sheet.addRow();
         const cellOver2 = rowOver2.addCell();
         cellOver2.value = '青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。';
         cellOver2.hMerge = 8;
+        border(cellOver2, 0, 0, 1, 0);
         var tableOver = ["村（社区）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
+            if(i==3){
+                cellOver.hMerge = 2;
+            }
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 1; i++) {
                 rowOver.addCell();
             }
         }
+        //设置列宽度
+        for (let i = 0; i < 9; i++) {
+            sheet.col(i).width = 10;
+        }
         //导出
-        var excelRoot = $scope.cityName +$scope.table412Total.city4Name+ '--表4-1地面建筑物--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName + $scope.table412Total.city4Name + '--表4-1地面建筑物--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -2941,6 +3334,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 8;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -2952,6 +3346,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cell1 = row1.addCell();
             cell1.value = table1Head[i];
             cell1.style.align.v = 'center';
+            border(cell1, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['name', '', '青苗', '亩', 'quantity', 'price', 'total'];
@@ -2959,6 +3354,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
+                border(cellContent, 0, 0, 1, 0);
                 if (j == 0 || j > 3) {
                     cellContent.value = $scope.table411Datas[i][table1Content[j]];
                 }
@@ -2966,11 +3362,16 @@ function TreeIndexController($scope, $http, $location, user) {
                     cellContent.value = table1Content[j];
                 }
             }
+            for (let j = 0; j < 2; j++) {
+                cellContents = rowContent.addCell();
+                border(cellContents, 0, 0, 1, 0);
+            }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
@@ -2978,29 +3379,45 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = $scope.table411Total[table1Content[i]];
+            border(cellT3, 0, 0, 1, 0);
             rowTotal.addCell();
+        }
+        for (let i = 0; i < 1; i++) {
+            cellTs = rowTotal.addCell();
+            cellTs.value = '';
+            border(cellTs, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表以户为单位由镇（乡、街办）填写，凭证编号指同被拆迁户签订的协议、付款凭证的财务账编号，补偿类别为土地、';
         cellOver1.hMerge = 8;
+        border(cellOver1, 0, 0, 1, 0);
         const rowOver2 = sheet.addRow();
         const cellOver2 = rowOver2.addCell();
         cellOver2.value = '青苗、地面建筑物等，或汇总为“补偿款”。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版。';
         cellOver2.hMerge = 8;
+        border(cellOver2, 0, 0, 1, 0);
         var tableOver = ["村（社区）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
+            if(i==3){
+                cellOver.hMerge = 2;
+            }
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 1; i++) {
                 rowOver.addCell();
             }
         }
+        //设置列宽度
+        for (let i = 0; i < 9; i++) {
+            sheet.col(i).width = 10;
+        }
         //导出
-        var excelRoot = $scope.cityName + $scope.table411Total.city4Name+'--表4-1青苗--第' + $scope.currPage + '页.xlsx';
+        var excelRoot = $scope.cityName + $scope.table411Total.city4Name + '--表4-1青苗--第' + $scope.currPage + '页.xlsx';
         file
             .saveAs('blob')
             .then(function (content) {
@@ -3024,6 +3441,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 8;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -3035,6 +3453,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cell1 = row1.addCell();
             cell1.value = table1Head[i];
             cell1.style.align.v = 'center';
+            border(cell1, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['c4', '', 'type', 'unit', 'quantity', 'price', 'total'];
@@ -3045,12 +3464,18 @@ function TreeIndexController($scope, $http, $location, user) {
                 if (j != 1) {
                     cellContent.value = $scope.table42Datas[i][table1Content[j]];
                 }
+                border(cellContent, 0, 0, 1, 0);
+            }
+            for (let j = 0; j < 2; j++) {
+                cellContents = rowContent.addCell();
+                border(cellContents, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
@@ -3058,26 +3483,42 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = $scope.table42Total[table1Content[i]];
+            border(cellT3, 0, 0, 1, 0);
             rowTotal.addCell();
+        }
+        for (let i = 0; i < 1; i++) {
+            cellTs = rowTotal.addCell();
+            cellTs.value = '';
+            border(cellTs, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表以村（社区）为单位由镇（乡、街办）一级填写，依据各村（社区）报来的地验交—4—1表进行填制。凭证编号指付款凭证的财务账编';
         cellOver1.hMerge = 8;
+        border(cellOver1, 0, 0, 1, 0);
         const rowOver2 = sheet.addRow();
         const cellOver2 = rowOver2.addCell();
         cellOver2.value = '号，补偿类别为村为单位的“补偿款”总额、土地补偿款等由镇（乡、街办）补偿到村（社区）的各类费用。本表签字盖章后同相关附件（各村报送资料）扫描为电子版。';
         cellOver2.hMerge = 8;
+        border(cellOver2, 0, 0, 1, 0);
         var tableOver = ["镇（乡、街办）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
+            if(i==3){
+                cellOver.hMerge = 2;
+            }
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 1; i++) {
                 rowOver.addCell();
             }
+        }
+        //设置列宽度
+        for (let i = 0; i < 9; i++) {
+            sheet.col(i).width = 10;
         }
         //导出
         var excelRoot = $scope.cityName + '--表4-2--第' + $scope.currPage + '页.xlsx';
@@ -3091,6 +3532,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel43() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3103,18 +3545,20 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowLine = sheet.addRow();
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
-            cellLine.hMerge = 10;
+            cellLine.hMerge = 8;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['被拆迁单位名称', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '领款人（单位）签字盖章', '备注'];
+        var table1Head = ['被拆迁单位名称', '凭证编号', '补偿类别', '单位', '数量', '单价(元)', '金额(元)', '签字盖章', '备注'];
         for (let i = 0; i < 9; i++) {
             const cell1 = row1.addCell();
             cell1.value = table1Head[i];
             cell1.style.align.v = 'center';
+            border(cell1, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['name', 'id', 'type', 'unit', 'quantity', 'price', 'total'];
@@ -3123,12 +3567,19 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table43Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
+            }
+            for (let k = 0; k < 2; k++) {
+                const cellContents = rowContent.addCell();
+                cellContents.value = '';
+                border(cellContents, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
@@ -3136,21 +3587,42 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = $scope.table43Total[table1Content[i]];
+            border(cellT3, 0, 0, 1, 0);
             rowTotal.addCell();
+        }
+        for (let k = 0; k < 1; k++) {
+            const cellrowTotal = rowTotal.addCell();
+            cellrowTotal.value = '';
+            border(cellrowTotal, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表以户（企业单位）为单位由县（区）一级填写。凭证编号指付款凭证的财务账编号，补偿类别为“补偿款”总额、土地补偿款等各类费用。本表签字盖章后同相关附件（各村报送资料）扫描为电子版。';
         cellOver1.hMerge = 8;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["县（区）主管部门（单位）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
-            for (let i = 0; i < 2; i++) {
+            border(cellOver, 0, 0, 1, 0);
+            for (let i = 0; i < 1; i++) {
                 rowOver.addCell();
+            }
+        }
+        const cellOverl = rowOver.addCell();
+        cellOverl.value = tableOver[3];
+        cellOverl.hMerge = 2;
+        border(cellOverl, 0, 0, 1, 0);
+        //设置列宽度
+        for (let i = 0; i < 9; i++) {
+            if (i == 0 || i == 1) {
+                sheet.col(i).width = 15;
+            }
+            else {
+                sheet.col(i).width = 8;
             }
         }
         //导出
@@ -3165,6 +3637,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel5() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3178,6 +3651,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 10;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -3191,6 +3665,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell2.value = table1Head[i];
                 cell2.hMerge = 5;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
                 row1.addCell();
                 row1.addCell();
@@ -3202,6 +3677,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3212,22 +3688,26 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 6; i++) {
             var cell3 = row2.addCell();
             cell3.value = table1Head2[i];
+            border(cell3, 0, 0, 1, 0);
         }
         //表内容
-        var table1Content = ['id', 'name', 'address', 'area', 'a1', 'a2', 'a3', 'a4', 'a5', 'doc'];
+        var table1Content = ['id', 'name', 'address', 'area', 'a1', 'a2', 'a3', 'a4', 'a5', 'total', 'doc'];
         for (let i = 0; i < $scope.table5Datas.length; i++) {
             const rowContent = sheet.addRow();
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table5Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "";
+        border(cellT1, 0, 0, 1, 0);
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 1; i++) {
             rowTotal.addCell();
         }
@@ -3235,20 +3715,46 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table1Content.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = $scope.table5Total[table1Content[i]];
+            border(cellT3, 0, 0, 1, 0);
         }
+        const cellT3s = rowTotal.addCell();
+        cellT3s.value = '';
+        border(cellT3s, 0, 0, 1, 0);
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
-        cellOver1.value = '备注：本表以各方现场核对签认的勘验表汇总，构筑物种类多时可以增加续表。本表由县（区）一级填写，填写内容为国有土地征地拆迁。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版';
+        cellOver1.value = '备注：本表以各方现场核对签认的勘验表汇总，构筑物种类多时可以增加续表。本表由县（区）一级填写，填写内容为国有土地\n征地拆迁。本表签字盖章后同相关附件（协议、付款凭证原件）扫描为电子版';
         cellOver1.hMerge = 10;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["县（区）主管部门（单位）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
-            cellOver.hMerge = 2;
+            if (i == 3) {
+                cellOver.hMerge = 1;
+            }
+            else {
+                cellOver.hMerge = 2;
+            }
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 11; i++) {
+            if (i == 1) {
+                sheet.col(i).width = 15;
+            }
+            else if (i == 2) {
+                sheet.col(i).width = 25;
+            }
+            else if (i == 3) {
+                sheet.col(i).width = 10;
+            }
+            else {
+                sheet.col(i).width = 5;
             }
         }
         //导出
@@ -3263,6 +3769,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel101() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3274,20 +3781,22 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowLine = sheet.addRow();
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
-            cellLine.hMerge = 11;
+            cellLine.hMerge = 10;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 7; i++) {
             if (i > 2) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3295,6 +3804,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3304,8 +3814,10 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['unit', 'a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
@@ -3313,50 +3825,83 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             const cellContent1 = rowContent.addCell();
             cellContent1.value = $scope.table101NumDatas[i];
+            border(cellContent1, 0, 0, 1, 0);
             const cellContent2 = rowContent.addCell();
             cellContent2.value = $scope.table101NameDatas[i];
+            border(cellContent2, 0, 0, 1, 0);
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table101Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
-        const rowContent2 = sheet.addRow();
-        const rowContent3 = sheet.addRow();
-        const rowContent4 = sheet.addRow();
-        const rowContent5 = sheet.addRow();
-        const rowContent6 = sheet.addRow();
-        const rowContent7 = sheet.addRow();
-        const rowContent8 = sheet.addRow();
-        const rowContent9 = sheet.addRow();
-        const rowContent10 = sheet.addRow();
-        const rowContent11 = sheet.addRow();
-        const rowContent12 = sheet.addRow();
+        for (let j = 0; j < 11; j++) {
+            const rowContent2 = sheet.addRow();
+            var cellrowContent = rowContent2.addCell();
+            cellrowContent.value = '';
+            cellrowContent.hMerge = 10;
+            border(cellrowContent, 0, 0, 1, 0);
+        }
+        // const rowContent2 = sheet.addRow();
+        // const rowContent3 = sheet.addRow();
+        // const rowContent4 = sheet.addRow();
+        // const rowContent5 = sheet.addRow();
+        // const rowContent6 = sheet.addRow();
+        // const rowContent7 = sheet.addRow();
+        // const rowContent8 = sheet.addRow();
+        // const rowContent9 = sheet.addRow();
+        // const rowContent10 = sheet.addRow();
+        // const rowContent11 = sheet.addRow();
+        // const rowContent12 = sheet.addRow();
         const rowContent13 = sheet.addRow();
         var cell91 = rowContent13.addCell();
         cell91.value = '';
+        border(cell91, 0, 0, 1, 0);
         var cell92 = rowContent13.addCell();
         cell92.value = '合计';
+        border(cell92, 0, 0, 1, 0);
         for (let i = 0; i < 1; i++) {
             rowContent13.addCell();
         }
         var table2Content = ['a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
-        for (let j = 0; j < table1Content.length; j++) {
+        for (let j = 0; j < table2Content.length; j++) {
             const cellContent9 = rowContent13.addCell();
             cellContent9.value = $scope.table101Total[table2Content[j]];
+            border(cellContent9, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。';
-        cellOver1.hMerge = 11;
+        cellOver1.hMerge = 10;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["主管部门: （章) ", "负责人：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
-            cellOver.hMerge = 2;
+            if (i == 3) {
+                cellOver.hMerge = 1;
+            }
+            else {
+                cellOver.hMerge = 2;
+            }
+
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 11; i++) {
+            if (i == 0 || i == 2) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -3371,6 +3916,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel10() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3383,19 +3929,21 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '单价', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 8; i++) {
             if (i > 3) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3403,6 +3951,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3412,14 +3961,18 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         const rowContent1 = sheet.addRow();
         var cell5 = rowContent1.addCell();
         cell5.value = '一';
+        border(cell5, 0, 0, 1, 0);
         var cell6 = rowContent1.addCell();
+        border(cell6, 0, 0, 1, 0);
         cell6.value = '征收国有、集体土地补偿安置费用';
         for (let i = 0; i < 2; i++) {
             rowContent1.addCell();
@@ -3428,43 +3981,69 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent = rowContent1.addCell();
             cellContent.value = $scope.table101Total[table1Content[j]];
+            border(cellContent, 0, 0, 1, 0);
         }
-        const rowContent2 = sheet.addRow();
-        const rowContent3 = sheet.addRow();
-        const rowContent4 = sheet.addRow();
-        const rowContent5 = sheet.addRow();
-        const rowContent6 = sheet.addRow();
-        const rowContent7 = sheet.addRow();
-        const rowContent8 = sheet.addRow();
-        const rowContent9 = sheet.addRow();
-        const rowContent10 = sheet.addRow();
-        const rowContent11 = sheet.addRow();
-        const rowContent12 = sheet.addRow();
+        for (let j = 0; j < 11; j++) {
+            const rowContent2 = sheet.addRow();
+            var cellrowContent = rowContent2.addCell();
+            cellrowContent.value = '';
+            cellrowContent.hMerge = 11;
+            border(cellrowContent, 0, 0, 1, 0);
+        }
+
+
+        // const rowContent3 = sheet.addRow();
+        // const rowContent4 = sheet.addRow();
+        // const rowContent5 = sheet.addRow();
+        // const rowContent6 = sheet.addRow();
+        // const rowContent7 = sheet.addRow();
+        // const rowContent8 = sheet.addRow();
+        // const rowContent9 = sheet.addRow();
+        // const rowContent10 = sheet.addRow();
+        // const rowContent11 = sheet.addRow();
+        // const rowContent12 = sheet.addRow();
         const rowContent13 = sheet.addRow();
         var cell91 = rowContent13.addCell();
         cell91.value = '二';
+        border(cell91, 0, 0, 1, 0);
         var cell92 = rowContent13.addCell();
         cell92.value = '合计';
+        border(cell92, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
             rowContent13.addCell();
         }
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent9 = rowContent13.addCell();
             cellContent9.value = $scope.table101Total[table1Content[j]];
+            border(cellContent9, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["主管部门: （章) ", "分管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0 || i == 2 || i == 3) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 24;
+            }
+            else {
+                sheet.col(i).width = 6;
             }
         }
         //导出
@@ -3479,6 +4058,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel9() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3491,19 +4071,21 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '单价', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 8; i++) {
             if (i > 3) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3511,6 +4093,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3520,72 +4103,123 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         const rowContent1 = sheet.addRow();
         var cell5 = rowContent1.addCell();
         cell5.value = '一';
+        border(cell5, 0, 0, 1, 0);
         var cell6 = rowContent1.addCell();
         cell6.value = '征收国有土地补偿安置费用';
+        border(cell6, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
-            rowContent1.addCell();
+            // rowContent1.addCell();
+            cell6 = rowContent1.addCell();
+            cell6.value = '';
+            border(cell6, 0, 0, 1, 0);
         }
         var table1Content = ['a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent = rowContent1.addCell();
             cellContent.value = $scope.t9Data1[table1Content[j]];
+            border(cellContent, 0, 0, 1, 0);
         }
         const rowContent2 = sheet.addRow();
+        cell6 = rowContent2.addCell();
+        cell6.value = '';
+        cell6.hMerge = 11;
+        border(cell6, 0, 0, 1, 0);
         const rowContent3 = sheet.addRow();
+        cell6 = rowContent3.addCell();
+        cell6.value = '';
+        cell6.hMerge = 11;
+        border(cell6, 0, 0, 1, 0);
         const rowContent4 = sheet.addRow();
+        cell6 = rowContent4.addCell();
+        cell6.value = '';
+        cell6.hMerge = 11;
+        border(cell6, 0, 0, 1, 0);
         const rowContent5 = sheet.addRow();
         var cell51 = rowContent5.addCell();
         cell51.value = '二';
+        border(cell51, 0, 0, 1, 0);
         var cell52 = rowContent5.addCell();
         cell52.value = '征收集体土地补偿安置费用';
+        border(cell52, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
-            rowContent5.addCell();
+            // rowContent5.addCell();
+            cell6 = rowContent5.addCell();
+            cell6.value = '';
+            border(cell6, 0, 0, 1, 0);
         }
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent5 = rowContent5.addCell();
             cellContent5.value = $scope.t9Data2[table1Content[j]];
+            border(cellContent5, 0, 0, 1, 0);
         }
         const rowContent6 = sheet.addRow();
+        cell6 = rowContent6.addCell();
+        cell6.value = '';
+        cell6.hMerge = 11;
+        border(cell6, 0, 0, 1, 0);
         const rowContent7 = sheet.addRow();
         var cell71 = rowContent7.addCell();
         cell71.value = '三';
+        border(cell71, 0, 0, 1, 0);
         var cell72 = rowContent7.addCell();
         cell72.value = '工作经费';
+        border(cell72, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
-            rowContent7.addCell();
+            // rowContent7.addCell();
+            cell6 = rowContent7.addCell();
+            cell6.value = '';
+            border(cell6, 0, 0, 1, 0);
         }
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent7 = rowContent7.addCell();
             cellContent7.value = $scope.t9Data3[table1Content[j]];
+            border(cellContent7, 0, 0, 1, 0);
         }
         const rowContent8 = sheet.addRow();
+        cell6 = rowContent8.addCell();
+        cell6.value = '';
+        cell6.hMerge = 11;
+        border(cell6, 0, 0, 1, 0);
         const rowContent9 = sheet.addRow();
         var cell91 = rowContent9.addCell();
         cell91.value = '四';
+        border(cell91, 0, 0, 1, 0);
         var cell92 = rowContent9.addCell();
         cell92.value = '税费等其他费用';
+        border(cell92, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
-            rowContent9.addCell();
+            // rowContent9.addCell();
+            cell6 = rowContent9.addCell();
+            cell6.value = '';
+            border(cell6, 0, 0, 1, 0);
         }
         for (let j = 0; j < table1Content.length; j++) {
             const cellContent9 = rowContent9.addCell();
             cellContent9.value = $scope.t9Data4[table1Content[j]];
+            border(cellContent9, 0, 0, 1, 0);
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "五";
+        border(cellT1, 0, 0, 1, 0);
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
-            rowTotal.addCell();
+            // rowTotal.addCell();
+            cell6 = rowTotal.addCell();
+            cell6.value = '';
+            border(cell6, 0, 0, 1, 0);
         }
         var totalLine = [];
         for (let j = 0; j < table1Content.length; j++) {
@@ -3594,20 +4228,35 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = totalLine[i];
+            border(cellT3, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由市铁建办汇总本区域内国有土地、集体土地征地费用。';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["主管部门: （章) ", "分管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0 || i == 2 || i == 3) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -3622,6 +4271,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel91() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3634,19 +4284,21 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '单价', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 8; i++) {
             if (i > 3) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3654,6 +4306,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3663,33 +4316,43 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         const rowContent1 = sheet.addRow();
         var cell5 = rowContent1.addCell();
         cell5.value = '一';
+        border(cell5, 0, 0, 1, 0);
         var cell6 = rowContent1.addCell();
         cell6.value = '征地补偿及拆迁安置费用';
+        cell6.hMerge = 10;
+        border(cell6, 0, 0, 1, 0);
         var table1Content = ['unit', 'price', 'a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
         for (let i = 0; i < $scope.table91Datas.length; i++) {
             const rowContent = sheet.addRow();
             const cellContent1 = rowContent.addCell();
             cellContent1.value = $scope.table91NumDatas[i];
+            border(cellContent1, 0, 0, 1, 0);
             const cellContent2 = rowContent.addCell();
             cellContent2.value = $scope.table91NameDatas[i];
+            border(cellContent2, 0, 0, 1, 0);
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table91Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "三";
+        border(cellT1, 0, 0, 1, 0);
         const cellT2 = rowTotal.addCell();
         cellT2.value = "以上合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
             rowTotal.addCell();
         }
@@ -3705,20 +4368,35 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = totalLine[i];
+            border(cellT3, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由县（区）一级填制，根据表内费用类别据实填制后报市一级单位。本表签字盖章后扫描为电子版。';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["县（区）主管部门（单位）: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0 || i == 2 || i == 3) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -3733,6 +4411,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel92() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3745,19 +4424,21 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '单价', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 8; i++) {
             if (i > 3) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3765,6 +4446,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3774,33 +4456,43 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         const rowContent1 = sheet.addRow();
         var cell5 = rowContent1.addCell();
         cell5.value = '一';
+        border(cell5, 0, 0, 1, 0);
         var cell6 = rowContent1.addCell();
         cell6.value = '征地补偿及拆迁安置费用';
+        cell6.hMerge = 10;
+        border(cell6, 0, 0, 1, 0);
         var table1Content = ['unit', 'price', 'a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
         for (let i = 0; i < $scope.table92Datas.length; i++) {
             const rowContent = sheet.addRow();
             const cellContent1 = rowContent.addCell();
             cellContent1.value = $scope.table91NumDatas[i];
+            border(cellContent1, 0, 0, 1, 0);
             const cellContent2 = rowContent.addCell();
             cellContent2.value = $scope.table91NameDatas[i];
+            border(cellContent2, 0, 0, 1, 0);
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table92Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "三";
+        border(cellT1, 0, 0, 1, 0);
         const cellT2 = rowTotal.addCell();
         cellT2.value = "以上合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
             rowTotal.addCell();
         }
@@ -3816,20 +4508,35 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = totalLine[i];
+            border(cellT3, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由市铁建办根据各县（区）所填制建协表—9—1汇总填制。';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["市政府主管部门: （章) ", "分管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
+            border(cellOver, 0, 0, 1, 0);
             cellOver.hMerge = 2;
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0 || i == 2 || i == 3) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -3844,6 +4551,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel93() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3856,19 +4564,21 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
         }
         //多级表头
         const row1 = sheet.addRow();
-        var table1Head = ['序号', '项目及费用名称', '计量单位', '单价', '本月（上、中、下）旬完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
+        var table1Head = ['序号', '项目及费用名称', '单位', '单价', '本月完成(元)', '本季完成(元)', '本年完成(元)', '开累完成(元)'];
         for (let i = 0; i < 8; i++) {
             if (i > 3) {
                 const cell2 = row1.addCell();
                 cell2.value = table1Head[i];
                 cell2.hMerge = 1;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
             }
             else {
@@ -3876,6 +4586,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3885,8 +4596,10 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 4; i++) {
             var cell3 = row2.addCell();
             cell3.value = '数量';
+            border(cell3, 0, 0, 1, 0);
             var cell4 = row2.addCell();
             cell4.value = '价值';
+            border(cell4, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ['unit', 'price', 'a1', 'b1', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'];
@@ -3894,19 +4607,24 @@ function TreeIndexController($scope, $http, $location, user) {
             const rowContent = sheet.addRow();
             const cellContent1 = rowContent.addCell();
             cellContent1.value = $scope.table93NumDatas[i];
+            border(cellContent1, 0, 0, 1, 0);
             const cellContent2 = rowContent.addCell();
             cellContent2.value = $scope.table93NameDatas[i];
+            border(cellContent2, 0, 0, 1, 0);
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table93Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "四";
+        border(cellT1, 0, 0, 1, 0);
         const cellT2 = rowTotal.addCell();
         cellT2.value = "合计";
+        border(cellT2, 0, 0, 1, 0);
         for (let i = 0; i < 2; i++) {
             rowTotal.addCell();
         }
@@ -3922,20 +4640,35 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT3 = rowTotal.addCell();
             cellT3.value = totalLine[i];
+            border(cellT3, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由各县（区）汇总本区域内国有土地征地费用';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["主管单位（部门）: （章) ", "分管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0 || i == 2 || i == 3) {
+                sheet.col(i).width = 4;
+            }
+            else if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -3950,6 +4683,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel71() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3963,6 +4697,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 0) {
                 cellLine.style.align.h = 'center';
             }
@@ -3976,6 +4711,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell2.value = table1Head[i];
                 cell2.hMerge = 4;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
                 row1.addCell();
                 row1.addCell();
@@ -3986,6 +4722,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 2;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -3997,12 +4734,14 @@ function TreeIndexController($scope, $http, $location, user) {
             cell3.value = '用地';
             cell3.hMerge = 2;
             cell3.style.align.h = 'center';
+            border(cell3, 0, 0, 1, 0);
             row2.addCell();
             row2.addCell();
             var cell4 = row2.addCell();
             cell4.value = '拆迁';
             cell4.hMerge = 1;
             cell4.style.align.h = 'center';
+            border(cell4, 0, 0, 1, 0);
             row2.addCell();
         }
         const row3 = sheet.addRow();
@@ -4014,6 +4753,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let i = 0; i < 5; i++) {
                 const cell5 = row3.addCell();
                 cell5.value = tableHead2[i];
+                border(cell5, 0, 0, 1, 0);
             }
         }
         //表内容
@@ -4023,6 +4763,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table71Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
@@ -4030,6 +4771,7 @@ function TreeIndexController($scope, $http, $location, user) {
         const cellT1 = rowTotal.addCell();
         cellT1.value = "本页合计";
         cellT1.hMerge = 1;
+        border(cellT1, 0, 0, 1, 0);
         for (let i = 0; i < 1; i++) {
             rowTotal.addCell();
         }
@@ -4047,20 +4789,32 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT2 = rowTotal.addCell();
             cellT2.value = totalLine[i];
+            border(cellT2, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由县（区）一级填制，统征统迁数量一栏中填写本线在本区域所需征拆总量。本表签字盖章后扫描为电子版。';
         cellOver1.hMerge = 11;
-        var tableOver = ["县（区）主管部门（单位）: （章) ", "主管领导：", "复核：", "经办人："];
+        border(cellOver1, 0, 0, 1, 0);
+        var tableOver = ["县(区)主管部门(单位):(章)", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
+            }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            if (i == 0) {
+                sheet.col(i).width = 10;
+            }
+            else {
+                sheet.col(i).width = 7;
             }
         }
         //导出
@@ -4075,6 +4829,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel7() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -4088,6 +4843,7 @@ function TreeIndexController($scope, $http, $location, user) {
             cellLine.value = lines[i];
             cellLine.hMerge = 11;
             cellLine.style.align.h = 'center';
+            border(cellLine, 0, 0, 1, 0);
         }
         //多级表头
         const row1 = sheet.addRow();
@@ -4098,6 +4854,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell2.value = table1Head[i];
                 cell2.hMerge = 4;
                 cell2.style.align.h = 'center';
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
                 row1.addCell();
                 row1.addCell();
@@ -4108,6 +4865,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 2;
                 cell1.style.align.v = 'center';
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row2 = sheet.addRow();
@@ -4119,12 +4877,14 @@ function TreeIndexController($scope, $http, $location, user) {
             cell3.value = '用地';
             cell3.hMerge = 2;
             cell3.style.align.h = 'center';
+            border(cell3, 0, 0, 1, 0);
             row2.addCell();
             row2.addCell();
             var cell4 = row2.addCell();
             cell4.value = '拆迁';
             cell4.hMerge = 1;
             cell4.style.align.h = 'center';
+            border(cell4, 0, 0, 1, 0);
             row2.addCell();
         }
         const row3 = sheet.addRow();
@@ -4136,6 +4896,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let i = 0; i < 5; i++) {
                 const cell5 = row3.addCell();
                 cell5.value = tableHead2[i];
+                border(cell5, 0, 0, 1, 0);
             }
         }
         //表内容
@@ -4145,6 +4906,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table7Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
@@ -4152,6 +4914,7 @@ function TreeIndexController($scope, $http, $location, user) {
         const cellT1 = rowTotal.addCell();
         cellT1.value = "本页合计";
         cellT1.hMerge = 1;
+        border(cellT1, 0, 0, 1, 0);
         for (let i = 0; i < 1; i++) {
             rowTotal.addCell();
         }
@@ -4169,21 +4932,28 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT2 = rowTotal.addCell();
             cellT2.value = totalLine[i];
+            border(cellT2, 0, 0, 1, 0);
         }
         //表尾
         const rowOver1 = sheet.addRow();
         const cellOver1 = rowOver1.addCell();
         cellOver1.value = '备注：本表由市铁建办依据各县（区）填写的建协表—7—1填制，统征统迁数量一栏中填写本线在本区域所需征拆总量。';
         cellOver1.hMerge = 11;
+        border(cellOver1, 0, 0, 1, 0);
         var tableOver = ["市政府主管单位: （章) ", "主管领导：", "复核：", "经办人："];
         const rowOver = sheet.addRow();
         for (let i = 0; i < 4; i++) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 2;
+            border(cellOver, 0, 0, 1, 0);
             for (let i = 0; i < 2; i++) {
                 rowOver.addCell();
             }
+        }
+        //设置列宽度
+        for (let i = 0; i < 12; i++) {
+            sheet.col(i).width = 7;
         }
         //导出
         var excelRoot = $scope.cityName + '-表7-第' + $scope.currPage + '页.xlsx';
@@ -4214,6 +4984,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 19;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 1)
                 cellLine.style = style;
         }
@@ -4226,10 +4997,12 @@ function TreeIndexController($scope, $http, $location, user) {
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2];
             cell1.hMerge = 1;
+            border(cell1, 0, 0, 1, 0);
             cell1 = row1.addCell();
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2 + 1];
             cell1.hMerge = 1;
+            border(cell1, 0, 0, 1, 0);
             cell1 = row1.addCell();
         }
 
@@ -4238,6 +5011,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "拆迁建筑物补偿费（元）";
         cell2.hMerge = 7;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
         for (let i = 0; i < 7; i++) {
             row2.addCell();
         }
@@ -4245,6 +5019,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "构筑物补偿费（元）";
         cell2.hMerge = 5;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
         for (let i = 0; i < 5; i++) {
             row2.addCell();
         }
@@ -4252,6 +5027,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "其他补偿（元）";
         cell2.hMerge = 5;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
 
         const row3 = sheet.addRow();
         var table4Head = ["序号", "拆迁面积（平方米）", "单价", "补偿金额", "序号", "构筑物名称",
@@ -4262,6 +5038,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell2.value = table4Head[i];
                 cell2.hMerge = 4;
                 cell2.style = style;
+                border(cell2, 0, 0, 1, 0);
                 row3.addCell();
                 row3.addCell();
                 row3.addCell();
@@ -4272,6 +5049,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table4Head[i];
                 cell1.vMerge = 1;
                 cell1.style = style;
+                border(cell1, 0, 0, 1, 0);
             }
         }
         const row4 = sheet.addRow();
@@ -4280,6 +5058,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < table4Head2.length; i++) {
             const cell4 = row4.addCell();
             cell4.value = table4Head2[i];
+            border(cell4, 0, 0, 1, 0);
             //cell3.style = style;
         }
         //表内容
@@ -4290,6 +5069,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table4Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table4Datas[i][table4Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //表尾
@@ -4301,6 +5081,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i * 2];
             cellOver.hMerge = 4;
+            border(cellOver, 0, 0, 1, 0);
 
             for (let i = 0; i < 4; i++) {
                 rowOver.addCell();
@@ -4308,6 +5089,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
             cellOver2.hMerge = 4;
+            border(cellOver2, 0, 0, 1, 0);
         }
         //设置列宽度
         for (let i = 0; i < 19; i++) {
@@ -4341,6 +5123,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 10;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 1)
                 cellLine.style = style;
         }
@@ -4352,27 +5135,33 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 3; i++) {
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2];
+            border(cell1, 0, 0, 1, 0);
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2 + 1];
+            border(cell1, 0, 0, 1, 0);
         }
         cell1 = row1.addCell();
         cell1.value = "家庭人口";
         cell1.hMerge = 1;
+        border(cell1, 0, 0, 1, 0);
         cell1 = row1.addCell();
         cell1 = row1.addCell();
         cell1.value = $scope.current.family;
         cell1.hMerge = 1;
+        border(cell1, 0, 0, 1, 0);
         cell1 = row1.addCell();
         cell1 = row1.addCell();
         cell1.value = "户主签名";
         cell1.vMerge = 2;
         cell1.style = style;
+        border(cell1, 0, 0, 1, 0);
 
         const row2 = sheet.addRow();
         var cell2 = row2.addCell();
         cell2.value = "拆迁房屋";
         cell2.hMerge = 6;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
         for (let i = 0; i < 6; i++) {
             row2.addCell();
         }
@@ -4380,6 +5169,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "拆迁其他建（构）筑物";
         cell2.hMerge = 2;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
 
         const row3 = sheet.addRow();
         var cell3 = null;
@@ -4387,6 +5177,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 10; i++) {
             cell3 = row3.addCell();
             cell3.value = table2Heads2[i];
+            border(cell3, 0, 0, 1, 0);
         }
         //表内容
         var table4Content = ["index", "length", "width", "high", "area",
@@ -4397,6 +5188,7 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table4Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table3Datas[i][table4Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //表尾
@@ -4408,6 +5200,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i * 2];
             cellOver.hMerge = 6;
+            border(cellOver, 0, 0, 1, 0);
 
             for (let i = 0; i < 6; i++) {
                 rowOver.addCell();
@@ -4415,6 +5208,13 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
             cellOver2.hMerge = 6;
+            border(cellOver2, 0, 0, 1, 0);
+        }
+        //设置列宽度
+        for (let i = 0; i < 10; i++) {
+
+            sheet.col(i).width = 9;
+
         }
         //导出
         var excelRoot = $scope.cityName + '-表3-第' + $scope.currPage + '页.xlsx';
@@ -4444,6 +5244,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellLine = rowLine.addCell();
             cellLine.value = lines[i];
             cellLine.hMerge = 9;
+            border(cellLine, 0, 0, 1, 0);
             if (i == 1)
                 cellLine.style = style;
         }
@@ -4455,10 +5256,13 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 3; i++) {
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2];
+            border(cell1, 0, 0, 1, 0);
             cell1 = row1.addCell();
             cell1.value = table2Heads[i * 2 + 1];
+            border(cell1, 0, 0, 1, 0);
             cell1.hMerge = 1;
             cell1 = row1.addCell();
+            border(cell1, 0, 0, 1, 0);
         }
 
         const row2 = sheet.addRow();
@@ -4466,6 +5270,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "青苗及附着物补偿";
         cell2.hMerge = 4;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
         for (let i = 0; i < 4; i++) {
             row2.addCell();
         }
@@ -4473,6 +5278,7 @@ function TreeIndexController($scope, $http, $location, user) {
         cell2.value = "青苗及附着物补偿";
         cell2.hMerge = 4;
         cell2.style = style;
+        border(cell2, 0, 0, 1, 0);
 
         const row3 = sheet.addRow();
         var cell3 = null;
@@ -4480,10 +5286,12 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < 5; i++) {
             cell3 = row3.addCell();
             cell3.value = table2Heads2[i];
+            border(cell3, 0, 0, 1, 0);
         }
         for (let i = 0; i < 5; i++) {
             cell3 = row3.addCell();
             cell3.value = table2Heads2[i];
+            border(cell3, 0, 0, 1, 0);
         }
         //表内容
         var table2Content = ["prj", "unit", "quantity", "price", "total",
@@ -4493,22 +5301,26 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table2Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table2Datas[i][table2Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
         }
         //合计行
         const rowTotal = sheet.addRow();
         var cellT1 = rowTotal.addCell();
         cellT1.value = "小计";
+        border(cellT1, 0, 0, 1, 0);
         for (let i = 0; i < 3; i++) {
             rowTotal.addCell();
         }
         cellT1 = rowTotal.addCell();
         cellT1.value = $scope.table2Total.total;
+        border(cellT1, 0, 0, 1, 0);
         for (let i = 0; i < 4; i++) {
             rowTotal.addCell();
         }
         cellT1 = rowTotal.addCell();
         cellT1.value = $scope.table2Total.total2;
+        border(cellT1, 0, 0, 1, 0);
         //表尾
         var tableOver = ["乡镇人民政府（公章）： ", "被拆迁人（签字/章）：", "结算人（签字）：",
             "审核人（签字）："];
@@ -4518,6 +5330,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i * 2];
             cellOver.hMerge = 4;
+            border(cellOver, 0, 0, 1, 0);
 
             for (let i = 0; i < 4; i++) {
                 rowOver.addCell();
@@ -4525,6 +5338,13 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
             cellOver2.hMerge = 4;
+            border(cellOver2, 0, 0, 1, 0);
+        }
+        //设置列宽度
+        for (let i = 0; i < 10; i++) {
+
+            sheet.col(i).width = 9;
+
         }
         //导出
         var excelRoot = $scope.cityName + '-表2-第' + $scope.currPage + '页.xlsx';
@@ -4562,6 +5382,7 @@ function TreeIndexController($scope, $http, $location, user) {
             }
             cellLine.value = lines[i];
             cellLine.hMerge = 12;
+            border(cellLine, 0, 0, 1, 0);
         }
 
         //多级表头
@@ -4573,6 +5394,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell2.value = table1Head[i];
                 cell2.hMerge = 2;
                 cell2.style = style;
+                border(cell2, 0, 0, 1, 0);
                 row1.addCell();
                 row1.addCell();
             }
@@ -4581,8 +5403,12 @@ function TreeIndexController($scope, $http, $location, user) {
                 cell1.value = table1Head[i];
                 cell1.vMerge = 1;
                 cell1.style = style;
+                border(cell1, 0, 0, 1, 0);
             }
         }
+        // const cells1 = row1.addCell();
+        // cells1.value = '';
+        // border(cells1, 0, 0, 1, 0);
         const row2 = sheet.addRow();
         for (let i = 0; i < 6; i++) {
             row2.addCell();
@@ -4591,6 +5417,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cell3 = row2.addCell();
             cell3.value = table1Head[i];
             cell3.style = style;
+            border(cell3, 0, 0, 1, 0);
         }
         //表内容
         var table1Content = ["name", "id", "family", "people", "rail", "type", "area",
@@ -4600,12 +5427,17 @@ function TreeIndexController($scope, $http, $location, user) {
             for (let j = 0; j < table1Content.length; j++) {
                 const cellContent = rowContent.addCell();
                 cellContent.value = $scope.table1Datas[i][table1Content[j]];
+                border(cellContent, 0, 0, 1, 0);
             }
+            const cellContents = rowContent.addCell();
+            cellContents.value = '';
+            border(cellContents, 0, 0, 1, 0);
         }
         //合计行
         const rowTotal = sheet.addRow();
         const cellT1 = rowTotal.addCell();
         cellT1.value = "本页合计";
+        border(cellT1, 0, 0, 1, 0);
         cellT1.hMerge = 1;
         for (let i = 0; i < 5; i++) {
             rowTotal.addCell();
@@ -4620,7 +5452,11 @@ function TreeIndexController($scope, $http, $location, user) {
         for (let i = 0; i < totalLine.length; i++) {
             const cellT2 = rowTotal.addCell();
             cellT2.value = totalLine[i];
+            border(cellT2, 0, 0, 1, 0);
         }
+        const cellT2s = rowTotal.addCell();
+        cellT2s.value = '';
+        border(cellT2s, 0, 0, 1, 0);
         //表尾
         var tableOver = ["乡镇人民政府签字（公章）： ", "县（区）铁建办签字（公章）", "铁路建设业主单位签字（公章）：",
             "设计单位签字（公章）：", "监理单位签字（公章）：", "铁路施工单位签字（公章）："];
@@ -4630,17 +5466,24 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i * 2];
             cellOver.hMerge = 6;
+            border(cellOver, 0, 0, 1, 0);
 
             for (let i = 0; i < 6; i++) {
                 rowOver.addCell();
             }
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
-            cellOver2.hMerge = 6;
+            cellOver2.hMerge = 5;
+            border(cellOver2, 0, 0, 1, 0);
         }
         //设置列宽度
         for (let i = 0; i < 13; i++) {
-            sheet.col(i).width = 6;
+            if (i == 1) {
+                sheet.col(i).width = 18;
+            }
+            else {
+                sheet.col(i).width = 6;
+            }
         }
         //导出
         var excelRoot = $scope.cityName + '-表1-第' + $scope.currPage + '页.xlsx';
@@ -4653,5 +5496,26 @@ function TreeIndexController($scope, $http, $location, user) {
         // file
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
+    }
+    function border(cell, top, left, bottom, right) {
+        // const light = 'ffded9d4';
+        const light = 'ff7e6a54';
+        const dark = 'ff7e6a54';
+        cell.style.border.top = 'thin';
+        cell.style.border.topColor = dark;
+        cell.style.border.left = 'thin';
+        cell.style.border.leftColor = dark;
+        cell.style.border.bottom = 'thin';
+        cell.style.border.bottomColor = dark;
+        cell.style.border.right = 'thin';
+        cell.style.border.rightColor = dark;
+        // cell.style.border.top = 'thin';
+        // cell.style.border.topColor = top ? dark : light;
+        // cell.style.border.left = 'thin';
+        // cell.style.border.leftColor = left ? dark : light;
+        // cell.style.border.bottom = 'thin';
+        // cell.style.border.bottomColor = bottom ? dark : light;
+        // cell.style.border.right = 'thin';
+        // cell.style.border.rightColor = right ? dark : light;
     }
 }

@@ -22,10 +22,11 @@
             <th>金额(元)</th>
             <th>领款人（单位）签字盖章</th>
             <th>备注</th>
+            <td>编辑</td>
         </tr>
         <tr ng-repeat="t41 in table412Datas">
             <td>{{t41.name}}</td>
-            <td></td>
+            <td>{{t41.mId}}</td>
             <td>地面建筑物</td>
             <td>m²</td>
             <td>{{t41.area1}}</td>
@@ -33,6 +34,9 @@
             <td>{{t41.total}}</td>
             <td></td>
             <td></td>
+            <td>
+                <button ng-click="getTable412mIdByPK(t41.name)" class="btn btn-primary btn-small">编辑</button>
+            </td>
         </tr>
         <tr>
             <th>合计</th>
@@ -44,8 +48,18 @@
             <th>{{table412Total.t2}}</th>
             <th></th>
             <th></th>
+            <th></th>
+        </tr>
+         <tr>
+            <td colspan="15">正在编辑的凭证编号：</td>
+        </tr>
+        <tr>
+            <td>{{currTable412.name}}</td>
+            <td>
+                <input value="currTable412.mId" ng-model="currTable412.mId" type="text" style="width:100%;margin: 3px auto;"></td>
         </tr>
     </table>
+    <button ng-click="saveTable412mId()" class="btn btn-success">保存</button>
     <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button> 
     <div style="float: right">
         <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>

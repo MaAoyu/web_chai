@@ -22,17 +22,25 @@
             <th>金额(元)</th>
             <th>领款人（单位）签字盖章</th>
             <th>备注</th>
+            <th>编辑</th>
+            <th>删除</th>
         </tr>
-        <tr ng-repeat="t41 in table413Datas">
-            <td></td>
-            <td></td>
+        <tr ng-repeat="t413 in table413Datas">
+            <td>{{t413.name}}</td>
+            <td>{{t413.id}}</td>
             <td>土地</td>
             <td>m²</td>
+            <td>{{t413.quantity}}</td>
+            <td>{{t413.price}}</td>
+            <td>{{t413.total}}</td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{t413.text}}</td>
+            <td>
+                <button ng-click="getTable413ByPK(t413.id)" class="btn btn-primary btn-small">编辑</button>
+            </td>
+            <td>
+                <button ng-click="deleteTable413(t413.id)" class="btn btn-danger btn-middle">删除</button>
+            </td>
         </tr>
         <tr>
             <td>合计</td>
@@ -44,8 +52,36 @@
             <td>{{table413Total.t2}}</td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+         <tr>
+            <tr colspan="11">正在添加/编辑的数据：</tr>
+        </tr>
+        <tr>
+            <td>
+                <input ng-model="curTable413.name" type="text" style="width:100%;margin: 3px auto;"></td>
+            <td>
+                <input ng-model="curTable413.id" type="text" style="width:100%;margin: 3px auto;"></td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                <input ng-model="curTable413.quantity" type="text" style="width:100%;margin: 3px auto;"></td>
+            <td>
+                <input ng-model="curTable413.price" type="text" style="width:100%;margin: 3px auto;"></td>
+            <td>
+                <input ng-model="curTable413.total" type="text" style="width:30px;;margin: 3px 0;"></td>
+            <td>
+            </td>
+            <td>
+                <input ng-model="curTable413.text" type="text" style="width:30px;margin: 3px 0;"></td>
+            <td></td>
+            <td></td>
         </tr>
     </table>
+    <button type="button" ng-click="saveTable413Data()" class="btn btn-success">保存数据</button>
     <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button> 
     <div style="float: right">
         <md-button ng-click="getNextPage(0)" class="btn btn-default">首页</md-button>

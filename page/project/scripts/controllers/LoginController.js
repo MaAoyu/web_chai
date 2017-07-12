@@ -52,7 +52,7 @@ function LoginController($scope, $http, $location, user) {
       setCookie("password", '', 1);
       setCookie("rememberPassword", '', 1);
     }
-    $http.get('http://106.14.17.37/:8081/login?name='+$scope.userName+'&passWord='+$scope.passWord)
+    $http.get('http://localhost:8081/login?name='+$scope.userName+'&passWord='+$scope.passWord)
       .success(function (res) {
         if(res['ok']==-1)
           alert("帐号不存在");
