@@ -218,7 +218,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.table7Datas = [];
         $scope.table7Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
         for (var k = 0; k < $scope.c2CurrList.length; k++) {
-            $http.get('http://localhost:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
+            $http.get('http://106.14.17.37:8081/getTable7?city=' + $scope.cityName + $scope.c2CurrList[k])
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     for (var i = 0; i < res.length; i++) {
@@ -249,7 +249,7 @@ function TreeIndexController($scope, $http, $location, user) {
             alert("两次输入新密码不一致，请重新输入！");
         }
         else {
-            $http.get('http://localhost:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
+            $http.get('http://106.14.17.37:8081/login?name=' + $scope.userName + '&passWord=' + $scope.password.p1)
                 .success(function (res) {
                     if (res['ok'] == -1)
                         alert("帐号不存在");
@@ -257,7 +257,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         alert("旧密码输入错误");
                     else {
                         console.log($scope.password.p2);
-                        $http.get('http://localhost:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
+                        $http.get('http://106.14.17.37:8081/modifyPassword?name=' + $scope.userName + '&passWord=' + $scope.password.p2)
                             .success(function (res) {
                                 alert("修改密码成功！");
                             })
@@ -284,7 +284,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table101Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://localhost:8081/updateTable101?' + urlPara)
+        $http.get('http://106.14.17.37:8081/updateTable101?' + urlPara)
             .success(function (res) {
                 alert("更新表101成功！");
             })
@@ -295,7 +295,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable101Datas() {
         $scope.table101Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://localhost:8081/getTable101?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable101?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.table101Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -312,7 +312,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable9Datas() {
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://localhost:8081/getTable9L1?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable9L1?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data1.a1 = res[0]['sum(a1)'];
                 $scope.t9Data1.b1 = res[0]['sum(a1*price)'];
@@ -326,7 +326,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable9L2?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable9L2?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data2.a1 = res[0]['sum(a1)'];
                 $scope.t9Data2.b1 = res[0]['sum(a1*price)'];
@@ -339,7 +339,7 @@ function TreeIndexController($scope, $http, $location, user) {
             })
             .error(function (res) {
             });
-        $http.get('http://localhost:8081/getTable9L4?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable9L4?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data4.a1 = res[0]['sum(a1)'];
                 $scope.t9Data4.b1 = res[0]['sum(a1*price)'];
@@ -352,7 +352,7 @@ function TreeIndexController($scope, $http, $location, user) {
             })
             .error(function (res) {
             });
-        $http.get('http://localhost:8081/getTable9L31?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable9L31?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.t9Data3.a1 = res[0]['sum(a1)'];
                 $scope.t9Data3.b1 = res[0]['sum(a1*price)'];
@@ -362,7 +362,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 $scope.t9Data3.b3 = res[0]['sum(a3*price)'];
                 $scope.t9Data3.a4 = res[0]['sum(a4)'];
                 $scope.t9Data3.b4 = res[0]['sum(a4*price)'];
-                $http.get('http://localhost:8081/getTable9L32?city=' + $scope.cityName)
+                $http.get('http://106.14.17.37:8081/getTable9L32?city=' + $scope.cityName)
                     .success(function (res) {
                         $scope.t9Data3.a1 = $scope.t9Data3.a1 + res[0]['sum(a1)'];
                         $scope.t9Data3.b1 = $scope.t9Data3.b1 + res[0]['sum(a1*price)'];
@@ -387,7 +387,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table93Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://localhost:8081/updateTable93?' + urlPara)
+        $http.get('http://106.14.17.37:8081/updateTable93?' + urlPara)
             .success(function (res) {
                 alert("更新表93成功！");
             })
@@ -398,7 +398,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable93Datas() {
         $scope.table93Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://localhost:8081/getTable93?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable93?city=' + $scope.cityName)
             .success(function (res) {
                 res.sort(function (a, b) {
                     return a.index1 - b.index1
@@ -430,7 +430,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable92Datas() {
         $scope.table92Datas = [];
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://localhost:8081/getTable92Sum?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable92Sum?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.table92Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
                 for (var j = 0; j < res.length; j++) {
@@ -446,7 +446,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     $scope.table92Total.a4 = $scope.table92Total.a4 + new92.a4;
                     $scope.table92Datas.push(new92);
                 }
-                $http.get('http://localhost:8081/getTable92?city=' + $scope.cityName)
+                $http.get('http://106.14.17.37:8081/getTable92?city=' + $scope.cityName)
                     .success(function (res2) {
                         //console.log(JSON.stringify(res2));
                         for (var j = 0; j < res2.length; j++) {
@@ -494,7 +494,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.table91Datas[index][t1Para[i]] + '&';
         }
         console.log(urlPara);
-        $http.get('http://localhost:8081/updateTable91?' + urlPara)
+        $http.get('http://106.14.17.37:8081/updateTable91?' + urlPara)
             .success(function (res) {
                 alert("更新表91成功！");
             })
@@ -505,7 +505,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable91Datas() {
         $scope.table91Total = { "a1": 0, "b1": 0, "a2": 0, "b2": 0, "a3": 0, "b3": 0, "a4": 0, "b4": 0 };
-        $http.get('http://localhost:8081/getTable91?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable91?city=' + $scope.cityName)
             .success(function (res) {
                 res.sort(function (a, b) {
                     return a.index1 - b.index1
@@ -535,7 +535,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable71ByPK(autoID) {
-        $http.get('http://localhost:8081/getTable71ByPK?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/getTable71ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable71 = res[0];
             })
@@ -544,7 +544,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable71(autoID) {
-        $http.get('http://localhost:8081/deleteTable71?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/deleteTable71?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable71Datas();
@@ -562,7 +562,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://localhost:8081/updateTable71?' + urlPara)
+            $http.get('http://106.14.17.37:8081/updateTable71?' + urlPara)
                 .success(function (res) {
                     alert("更新表71成功！");
                 })
@@ -582,14 +582,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable71[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://localhost:8081/addTable71?' + urlPara)
+            $http.get('http://106.14.17.37:8081/addTable71?' + urlPara)
                 .success(function (res) {
                     alert("添加表71成功！");
                 })
                 .error(function (res) {
                     alert("添加表71数据出错");
                 });
-            $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://106.14.17.37:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable71Datas($scope.totalPages + 1);
@@ -607,7 +607,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable71Datas(page) {
         $scope.currPage = page;
         $scope.table71Datas = [];
-        $http.get('http://localhost:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable71Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -616,7 +616,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table71Total = { "a1": 0, "b1": 0, "t1": 0, "f1": 0, "m1": 0, "a2": 0, "b2": 0, "t2": 0, "f2": 0, "m2": 0 };
-        $http.get('http://localhost:8081/getTable71?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://106.14.17.37:8081/getTable71?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table71Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -636,7 +636,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable5ByPK(autoID) {
-        $http.get('http://localhost:8081/getTable5ByPK?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/getTable5ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable5 = res[0];
             })
@@ -645,7 +645,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable5(autoID) {
-        $http.get('http://localhost:8081/deleteTable5?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/deleteTable5?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable5Datas($scope.currPage);
@@ -663,7 +663,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://localhost:8081/updateTable5?' + urlPara)
+            $http.get('http://106.14.17.37:8081/updateTable5?' + urlPara)
                 .success(function (res) {
                     alert("更新表5成功！");
                 })
@@ -684,14 +684,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable5[t1Para[i]] + '&';
             }
             console.log(urlPara);
-            $http.get('http://localhost:8081/addTable5?' + urlPara)
+            $http.get('http://106.14.17.37:8081/addTable5?' + urlPara)
                 .success(function (res) {
                     alert("添加表5成功！");
                 })
                 .error(function (res) {
                     alert("添加表5数据出错");
                 });
-            $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://106.14.17.37:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable5Datas($scope.totalPages + 1);
@@ -709,7 +709,7 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable5Datas(page) {
         $scope.currPage = page;
         $scope.table5Datas = [];
-        $http.get('http://localhost:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable5Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -718,7 +718,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         $scope.table5Total = { "area": 0, "a1": 0, "a2": 0, "a3": 0, "a4": 0, "a5": 0, "total": 0 };
-        $http.get('http://localhost:8081/getTable5?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://106.14.17.37:8081/getTable5?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table5Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -744,7 +744,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getTable43ByPK(autoID) {
-        $http.get('http://localhost:8081/getTable43ByPK?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/getTable43ByPK?autoID=' + autoID)
             .success(function (res) {
                 $scope.curTable43 = res[0];
             })
@@ -753,7 +753,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable43(autoID) {
-        $http.get('http://localhost:8081/deleteTable43?autoID=' + autoID)
+        $http.get('http://106.14.17.37:8081/deleteTable43?autoID=' + autoID)
             .success(function (res) {
                 alert("删除成功！");
                 getAllTable43Datas($scope.currPage);
@@ -771,7 +771,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable43[t1Para[i]] + '&';
             }
             //console.log(urlPara);
-            $http.get('http://localhost:8081/updateTable43?' + urlPara)
+            $http.get('http://106.14.17.37:8081/updateTable43?' + urlPara)
                 .success(function (res) {
                     alert("更新表4-3成功！");
                 })
@@ -792,14 +792,14 @@ function TreeIndexController($scope, $http, $location, user) {
                 urlPara = urlPara + t1Para[i] + '=' + $scope.curTable43[t1Para[i]] + '&';
             }
             console.log(urlPara);
-            $http.get('http://localhost:8081/addTable43?' + urlPara)
+            $http.get('http://106.14.17.37:8081/addTable43?' + urlPara)
                 .success(function (res) {
                     alert("添加表4-3成功！");
                 })
                 .error(function (res) {
                     alert("添加表4-3数据出错");
                 });
-            $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+            $http.get('http://106.14.17.37:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable43Datas($scope.totalPages + 1);
@@ -819,14 +819,14 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.currPage = page;
         $scope.table43Datas = [];
         $scope.table43Total = { "t1": 0, "t2": 0 };
-        $http.get('http://localhost:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable43Count?city=' + $scope.cityName)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable43?city=' + $scope.cityName + '&page=' + page)
+        $http.get('http://106.14.17.37:8081/getTable43?city=' + $scope.cityName + '&page=' + page)
             .success(function (res) {
                 $scope.table43Datas = res;
                 for (var i = 0; i < res.length; i++) {
@@ -859,7 +859,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var countc3 = 0;
 
         for (var j = 0; j < $scope.c3CurrList.length; j++) {//2.遍历所有村
-            $http.get('http://localhost:8081/getTable1SumArea?city=' + $scope.cityName + $scope.c3CurrList[j])
+            $http.get('http://106.14.17.37:8081/getTable1SumArea?city=' + $scope.cityName + $scope.c3CurrList[j])
                 .success(function (res) {                   //3.从表一获取征地面积
                     var new12 = new Object();
                     var new12p2 = new Object();
@@ -884,7 +884,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     new12.area = res[0]["sum(area)"] != null ? res[0]["sum(area)"] : 0;
                     $scope.table12TotalP1.area = $scope.table12TotalP1.area + new12.area;
                     //console.log($scope.cityName + new12.c4);
-                    $http.get('http://localhost:8081/getTable3Bycity3?city=' + $scope.cityName + new12.c4)
+                    $http.get('http://106.14.17.37:8081/getTable3Bycity3?city=' + $scope.cityName + new12.c4)
                         .success(function (res2) {                   //3.从表三获取房屋信息
                             //console.log(JSON.stringify(res2));
                             var rawT4Datas = [].concat(res2);
@@ -993,7 +993,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var count1 = 0;
         console.log(JSON.stringify($scope.c4CurrList));
         for (var i = 0; i < $scope.c4CurrList.length; i++) {//1.遍历所有村
-            $http.get('http://localhost:8081/getTable1Area?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://106.14.17.37:8081/getTable1Area?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     var new11 = new Object();
@@ -1022,7 +1022,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     };
                     $scope.table11TotalP1.area = $scope.table11TotalP1.area + new11.area;
                     //房屋
-                    $http.get('http://localhost:8081/getTable3Bycity?city=' + $scope.cityName + new11.c4)
+                    $http.get('http://106.14.17.37:8081/getTable3Bycity?city=' + $scope.cityName + new11.c4)
                         .success(function (res) {
                             var rawT4Datas = [].concat(res);
                             new11.familys = rawT4Datas.length;      //4.房屋户数
@@ -1111,11 +1111,11 @@ function TreeIndexController($scope, $http, $location, user) {
         var c4 = $scope.cityName + $scope.currTable42.c4;
         //console.log('###'+mId + name + city4Name);
         //判断数据库中是否有记录
-        $http.get('http://localhost:8081/isTable42mId?c4=' + c4 + '&type=' + type)
+        $http.get('http://106.14.17.37:8081/isTable42mId?c4=' + c4 + '&type=' + type)
             .success(function (res) {
                 if (res.length > 0) {
                     //update
-                    $http.get('http://localhost:8081/updateTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
+                    $http.get('http://106.14.17.37:8081/updateTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
                         .success(function (res) {
                             //console.log(JSON.stringify(res));
                             alert('修改成功');
@@ -1127,7 +1127,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 }
                 else {
                     //add
-                    $http.get('http://localhost:8081/saveTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
+                    $http.get('http://106.14.17.37:8081/saveTable42mId?c4=' + c4 + '&mId=' + mId + '&type=' + type)//凭证编号
                         .success(function (res) {
                             //console.log(JSON.stringify(res));
                             alert('添加成功');
@@ -1149,7 +1149,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.currTable42 = { 'c4': c4, 'mId': '', 'type': type };
         c4 = $scope.cityName + c4;
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable42mId')//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable42mId')//凭证编号
             .success(function (res) {
                 mIdList = res;
                 for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
@@ -1183,7 +1183,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //console.log('begin:' + begin + 'end:' + end);
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable42mId')//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable42mId')//凭证编号
             .success(function (res) {
                 mIdList = res;
             })
@@ -1191,7 +1191,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
 
         for (var i = begin; i < end; i++) {//1.遍历所有村
-            $http.get('http://localhost:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://106.14.17.37:8081/getAllTable411Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {                       //2.青苗
                     //console.log(JSON.stringify(res));
                     var new42 = new Object();
@@ -1232,7 +1232,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("网络出错");
                 });
-            $http.get('http://localhost:8081/getAllTable412Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://106.14.17.37:8081/getAllTable412Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {   //3.地面建筑物  地面建筑物单价不一致
                     var new42 = new Object();
                     new42.c4 = $scope.c4CurrList[count2];
@@ -1269,7 +1269,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 })
                 .error(function (res) {
                 });
-            $http.get('http://localhost:8081/getAllTable413Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
+            $http.get('http://106.14.17.37:8081/getAllTable413Datas2?city=' + $scope.cityName + $scope.c4CurrList[i])
                 .success(function (res) {   //3.地面建筑物  地面建筑物单价不一致
                     console.log(JSON.stringify(res));
                     var new42 = new Object();
@@ -1325,7 +1325,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.table413Total.city4Name = city4Name;
         console.log($scope.table413Total.city4Name);
         city4Name = $scope.cityName + city4Name;
-        $http.get('http://localhost:8081/getTable413Count?city=' + city4Name)
+        $http.get('http://106.14.17.37:8081/getTable413Count?city=' + city4Name)
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
@@ -1336,7 +1336,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     page = $scope.totalPages;
         // }
         $scope.currPage = page;
-        $http.get('http://localhost:8081/getAllTable413Datas?page=' + page + '&city=' + city4Name)
+        $http.get('http://106.14.17.37:8081/getAllTable413Datas?page=' + page + '&city=' + city4Name)
             .success(function (res) {
                 //console.log(res);
                 $scope.table413Datas = [].concat(res);
@@ -1368,7 +1368,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t1Para[i] + '=' + $scope.curTable413[t1Para[i]] + '&';
         }
         if ($scope.curTable413.isExist == 1) {
-            $http.get('http://localhost:8081/updateTable413?' + urlPara)
+            $http.get('http://106.14.17.37:8081/updateTable413?' + urlPara)
                 .success(function (res) {
                     alert("更新成功！");
                     $scope.curTable413 = {};
@@ -1379,7 +1379,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
         }
         else {
-            $http.get('http://localhost:8081/addTable413?' + urlPara)
+            $http.get('http://106.14.17.37:8081/addTable413?' + urlPara)
                 .success(function (res) {
                     alert("添加成功！");
                     $scope.curTable413 = {};
@@ -1391,7 +1391,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
     }
     function getTable413ByPK(id) {
-        $http.get('http://localhost:8081/getTable413ById?id=' + id)
+        $http.get('http://106.14.17.37:8081/getTable413ById?id=' + id)
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.curTable413 = rawDatas[0];
@@ -1403,7 +1403,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable413(id) {
-        $http.get('http://localhost:8081/deleteTable413?pk=' + id)
+        $http.get('http://106.14.17.37:8081/deleteTable413?pk=' + id)
             .success(function (res) {
                 getAllTable413Datas($scope.table413Total.city4Name, $scope.currPage);
             })
@@ -1418,11 +1418,11 @@ function TreeIndexController($scope, $http, $location, user) {
         var city4Name = $scope.cityName + $scope.table412Total.city4Name;
         console.log('###' + mId + name + city4Name);
         //判断数据库中是否有记录
-        $http.get('http://localhost:8081/isTable412mId?name=' + name + '&city=' + city4Name)
+        $http.get('http://106.14.17.37:8081/isTable412mId?name=' + name + '&city=' + city4Name)
             .success(function (res) {
                 if (res.length > 0) {
                     //update
-                    $http.get('http://localhost:8081/updateTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                    $http.get('http://106.14.17.37:8081/updateTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
                         .success(function (res) {
                             console.log(JSON.stringify(res));
                             alert('修改成功');
@@ -1434,7 +1434,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 }
                 else {
                     //add
-                    $http.get('http://localhost:8081/saveTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                    $http.get('http://106.14.17.37:8081/saveTable412mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
                         .success(function (res) {
                             console.log(JSON.stringify(res));
                             alert('添加成功');
@@ -1456,7 +1456,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var city4Name = $scope.cityName + $scope.table412Total.city4Name;
         $scope.currTable412 = { 'name': name, 'mId': '' };
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable412mId?c4name=' + city4Name)//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable412mId?c4name=' + city4Name)//凭证编号
             .success(function (res) {
                 mIdList = res;
                 for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
@@ -1475,14 +1475,14 @@ function TreeIndexController($scope, $http, $location, user) {
         city4Name = $scope.cityName + city4Name;
 
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable412mId?c4name=' + city4Name)//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable412mId?c4name=' + city4Name)//凭证编号
             .success(function (res) {
                 mIdList = res;
             })
             .error(function (res) {
             });
 
-        $http.get('http://localhost:8081/getAllTable412Datas?city=' + city4Name + '&page=' + page)//表内容
+        $http.get('http://106.14.17.37:8081/getAllTable412Datas?city=' + city4Name + '&page=' + page)//表内容
             .success(function (res) {
                 //console.log(JSON.stringify(res));
                 $scope.totalPages = Math.ceil(res.length / 10);
@@ -1523,11 +1523,11 @@ function TreeIndexController($scope, $http, $location, user) {
         var city4Name = $scope.cityName + $scope.table411Total.city4Name;
         //console.log(mId + name + city4Name);
         //判断数据库中是否有记录
-        $http.get('http://localhost:8081/isTable411mId?name=' + name + '&city=' + city4Name)
+        $http.get('http://106.14.17.37:8081/isTable411mId?name=' + name + '&city=' + city4Name)
             .success(function (res) {
                 if (res.length > 0) {
                     //update
-                    $http.get('http://localhost:8081/updateTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                    $http.get('http://106.14.17.37:8081/updateTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
                         .success(function (res) {
                             alert('修改成功');
                             getAllTable411Datas($scope.table411Total.city4Name, $scope.currPage);
@@ -1538,7 +1538,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 }
                 else {
                     //add
-                    $http.get('http://localhost:8081/saveTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
+                    $http.get('http://106.14.17.37:8081/saveTable411mId?name=' + name + '&mId=' + mId + '&city=' + city4Name)//凭证编号
                         .success(function (res) {
                             alert('添加成功');
                             getAllTable411Datas($scope.table411Total.city4Name, $scope.currPage);
@@ -1559,7 +1559,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var city4Name = $scope.cityName + $scope.table411Total.city4Name;
         $scope.currTable411 = { 'name': name, 'mId': '' };
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable411mId?c4name=' + city4Name)//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable411mId?c4name=' + city4Name)//凭证编号
             .success(function (res) {
                 mIdList = res;
                 for (var i = 0; i < mIdList.length; i++) {//添加凭证编号
@@ -1578,21 +1578,21 @@ function TreeIndexController($scope, $http, $location, user) {
         city4Name = $scope.cityName + city4Name;
         var limitPeopleList = [];
         var mIdList = [];
-        $http.get('http://localhost:8081/getTable411mId?c4name=' + city4Name)//凭证编号
+        $http.get('http://106.14.17.37:8081/getTable411mId?c4name=' + city4Name)//凭证编号
             .success(function (res) {
                 mIdList = res;
             })
             .error(function (res) {
             });
 
-        $http.get('http://localhost:8081/getPeopleList?city=' + city4Name)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getPeopleList?city=' + city4Name)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res.length / 10);
                 var resLength = 10 * page > res.length ? res.length : 10 * page;
                 for (var i = 10 * (page - 1); i < resLength; i++) {
                     limitPeopleList.push(res[i].id);
                 }
-                $http.get('http://localhost:8081/getSumTable411Datas?ids=' + limitPeopleList)//2.表内容
+                $http.get('http://106.14.17.37:8081/getSumTable411Datas?ids=' + limitPeopleList)//2.表内容
                     .success(function (res) {
                         //console.log(JSON.stringify(res));
                         var rawT4Datas = [].concat(res);
@@ -1630,7 +1630,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getUserByName(name) {
-        $http.get('http://localhost:8081/getUserByName?pk=' + name)
+        $http.get('http://106.14.17.37:8081/getUserByName?pk=' + name)
             .success(function (res) {
                 $scope.curUser = res[0];
                 if ($scope.curUser.city1 == 'true')
@@ -1648,7 +1648,7 @@ function TreeIndexController($scope, $http, $location, user) {
         var url = 'name=' + $scope.curUser.name + '&password=' + $scope.curUser.password + '&city1=' + $scope.curUser.city1 +
             '&city2=' + $scope.curUser.city2 + '&city3=' + $scope.curUser.city3;
         //console.log(url);
-        $http.get('http://localhost:8081/updateUser?' + url)
+        $http.get('http://106.14.17.37:8081/updateUser?' + url)
             .success(function (res) {
                 alert("更新成功！");
             })
@@ -1659,7 +1659,7 @@ function TreeIndexController($scope, $http, $location, user) {
         getUserDatas();
     }
     function deleteUser(name) { //删除用户
-        $http.get('http://localhost:8081/deleteUser?pk=' + name)
+        $http.get('http://106.14.17.37:8081/deleteUser?pk=' + name)
             .success(function (res) {
                 alert("删除成功！");
             })
@@ -1675,7 +1675,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.newUser.city3 = $scope.newUser.city3 == null ? false : $scope.newUser.city3;
         var url = 'name=' + $scope.newUser.name + '&password=' + $scope.newUser.password + '&city1=' + $scope.newUser.city1 +
             '&city2=' + $scope.newUser.city2 + '&city3=' + $scope.newUser.city3;
-        $http.get('http://localhost:8081/addUser?' + url)
+        $http.get('http://106.14.17.37:8081/addUser?' + url)
             .success(function (res) {
                 alert("添加成功！");
             })
@@ -1694,7 +1694,7 @@ function TreeIndexController($scope, $http, $location, user) {
             urlPara = urlPara + t4Para[i] + '=' + $scope.curTable4[t4Para[i]] + '&';
         }
         //console.log(urlPara);
-        $http.get('http://localhost:8081/updateTable4?' + urlPara)
+        $http.get('http://106.14.17.37:8081/updateTable4?' + urlPara)
             .success(function (res) {
                 alert("更新成功！");
             })
@@ -1705,7 +1705,7 @@ function TreeIndexController($scope, $http, $location, user) {
         $scope.curTable4 = {};
     }
     function getTable4ByPK(pk) {
-        $http.get('http://localhost:8081/getTable4ByPK?pk=' + pk)
+        $http.get('http://106.14.17.37:8081/getTable4ByPK?pk=' + pk)
             .success(function (res) {
                 //console.log(JSON.stringify(res));
                 var rawDatas = [].concat(res);
@@ -1718,14 +1718,14 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable4Datas(id, page) {    //根据户主ID获取表四数据
         $scope.currPage = page;
         $scope.table4Datas = [];
-        $http.get('http://localhost:8081/getTable4Count?id=' + id)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable4Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
@@ -1733,7 +1733,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 alert("网络出错");
             });
         console.log(page);
-        $http.get('http://localhost:8081/gettable4Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://106.14.17.37:8081/gettable4Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 var rawT4Datas = [].concat(res);
                 for (var i = 0; i < rawT4Datas.length; i++) {
@@ -1745,7 +1745,7 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/gettable4AllDatas?id=' + id)//4.汇总该户主所有数据
+        $http.get('http://106.14.17.37:8081/gettable4AllDatas?id=' + id)//4.汇总该户主所有数据
             .success(function (resall) {
                 $scope.table4Total = {
                     "t1": 0, "t2": 0, "t3": 0, "t4": 0, "t5": 0, "total1": 0,
@@ -1768,14 +1768,14 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable3(pk) { //删除表三
-        $http.get('http://localhost:8081/deleteTable3?pk=' + pk)//1.删除表三
+        $http.get('http://106.14.17.37:8081/deleteTable3?pk=' + pk)//1.删除表三
             .success(function (res) {
                 getAllTable3Datas($scope.current.id, $scope.currPage);
             })
             .error(function (res) {
                 alert("删除表三数据出错");
             });
-        $http.get('http://localhost:8081/deleteTable4?pk=' + pk)//2.删除表四
+        $http.get('http://106.14.17.37:8081/deleteTable4?pk=' + pk)//2.删除表四
             .success(function (res) {
             })
             .error(function (res) {
@@ -1827,7 +1827,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //console.log(JSON.stringify($scope.curTable3));
         //4.更新
         if ($scope.curTable3 != null && $scope.curTable3.autoID != "") {
-            $http.get('http://localhost:8081/updateTable3?' + urlPara)//4.1更新表三
+            $http.get('http://106.14.17.37:8081/updateTable3?' + urlPara)//4.1更新表三
                 .success(function (res) {
                     alert("更新表三成功！");
                 })
@@ -1836,7 +1836,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 });
             urlPara2 = urlPara2 + 'autoID=' + $scope.curTable3.autoID;
             console.log(urlPara2);
-            $http.get('http://localhost:8081/updateTable4ByT3?' + urlPara2)//4.2更新表四
+            $http.get('http://106.14.17.37:8081/updateTable4ByT3?' + urlPara2)//4.2更新表四
                 .success(function (res) {
                 })
                 .error(function (res) {
@@ -1846,7 +1846,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //5.添加
         else {
-            $http.get('http://localhost:8081/getT4PriceByPrj?prj=' + currTable4.type1)
+            $http.get('http://106.14.17.37:8081/getT4PriceByPrj?prj=' + currTable4.type1)
                 .success(function (res) {//5.1 根据type1得到表四price
                     if (res.length != 0)
                         urlPara2 = urlPara2 + 'price=' + res[0]["price"];
@@ -1856,7 +1856,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     urlPara2 = urlPara2 + 'price=0';
                 });
-            $http.get('http://localhost:8081/getT4Price2ByPrj?prj=' + currTable4.arcName)
+            $http.get('http://106.14.17.37:8081/getT4Price2ByPrj?prj=' + currTable4.arcName)
                 .success(function (res) {//5.2 根据arcName得到表四price2
                     if (res.length != 0)
                         urlPara2 = urlPara2 + 'price2=' + res[0]["price2"];
@@ -1867,12 +1867,12 @@ function TreeIndexController($scope, $http, $location, user) {
                     urlPara2 = urlPara2 + 'price2=0';
                 });
             urlPara = urlPara + 'id=' + $scope.current.id + '&city=' + $scope.cityName;
-            $http.get('http://localhost:8081/addTable3?' + urlPara)//5.3 添加表三
+            $http.get('http://106.14.17.37:8081/addTable3?' + urlPara)//5.3 添加表三
                 .success(function (res) {
                     //console.log(JSON.stringify(res));
                     urlPara2 = urlPara2 + '&id=' + $scope.current.id + '&fID=' + res.insertId
                         + '&city=' + $scope.cityName + '&name=' + $scope.current.name;    //取到表三自增id
-                    $http.get('http://localhost:8081/addTable4?' + urlPara2) //5.4 添加表四
+                    $http.get('http://106.14.17.37:8081/addTable4?' + urlPara2) //5.4 添加表四
                         .success(function (res) {
                         })
                         .error(function (res) {
@@ -1883,7 +1883,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 .error(function (res) {
                     alert("添加表三数据出错");
                 });
-            $http.get('http://localhost:8081/getTable3Count?id=' + $scope.current.id)//1.取到总页数
+            $http.get('http://106.14.17.37:8081/getTable3Count?id=' + $scope.current.id)//1.取到总页数
                 .success(function (res) {
                     if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                         getAllTable3Datas($scope.current.id, $scope.totalPages + 1);
@@ -1901,7 +1901,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getTable3ByPK(pk) {    //选择要编辑的数据
         //console.log(pk);
-        $http.get('http://localhost:8081/getTable3ByPK?pk=' + pk)
+        $http.get('http://106.14.17.37:8081/getTable3ByPK?pk=' + pk)
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.curTable3 = rawDatas[0];
@@ -1912,21 +1912,21 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function getAllTable3Datas(id, page) {//根据户主取出表三信息
         $scope.currPage = page;
-        $http.get('http://localhost:8081/getTable3Count?id=' + id)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable3Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/gettable3Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://106.14.17.37:8081/gettable3Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 $scope.table3Datas = [].concat(res);
             })
@@ -1940,7 +1940,7 @@ function TreeIndexController($scope, $http, $location, user) {
         for (var i = 0; i < $scope.table2Datas.length; i++) {
             //更改数据库中所有该种类的价格
             if ($scope.Table2Type1[i] != null) {
-                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj + '&type=' + $scope.Table2Type1[i])
+                $http.get('http://106.14.17.37:8081/updateTable2?prj=' + $scope.table2Datas[i].prj + '&type=' + $scope.Table2Type1[i])
                     .success(function (res) {
                         alert("更改成功！");
                     })
@@ -1949,7 +1949,7 @@ function TreeIndexController($scope, $http, $location, user) {
                     });
             }
             if ($scope.Table2Type2[i] != null) {
-                $http.get('http://localhost:8081/updateTable2?prj=' + $scope.table2Datas[i].prj2 + '&type=' + $scope.Table2Type2[i])
+                $http.get('http://106.14.17.37:8081/updateTable2?prj=' + $scope.table2Datas[i].prj2 + '&type=' + $scope.Table2Type2[i])
                     .success(function (res) {
                     })
                     .error(function (res) {
@@ -1964,21 +1964,21 @@ function TreeIndexController($scope, $http, $location, user) {
     function getAllTable2Datas(id, page) { //根据户主取出表二信息
         $scope.currPage = page;
         $scope.table2Datas = [];
-        $http.get('http://localhost:8081/getTable2Count?id=' + id)//1.取到总页数
+        $http.get('http://106.14.17.37:8081/getTable2Count?id=' + id)//1.取到总页数
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/getTable1ById?id=' + id)//2.取表头信息
+        $http.get('http://106.14.17.37:8081/getTable1ById?id=' + id)//2.取表头信息
             .success(function (res) {
                 $scope.current = res[0];
             })
             .error(function (res) {
                 alert("网络出错");
             });
-        $http.get('http://localhost:8081/gettable2Datas?id=' + id + '&page=' + page)//3.取表信息
+        $http.get('http://106.14.17.37:8081/gettable2Datas?id=' + id + '&page=' + page)//3.取表信息
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.table2Total = { "total": 0, "total2": 0 };
@@ -2008,7 +2008,7 @@ function TreeIndexController($scope, $http, $location, user) {
             getPeopleList();
         }
         else {
-            $http.get('http://localhost:8081/getNameListByName?city=' + $scope.cityName + '&text=' + filterText)
+            $http.get('http://106.14.17.37:8081/getNameListByName?city=' + $scope.cityName + '&text=' + filterText)
                 .success(function (res) {
                     $scope.peopleLists = [].concat(res);
                     $scope.current = res[0];
@@ -2041,7 +2041,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
     }
     function getPeopleList() {  //得到户主列表
-        $http.get('http://localhost:8081/getPeopleList?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getPeopleList?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.peopleLists = [].concat(res);
                 $scope.current = res[0];
@@ -2125,7 +2125,7 @@ function TreeIndexController($scope, $http, $location, user) {
     }
     function saveTable1Data() {   //添加表一数据
         //检验身份证与名字是否对应
-        $http.get('http://localhost:8081/getPeopleByID?id=' + $scope.curTable1.id)
+        $http.get('http://106.14.17.37:8081/getPeopleByID?id=' + $scope.curTable1.id)
             .success(function (res) {
                 if (res != null && res[0] != null && res[0].name != $scope.curTable1.name)
                     alert('身份证号与姓名不匹配，该身份证号已对应姓名:' + res[0].name);
@@ -2139,7 +2139,7 @@ function TreeIndexController($scope, $http, $location, user) {
                             urlPara = urlPara + t1Para[i] + '=' + $scope.curTable1[t1Para[i]] + '&';
                         }
                         //console.log(urlPara);
-                        $http.get('http://localhost:8081/updateTable1?' + urlPara)
+                        $http.get('http://106.14.17.37:8081/updateTable1?' + urlPara)
                             .success(function (res) {
                                 alert("更新表一成功！");
                             })
@@ -2150,7 +2150,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         urlPara2 = 'id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj + '&unit=' +
                             $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity + '&autoID=' +
                             $scope.curTable1.autoID;
-                        $http.get('http://localhost:8081/updateTable2ByT1?' + urlPara2)
+                        $http.get('http://106.14.17.37:8081/updateTable2ByT1?' + urlPara2)
                             .success(function (res) {
                                 // alert("更新表成功！");
                             })
@@ -2184,7 +2184,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         var urlTable2 = 'city=' + $scope.cityName + '&name=' + $scope.curTable1.name + '&id=' + $scope.curTable1.id + '&prj=' + $scope.curTable1.prj +
                             '&unit=' + $scope.curTable1.unit + '&quantity=' + $scope.curTable1.quantity;
                         //根据prj得到表二price
-                        $http.get('http://localhost:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
+                        $http.get('http://106.14.17.37:8081/getPriceByPrj?prj=' + $scope.curTable1.prj)
                             .success(function (res) {
                                 if (res.length != 0)
                                     urlTable2 = urlTable2 + '&price=' + res[0]["price"];
@@ -2194,11 +2194,11 @@ function TreeIndexController($scope, $http, $location, user) {
                             .error(function (res) {
                                 urlTable2 = urlTable2 + '&price=0';
                             });
-                        $http.get('http://localhost:8081/addTable1?' + urlPara)
+                        $http.get('http://106.14.17.37:8081/addTable1?' + urlPara)
                             .success(function (res) {
                                 urlTable2 = urlTable2 + '&fID=' + res.insertId;//取到表一自增id
                                 //添加表二
-                                $http.get('http://localhost:8081/addTable2?' + urlTable2)
+                                $http.get('http://106.14.17.37:8081/addTable2?' + urlTable2)
                                     .success(function (res) {
                                     })
                                     .error(function (res) {
@@ -2212,7 +2212,7 @@ function TreeIndexController($scope, $http, $location, user) {
                         //添加用户表，身份证为主键 id name city
                         var urlPeople = 'id=' + $scope.curTable1.id + '&name=' + $scope.curTable1.name
                             + '&city=' + $scope.curTable1.city;
-                        $http.get('http://localhost:8081/addTablePeople?' + urlPeople)
+                        $http.get('http://106.14.17.37:8081/addTablePeople?' + urlPeople)
                             .success(function (res) {
                             })
                             .error(function (res) {
@@ -2220,7 +2220,7 @@ function TreeIndexController($scope, $http, $location, user) {
                             });
                         //重载表单
                         $scope.curTable1 = {};
-                        $http.get('http://localhost:8081/getTable1Count?city=' + $scope.cityName)
+                        $http.get('http://106.14.17.37:8081/getTable1Count?city=' + $scope.cityName)
                             .success(function (res) {
                                 if ($scope.totalPages < Math.ceil(res[0]["count(*)"] / 10)) {
                                     getAllTable1Datas($scope.totalPages + 1);
@@ -2241,7 +2241,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function deleteTable1(pk, id) { //删除表一
-        $http.get('http://localhost:8081/deleteTable1?pk=' + pk)//1.删除表一
+        $http.get('http://106.14.17.37:8081/deleteTable1?pk=' + pk)//1.删除表一
             .success(function (res) {
                 //重新加载表1
                 getAllTable1Datas($scope.currPage);
@@ -2249,23 +2249,23 @@ function TreeIndexController($scope, $http, $location, user) {
             .error(function (res) {
                 alert("删除表一数据出错");
             });
-        $http.get('http://localhost:8081/deleteTable2?pk=' + pk)//2.删除表二
+        $http.get('http://106.14.17.37:8081/deleteTable2?pk=' + pk)//2.删除表二
             .success(function (res) {
             })
             .error(function (res) {
                 alert("删除表二数据出错");
             });
-        $http.get('http://localhost:8081/deleteTable2ByT1?pk=' + id)//2.删除表三
+        $http.get('http://106.14.17.37:8081/deleteTable2ByT1?pk=' + id)//2.删除表三
             .success(function (res) {
             })
             .error(function (res) {
                 alert("删除表三数据出错");
             });
-        $http.get('http://localhost:8081/getTable2Count?id=' + id)//3.删除用户表
+        $http.get('http://106.14.17.37:8081/getTable2Count?id=' + id)//3.删除用户表
             .success(function (res) {
                 console.log(res[0]["count(*)"] == 0);
                 if (res[0]["count(*)"] == 0) { //此人在表一没有记录则删除用户表数据
-                    $http.get('http://localhost:8081/deletePeopleTable?pk=' + id)
+                    $http.get('http://106.14.17.37:8081/deletePeopleTable?pk=' + id)
                         .success(function (res) {
                         })
                         .error(function (res) {
@@ -2285,7 +2285,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .targetEvent($event);
     }
     function getTable1ByPK(pk) {    //根据主键获取表一数据
-        $http.get('http://localhost:8081/getTable1ByPK?pk=' + pk)
+        $http.get('http://106.14.17.37:8081/getTable1ByPK?pk=' + pk)
             .success(function (res) {
                 var rawDatas = [].concat(res);
                 $scope.curTable1 = rawDatas[0];
@@ -2296,7 +2296,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getAllTable1Datas(page) {  //得到表一全部数据
-        $http.get('http://localhost:8081/getTable1Count?city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getTable1Count?city=' + $scope.cityName)
             .success(function (res) {
                 $scope.totalPages = Math.ceil(res[0]["count(*)"] / 10);
                 //alert(res[0]["count(*)"]);
@@ -2308,7 +2308,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     page = $scope.totalPages;
         // }
         $scope.currPage = page;
-        $http.get('http://localhost:8081/getAllTable1Datas?page=' + page + '&city=' + $scope.cityName)
+        $http.get('http://106.14.17.37:8081/getAllTable1Datas?page=' + page + '&city=' + $scope.cityName)
             .success(function (res) {
                 //console.log(res);
                 $scope.table1Datas = [].concat(res);
@@ -2333,7 +2333,7 @@ function TreeIndexController($scope, $http, $location, user) {
             });
     }
     function getUserDatas() {
-        $http.get('http://localhost:8081/getUserTable')
+        $http.get('http://106.14.17.37:8081/getUserTable')
             .success(function (res) {
                 $scope.userDatas = [].concat(res);
             })
@@ -3106,7 +3106,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .pipe(fs.createWriteStream(excelRoot));
     }
 
-
+    //
     function outputExcel413() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3190,7 +3190,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
-            if(i==3){
+            if (i == 3) {
                 cellOver.hMerge = 2;
             }
             border(cellOver, 0, 0, 1, 0);
@@ -3199,8 +3199,8 @@ function TreeIndexController($scope, $http, $location, user) {
             }
         }
         //设置列宽度
-        for (let i = 0; i < 7; i++) {
-            sheet.col(i).width = 11;
+        for (let i = 0; i < 9; i++) {
+            sheet.col(i).width = 10;
         }
         //导出
         var excelRoot = $scope.cityName + $scope.table413Total.city4Name + '--表4-1土地--第' + $scope.currPage + '页.xlsx';
@@ -3214,6 +3214,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel412() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3297,7 +3298,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
-            if(i==3){
+            if (i == 3) {
                 cellOver.hMerge = 2;
             }
             border(cellOver, 0, 0, 1, 0);
@@ -3321,6 +3322,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel411() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3404,7 +3406,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
-            if(i==3){
+            if (i == 3) {
                 cellOver.hMerge = 2;
             }
             border(cellOver, 0, 0, 1, 0);
@@ -3428,6 +3430,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel42() {
         const file = new xlsx.File();
         const sheet = file.addSheet('Sheet1');
@@ -3508,7 +3511,7 @@ function TreeIndexController($scope, $http, $location, user) {
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i];
             cellOver.hMerge = 1;
-            if(i==3){
+            if (i == 3) {
                 cellOver.hMerge = 2;
             }
             border(cellOver, 0, 0, 1, 0);
@@ -5093,7 +5096,7 @@ function TreeIndexController($scope, $http, $location, user) {
         }
         //设置列宽度
         for (let i = 0; i < 19; i++) {
-            sheet.col(i).width = 5;
+            sheet.col(i).width = 10;
         }
         //导出
         var excelRoot = $scope.cityName + '-表4-第' + $scope.currPage + '页.xlsx';
@@ -5103,6 +5106,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 saveAs(content, excelRoot);
             });
     }
+    //
     function outputExcel3() {
         console.log("excel3...")
         const file = new xlsx.File();
@@ -5190,6 +5194,9 @@ function TreeIndexController($scope, $http, $location, user) {
                 cellContent.value = $scope.table3Datas[i][table4Content[j]];
                 border(cellContent, 0, 0, 1, 0);
             }
+            const cellContents = rowContent.addCell();
+            cellContents.value = '';
+            border(cellContents, 0, 0, 1, 0);
         }
         //表尾
         var tableOver = ["乡镇人民政府签字（公章）： ", "县（区）铁建办签字（公章）", "铁路建设业主单位签字（公章）：",
@@ -5199,22 +5206,25 @@ function TreeIndexController($scope, $http, $location, user) {
 
             const cellOver = rowOver.addCell();
             cellOver.value = tableOver[i * 2];
-            cellOver.hMerge = 6;
+            cellOver.hMerge = 4;
             border(cellOver, 0, 0, 1, 0);
 
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 4; i++) {
                 rowOver.addCell();
             }
             const cellOver2 = rowOver.addCell();
             cellOver2.value = tableOver[i * 2 + 1];
-            cellOver2.hMerge = 6;
+            cellOver2.hMerge = 5;
             border(cellOver2, 0, 0, 1, 0);
         }
         //设置列宽度
-        for (let i = 0; i < 10; i++) {
-
-            sheet.col(i).width = 9;
-
+        for (let i = 0; i < 11; i++) {
+            if (i == 5 || i == 6 || i == 7) {
+                sheet.col(i).width = 10;
+            }
+            else {
+                sheet.col(i).width = 7;
+            }
         }
         //导出
         var excelRoot = $scope.cityName + '-表3-第' + $scope.currPage + '页.xlsx';
@@ -5224,6 +5234,7 @@ function TreeIndexController($scope, $http, $location, user) {
                 saveAs(content, excelRoot);
             });
     }
+    //
     function outputExcel2() {
         console.log("excel2...")
         const file = new xlsx.File();
@@ -5262,8 +5273,10 @@ function TreeIndexController($scope, $http, $location, user) {
             border(cell1, 0, 0, 1, 0);
             cell1.hMerge = 1;
             cell1 = row1.addCell();
-            border(cell1, 0, 0, 1, 0);
         }
+        cell1 = row1.addCell();
+        cell1.value = '';
+        border(cell1, 0, 0, 1, 0);
 
         const row2 = sheet.addRow();
         var cell2 = row2.addCell();
@@ -5359,6 +5372,7 @@ function TreeIndexController($scope, $http, $location, user) {
         //     .saveAs()
         //     .pipe(fs.createWriteStream(excelRoot));
     }
+    //
     function outputExcel1() {
         const file = new xlsx.File();
         const style = new xlsx.Style();
