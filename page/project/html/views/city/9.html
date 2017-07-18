@@ -15,6 +15,7 @@
         <th colspan="2">本季完成(元)</th>
         <th colspan="2">本年完成(元)</th>
         <th colspan="2">开累完成(元)</th>
+        <th rowspan="2">编辑</th>
     </tr>
     <tr>
         <th>数量</th>
@@ -29,8 +30,8 @@
     <tr>
         <td>一</td>
         <td>征收国有土地补偿安置费用</td>
-        <td></td>
-        <td></td>
+        <td><input ng-model="t9Data2.unit" type="text" style="width:40%;margin: 3px auto;"></td>
+        <td>{{t9Data2.price}}</td>
         <td>{{t9Data2.a1}}</td>
         <td>{{t9Data2.b1}}</td>
         <td>{{t9Data2.a2}}</td>
@@ -39,8 +40,12 @@
         <td>{{t9Data2.b3}}</td>
         <td>{{t9Data2.a4}}</td>
         <td>{{t9Data2.b4}}</td>
+         <td>
+            <button ng-click="saveTable9Line(2,t9Data2.unit)" class="btn btn-primary btn-small">保存</button>
+        </td>
     </tr>
     <tr ng-repeat="t9 in t9Data5">
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -57,8 +62,8 @@
     <tr>
         <td>二</td>
         <td>征收集体土地补偿安置费用</td>
-        <td></td>
-        <td></td>
+        <td><input ng-model="t9Data1.unit" type="text" style="width:40%;margin: 3px auto;"></td>
+        <td>{{t9Data1.price}}</td>
         <td>{{t9Data1.a1}}</td>
         <td>{{t9Data1.b1}}</td>
         <td>{{t9Data1.a2}}</td>
@@ -67,8 +72,12 @@
         <td>{{t9Data1.b3}}</td>
         <td>{{t9Data1.a4}}</td>
         <td>{{t9Data1.b4}}</td>
+        <td>
+            <button ng-click="saveTable9Line(1,t9Data1.unit)" class="btn btn-primary btn-small">保存</button>
+        </td>
     </tr>
     <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -85,8 +94,8 @@
     <tr>
         <td>三</td>
         <td>工作经费</td>
-        <td></td>
-        <td></td>
+         <td><input ng-model="t9Data3.unit" type="text" style="width:40%;margin: 3px auto;"></td>
+        <td>{{t9Data3.price}}</td>
         <td>{{t9Data3.a1}}</td>
         <td>{{t9Data3.b1}}</td>
         <td>{{t9Data3.a2}}</td>
@@ -95,8 +104,12 @@
         <td>{{t9Data3.b3}}</td>
         <td>{{t9Data3.a4}}</td>
         <td>{{t9Data3.b4}}</td>
+        <td>
+            <button ng-click="saveTable9Line(3,t9Data3.unit)" class="btn btn-primary btn-small">保存</button>
+        </td>
     </tr>
     <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -113,8 +126,8 @@
     <tr>
         <td>四</td>
         <td>税费等其他费用</td>
-        <td></td>
-        <td></td>
+         <td><input ng-model="t9Data4.unit" type="text" style="width:40%;margin: 3px auto;"></td>
+        <td>{{t9Data4.price}}</td>
         <td>{{t9Data4.a1}}</td>
         <td>{{t9Data4.b1}}</td>
         <td>{{t9Data4.a2}}</td>
@@ -123,6 +136,9 @@
         <td>{{t9Data4.b3}}</td>
         <td>{{t9Data4.a4}}</td>
         <td>{{t9Data4.b4}}</td>
+        <td>
+            <button ng-click="saveTable9Line(4,t9Data4.unit)" class="btn btn-primary btn-small">保存</button>
+        </td>
     </tr>
     <tr>
         <td>五</td>
@@ -137,6 +153,7 @@
         <td>{{t9Data1.b3+t9Data2.b3+t9Data3.b3+t9Data4.b3}}</td>
         <td>{{t9Data1.a4+t9Data2.a4+t9Data3.a4+t9Data4.a4}}</td>
         <td>{{t9Data1.b4+t9Data2.b4+t9Data3.b4+t9Data4.b4}}</td>
+        <td></td>
     </tr>
 </table>
 <button ng-click="outputExcel()" class="btn btn-primary btn-small">导出excel</button>
